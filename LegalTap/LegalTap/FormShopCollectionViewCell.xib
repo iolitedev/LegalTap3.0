@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="OpenSans-Semibold.ttf">
+            <string>OpenSans-Semibold</string>
+        </mutableArray>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FormShopCollectionViewCell" id="nH4-60-RIO" customClass="FormShopCollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="54" height="120"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="54" height="120"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eHA-U6-H3N">
+                        <rect key="frame" x="0.0" y="0.0" width="54" height="54"/>
+                        <animations/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="eHA-U6-H3N" secondAttribute="height" multiplier="1:1" id="010-fL-Si9"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LUS-Sy-DWf" userLabel="Name">
+                        <rect key="frame" x="0.0" y="58" width="52" height="62"/>
+                        <animations/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" name="OpenSans-Semibold" family="Open Sans" pointSize="10"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <animations/>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            </view>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="LUS-Sy-DWf" secondAttribute="trailing" id="0ks-gU-3xA"/>
+                <constraint firstItem="LUS-Sy-DWf" firstAttribute="top" secondItem="eHA-U6-H3N" secondAttribute="bottom" id="8Uu-EP-Mpj"/>
+                <constraint firstAttribute="trailing" secondItem="eHA-U6-H3N" secondAttribute="trailing" id="SDC-JJ-JwY"/>
+                <constraint firstItem="LUS-Sy-DWf" firstAttribute="leading" secondItem="nH4-60-RIO" secondAttribute="leading" id="ZFd-Z9-Uo3"/>
+                <constraint firstItem="eHA-U6-H3N" firstAttribute="leading" secondItem="nH4-60-RIO" secondAttribute="leading" id="qTH-ZG-7Ae"/>
+                <constraint firstItem="eHA-U6-H3N" firstAttribute="top" secondItem="nH4-60-RIO" secondAttribute="top" id="sss-1v-YRx"/>
+            </constraints>
+            <size key="customSize" width="54" height="120"/>
+            <connections>
+                <outlet property="imageView_Tranding" destination="eHA-U6-H3N" id="uoc-Bi-kWa"/>
+                <outlet property="lbl_FormName" destination="LUS-Sy-DWf" id="Png-5g-v9i"/>
+            </connections>
+            <point key="canvasLocation" x="-138" y="161"/>
+        </collectionViewCell>
+    </objects>
+</document>

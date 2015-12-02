@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>C000AD9C-F425-487D-A3AA-169922A0C267</string>
+	<key>IDESourceControlProjectName</key>
+	<string>LegalTap</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>EA618D6F96B274B896FC0994173DB0E20735095D</key>
+		<string>https://github.com/LegalTap/LT.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>LegalTap/LegalTap.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>EA618D6F96B274B896FC0994173DB0E20735095D</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/LegalTap/LT.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>EA618D6F96B274B896FC0994173DB0E20735095D</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>EA618D6F96B274B896FC0994173DB0E20735095D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>LT</string>
+		</dict>
+	</array>
+</dict>
+</plist>

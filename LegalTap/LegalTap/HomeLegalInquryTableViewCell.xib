@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7531" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="HomeLegalInquryTableViewCell" rowHeight="374" id="hg6-6q-JoM" customClass="HomeLegalInquryTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="384"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hg6-6q-JoM" id="k19-Hx-eOA">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="383"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" id="Xvp-Bb-v80">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="383"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="dyd-ep-zBj">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="191"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" id="Bd9-be-Ro1" userLabel="View Immigration">
+                                        <rect key="frame" x="15" y="10" width="290" height="84"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_Small_Business_On" id="elg-Re-hAu">
+                                                <rect key="frame" x="0.0" y="0.0" width="290" height="84"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <animations/>
+                                                <gestureRecognizers/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath=".clipsToBounds" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </imageView>
+                                        </subviews>
+                                        <animations/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="y8B-Ab-fYD" appends="YES" id="xae-M1-VZF"/>
+                                        </connections>
+                                    </view>
+                                    <view contentMode="scaleToFill" id="VFT-Fv-gdx" userLabel="View EMPLOYMENT">
+                                        <rect key="frame" x="15" y="101" width="140" height="84"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_Employment_On" id="73a-p7-DU4">
+                                                <rect key="frame" x="0.0" y="0.0" width="140" height="84"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <animations/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath=".clipsToBounds" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </imageView>
+                                        </subviews>
+                                        <animations/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="Cc8-et-XN5" appends="YES" id="egq-VZ-zJ9"/>
+                                        </connections>
+                                    </view>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" id="Kok-xq-ota" userLabel="View TAX">
+                                        <rect key="frame" x="165" y="101" width="140" height="84"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_Tax_On" id="cDW-OP-ws0">
+                                                <rect key="frame" x="0.0" y="0.0" width="140" height="84"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <animations/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath=".clipsToBounds" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </imageView>
+                                        </subviews>
+                                        <animations/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="qLg-b9-pV6" appends="YES" id="qsw-8B-C9f"/>
+                                        </connections>
+                                    </view>
+                                </subviews>
+                                <animations/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" id="pgk-6C-F1G">
+                                <rect key="frame" x="0.0" y="191" width="320.00000033477721" height="192"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" id="9Ae-GS-1Iz" userLabel="View Family">
+                                        <rect key="frame" x="15" y="94" width="140" height="84"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_Family_On" id="ZqS-Vb-oQ3">
+                                                <rect key="frame" x="0.0" y="0.0" width="144" height="84"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <animations/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath=".clipsToBounds" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </imageView>
+                                        </subviews>
+                                        <animations/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="rwZ-7L-FYg" appends="YES" id="hpM-DL-et0"/>
+                                        </connections>
+                                    </view>
+                                    <view contentMode="scaleToFill" id="d0X-hS-Ddh" userLabel="View Wills">
+                                        <rect key="frame" x="165" y="93" width="140" height="84"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_Wills_On" id="J5l-7Y-oOE">
+                                                <rect key="frame" x="0.0" y="0.0" width="140" height="84"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <animations/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath=".clipsToBounds" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </imageView>
+                                        </subviews>
+                                        <animations/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="LDs-Pu-CnY" appends="YES" id="t2O-L5-77H"/>
+                                        </connections>
+                                    </view>
+                                    <view contentMode="scaleToFill" id="uYL-OX-OMh" userLabel="View SMALL BUSINESS">
+                                        <rect key="frame" x="15" y="1" width="290" height="84"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_Immigration_On" id="HJz-vJ-InK">
+                                                <rect key="frame" x="0.0" y="0.0" width="290" height="84"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <animations/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath=".clipsToBounds" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </imageView>
+                                        </subviews>
+                                        <animations/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="NLL-qq-3PK" appends="YES" id="t2G-bP-D2M"/>
+                                        </connections>
+                                    </view>
+                                </subviews>
+                                <animations/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" red="0.92941176469999998" green="0.92941176469999998" blue="0.92941176469999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                </subviews>
+                <animations/>
+            </tableViewCellContentView>
+            <animations/>
+            <connections>
+                <outlet property="imageView_Divorce" destination="J5l-7Y-oOE" id="g58-og-n1O"/>
+                <outlet property="imageView_Employment" destination="73a-p7-DU4" id="uF1-49-D6t"/>
+                <outlet property="imageView_Family" destination="ZqS-Vb-oQ3" id="wMc-fB-lIz"/>
+                <outlet property="imageView_Immigration" destination="HJz-vJ-InK" id="y4Q-7a-PQL"/>
+                <outlet property="imageView_PersonalInquiry" destination="ZqS-Vb-oQ3" id="kkg-d8-6fD"/>
+                <outlet property="imageView_Small_Business" destination="elg-Re-hAu" id="cCe-ON-WwV"/>
+                <outlet property="imageView_Tax" destination="cDW-OP-ws0" id="vut-Ud-rN9"/>
+                <outlet property="imageView_Wills" destination="J5l-7Y-oOE" id="zrW-sY-tvl"/>
+                <outlet property="view_Content" destination="Xvp-Bb-v80" id="0TV-Qo-gy3"/>
+            </connections>
+            <point key="canvasLocation" x="342" y="470"/>
+        </tableViewCell>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.050000000000000003" id="rwZ-7L-FYg" userLabel="Long Press Gesture Recognizer Family">
+            <connections>
+                <action selector="press_Family:" destination="hg6-6q-JoM" id="srj-mY-2rP"/>
+            </connections>
+        </pongPressGestureRecognizer>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.050000000000000003" id="qLg-b9-pV6" userLabel="Long Press Gesture Recognizer Tax">
+            <connections>
+                <action selector="press_Tax:" destination="hg6-6q-JoM" id="Xg0-i3-b3T"/>
+            </connections>
+        </pongPressGestureRecognizer>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.050000000000000003" id="y8B-Ab-fYD" userLabel="Long Press Gesture Recognizer Small Business">
+            <connections>
+                <action selector="press_Small_Business:" destination="hg6-6q-JoM" id="BsO-yQ-GPo"/>
+            </connections>
+        </pongPressGestureRecognizer>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.050000000000000003" id="RlV-36-zeE" userLabel="Long Press Gesture Recognizer DUI">
+            <connections>
+                <action selector="press_DUI:" destination="hg6-6q-JoM" id="Wes-WQ-NjT"/>
+            </connections>
+        </pongPressGestureRecognizer>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.050000000000000003" id="LDs-Pu-CnY" userLabel="Long Press Gesture Recognizer Wills">
+            <connections>
+                <action selector="press_Wills:" destination="hg6-6q-JoM" id="RF7-nA-sPp"/>
+            </connections>
+        </pongPressGestureRecognizer>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.050000000000000003" id="Cc8-et-XN5" userLabel="Long Press Gesture Recognizer Employment">
+            <connections>
+                <action selector="press_Emploment:" destination="hg6-6q-JoM" id="2hm-gM-ofl"/>
+            </connections>
+        </pongPressGestureRecognizer>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.050000000000000003" id="NLL-qq-3PK" userLabel="Long Press Gesture Recognizer Immigration">
+            <connections>
+                <action selector="press_Immigration:" destination="hg6-6q-JoM" id="wPW-jn-id1"/>
+            </connections>
+        </pongPressGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="Home_Employment_On" width="191" height="112"/>
+        <image name="Home_Family_On" width="191" height="112"/>
+        <image name="Home_Immigration_On" width="386" height="132"/>
+        <image name="Home_Small_Business_On" width="386" height="110"/>
+        <image name="Home_Tax_On" width="191" height="112"/>
+        <image name="Home_Wills_On" width="191" height="112"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

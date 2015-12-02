@@ -1,0 +1,18 @@
+# Uncomment this line to define a global platform for your project
+# platform :ios, '6.0'
+
+target 'LegalTap' do
+	
+pod 'AFNetworking'
+pod 'MBProgressHUD'
+pod 'IQKeyboardManager'
+#pod 'CardIO'
+
+pod 'libextobjc/EXTScope
+pod 'MTBlockAlertView'
+pod 'QuickBlox', '= 2.2'
+pod 'PayPal-iOS-SDK'
+
+pod 'Mixpanel'
+
+end

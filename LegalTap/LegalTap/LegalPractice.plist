@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Practice Area List</key>
+	<array>
+		<string>DUI</string>
+		<string>TAX</string>
+		<string>IMMIGRATION</string>
+		<string>PERSONAL INJURY</string>
+		<string>SMALL BUSINESS</string>
+		<string>EMPLOYMENT</string>
+		<string>WILL AND TRUSTS</string>
+		<string>REAL ESTATE</string>
+		<string>TRADEMARK and COPYRIGHT</string>
+		<string>FAMILY</string>
+		<string>OTHER</string>
+	</array>
+	<key>Practice Area List Data</key>
+	<dict>
+		<key>DUI</key>
+		<dict>
+			<key>Name</key>
+			<string>DUI</string>
+			<key>Shortcut</key>
+			<string>DUI</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>Is this your first DUI?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>2</string>
+					<key>Question</key>
+					<string>Was there an automobile accident?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>3</string>
+					<key>Question</key>
+					<string>Was anyone hurt as a result of your DUI?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>4</string>
+					<key>Question</key>
+					<string>Did you fail a field sobriety test?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>TAX</key>
+		<dict>
+			<key>Name</key>
+			<string>TAX</string>
+			<key>Shortcut</key>
+			<string>TAX</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>BRIEFLY DESCRIBE YOUR PROBLEM</string>
+					<key>Type</key>
+					<string>INFO</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>IMMIGRATION</key>
+		<dict>
+			<key>Name</key>
+			<string>IMMIGRATION</string>
+			<key>Shortcut</key>
+			<string>IMMIGRATION</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>List</key>
+					<array/>
+					<key>Question</key>
+					<string>Please describe your Citizenship and Current Status</string>
+					<key>Number</key>
+					<string>1</string>
+					<key>Type</key>
+					<string>INFO</string>
+				</dict>
+			</array>
+		</dict>
+		<key>PERSONAL INJURY</key>
+		<dict>
+			<key>Name</key>
+			<string>PERSONAL INJURY</string>
+			<key>Shortcut</key>
+			<string>PERSONAL INJURY</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>Was someone injured in the accident?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>2</string>
+					<key>Question</key>
+					<string>Did you suffer an injury in the accident?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>3</string>
+					<key>Question</key>
+					<string>Were there any witnesses to the accident?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>4</string>
+					<key>Question</key>
+					<string>Have you notified your insurance of the accident?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>5</string>
+					<key>Question</key>
+					<string>Was a vehicle involved in the accident?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>SMALL BUSINESS</key>
+		<dict>
+			<key>Name</key>
+			<string>SMALL BUSINESS</string>
+			<key>Shortcut</key>
+			<string>SMALL BUSINESS</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>Are you calling about reigstering a business as an LLC, Corp., Partnership, etc.?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>2</string>
+					<key>Question</key>
+					<string>Is this a business tax concern?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>3</string>
+					<key>Question</key>
+					<string>Is your business being sued or do you plan on filing suing against another business?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>4</string>
+					<key>Question</key>
+					<string>Do you have a question about a business contract?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>EMPLOYMENT</key>
+		<dict>
+			<key>Name</key>
+			<string>EMPLOYMENT</string>
+			<key>Shortcut</key>
+			<string>EMPLOYMENT</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>Were you wrongfully terminated by your employer?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>2</string>
+					<key>Question</key>
+					<string>Did you suffer an injury on the job?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>3</string>
+					<key>Question</key>
+					<string>Are you part of a union?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>4</string>
+					<key>Question</key>
+					<string>Have you had contact with the EEOC?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>5</string>
+					<key>Question</key>
+					<string>Are you an employer?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>WILL AND TRUSTS</key>
+		<dict>
+			<key>Name</key>
+			<string>WILL AND TRUSTS</string>
+			<key>Shortcut</key>
+			<string>WILL AND TRUSTS</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>Are you trying to distribute property to a loved one?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>2</string>
+					<key>Question</key>
+					<string>Are you currently going through probate?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>Family</string>
+						<string>Probate</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>3</string>
+					<key>Question</key>
+					<string>Is this a tax question?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>4</string>
+					<key>Question</key>
+					<string>Are you trying to specify decisions regarding life support, burial, or organ donation?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>5</string>
+					<key>Question</key>
+					<string>Are you looking to appoint an individual to make key decisions for you upon death?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>REAL ESTATE</key>
+		<dict>
+			<key>Name</key>
+			<string>REAL ESTATE</string>
+			<key>Shortcut</key>
+			<string>REAL ESTATE</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>Is this a concern regarding you being a Landlord or Tenant?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>Landloard</string>
+						<string>Tanant Law</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>2</string>
+					<key>Question</key>
+					<string>Is this a concern regarding a commercial property?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>3</string>
+					<key>Question</key>
+					<string>Are you being sued or plan on filing suit against someone based on this concern?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>4</string>
+					<key>Question</key>
+					<string>Is this a tax concern?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>TRADEMARKS AND COPYRIGHTS</key>
+		<dict>
+			<key>Name</key>
+			<string>TRADEMARK AND COPYRIGHT</string>
+			<key>Shortcut</key>
+			<string>TRADEMARK AND COPYRIGHT</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>Are you calling about a name, logo, novel, song, photograph, drawing, or video?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>Trademark</string>
+						<string>Copyright</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>2</string>
+					<key>Question</key>
+					<string>Are you calling about an invention with a function or process, such as a machine?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>3</string>
+					<key>Question</key>
+					<string>Are you currently dealing with the United States Patent And Trademark</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>4</string>
+					<key>Question</key>
+					<string>Are you concerned you&apos;ve violated someone else&apos;s intellectual property?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>FAMILY</key>
+		<dict>
+			<key>Name</key>
+			<string>FAMILY</string>
+			<key>Shortcut</key>
+			<string>FAMILY</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>Are you calling about a prenuptial agreement?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>2</string>
+					<key>Question</key>
+					<string>Are you calling about a divorce?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>3</string>
+					<key>Question</key>
+					<string>Are you calling about adoption or custody concerns?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>4</string>
+					<key>Question</key>
+					<string>Are you calling about child support or alimony?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>OTHER</key>
+		<dict>
+			<key>Name</key>
+			<string>OTHER</string>
+			<key>Shortcut</key>
+			<string>OTHER</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>BRIEFLY DESCRIBE YOUR PROBLEM</string>
+					<key>Type</key>
+					<string>INFO</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>PATENTS</key>
+		<dict>
+			<key>Name</key>
+			<string>TRADEMARK AND COPYRIGHT</string>
+			<key>Shortcut</key>
+			<string>TRADEMARK AND COPYRIGHT</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>Are you calling about a name, logo, novel, song, photograph, drawing, or video?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>Trademark</string>
+						<string>Copyright</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>2</string>
+					<key>Question</key>
+					<string>Are you calling about an invention with a function or process, such as a machine?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>3</string>
+					<key>Question</key>
+					<string>Are you currently dealing with the United States Patent And Trademark</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+				<dict>
+					<key>Number</key>
+					<string>4</string>
+					<key>Question</key>
+					<string>Are you concerned you&apos;ve violated someone else&apos;s intellectual property?</string>
+					<key>Type</key>
+					<string>LIST</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>LGBT</key>
+		<dict>
+			<key>Name</key>
+			<string>OTHER</string>
+			<key>Shortcut</key>
+			<string>OTHER</string>
+			<key>Questions</key>
+			<array>
+				<dict>
+					<key>Number</key>
+					<string>1</string>
+					<key>Question</key>
+					<string>BRIEFLY DESCRIBE YOUR PROBLEM</string>
+					<key>Type</key>
+					<string>INFO</string>
+					<key>List</key>
+					<array>
+						<string>YES</string>
+						<string>NO</string>
+					</array>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+</dict>
+</plist>

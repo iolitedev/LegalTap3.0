@@ -1,0 +1,46 @@
+//
+//  PrefixHeader.pch
+//  LegalTap
+//
+//  Created by John Basile on 7/13/15.
+//  Copyright (c) 2015 Brighthaus, LLC. All rights reserved.
+//
+
+#define LegalTap_PrefixHeader_pch
+
+#define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+#define IS_RETINA ([[UIScreen mainScreen] scale] >= 2.0)
+
+#define SCREEN_WIDTH ([[UIScreen mainScreen] bounds].size.width)
+#define SCREEN_HEIGHT ([[UIScreen mainScreen] bounds].size.height)
+#define SCREEN_MAX_LENGTH (MAX(SCREEN_WIDTH, SCREEN_HEIGHT))
+#define SCREEN_MIN_LENGTH (MIN(SCREEN_WIDTH, SCREEN_HEIGHT))
+
+#define IS_IPHONE_4_OR_LESS (IS_IPHONE && SCREEN_MAX_LENGTH < 568.0)
+#define IS_IPHONE_5 (IS_IPHONE && SCREEN_MAX_LENGTH == 568.0)
+#define IS_IPHONE_6 (IS_IPHONE && SCREEN_MAX_LENGTH == 667.0)
+#define IS_IPHONE_6P (IS_IPHONE && SCREEN_MAX_LENGTH == 736.0)
+
+
+
+#ifdef __OBJC__
+
+#import <UIKit/UIKit.h>
+#import "CommonHelper.h"
+#import "LTAPIClientManager.h"
+#import "ErrorHelper.h"
+#import "MBProgressHUD.h"
+#import "SharedSingleton.h"
+#import <UIImageView+AFNetworking.h>
+#import <Quickblox/Quickblox.h>
+#import "Mixpanel.h"
+
+#import <SystemConfiguration/SystemConfiguration.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+#import <Quickblox/Quickblox.h>
+#import <QuickbloxWebRTC/QuickbloxWebRTC.h>
+
+#define def_DeviceWidth [UIScreen mainScreen].bounds.size.width
+#define def_DeviceHeight [UIScreen mainScreen].bounds.size.height
+#endif
