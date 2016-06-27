@@ -72,31 +72,8 @@
 }
 -(void)AddLinkToLabel
 {
-//    [helpTextLabel addGestureRecognizer:
-//     [[UITapGestureRecognizer alloc] initWithTarget:self
-//                                             action:@selector(handleTapOnLabel:)]];
-//    
-//    // create your attributed text and keep an ivar of your "link" text range
-//    NSAttributedString *plainText;
-//    NSAttributedString *linkText;
-//    plainText = [[NSMutableAttributedString alloc] initWithString:@"If you are having issues with the app please email info@legaltap.com with your question and we will promptly get in touch with you."
-//                                                       attributes:nil];
-//    linkText = [[NSMutableAttributedString alloc] initWithString:@"info@legaltap.com"
-//                                                      attributes:@{
-//                                                                   NSForegroundColorAttributeName:[UIColor blueColor]
-//                                                                   }];
-//    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] init];
-//    [attrText appendAttributedString:plainText];
-//    [attrText appendAttributedString:linkText];
-//    
-//    // ivar -- keep track of the target range so you can compare in the callback
-//  NSRange targetRange = NSMakeRange(plainText.length, linkText.length);
-//    NSDictionary *linkAttributes = @{ NSForegroundColorAttributeName : [UIColor colorWithRed:0.05 green:0.4 blue:0.65 alpha:1.0],
-//                                      NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle) };
-//    [attrText setAttributes:linkAttributes range:targetRange];
-//    
-//    // Assign attributedText to UILabel
-//    helpTextLabel.attributedText = attrText;
+
+   // Assign attributedText to UILabel
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"If you are having issues with the app please email info@legaltap.co with your question and we will promptly get in touch with you." attributes:nil];
     NSRange linkRange = NSMakeRange(51, 16); // for the word "link" in the string above
     
@@ -125,16 +102,7 @@
         
         NSArray *toRecipients = [NSArray arrayWithObjects:@"info@legaltap.co",nil];
         [mailer setToRecipients:toRecipients];
-        
-       // UIImage *myImage = [UIImage imageNamed:@"mobiletuts-logo.png"];
-      //  NSData *imageData = UIImagePNGRepresentation(myImage);
-       // [mailer addAttachmentData:imageData mimeType:@"image/png" fileName:@"mobiletutsImage"];
-        
-       // NSString *emailBody = @"Have you seen the MobileTuts+ web site?";
-      //  [mailer setMessageBody:emailBody isHTML:NO];
-        
-//      [self presentModalViewController:mailer animated:YES];
-        [self presentViewController:mailer animated:YES completion:nil];
+         [self presentViewController:mailer animated:YES completion:nil];
     }
     else
     {

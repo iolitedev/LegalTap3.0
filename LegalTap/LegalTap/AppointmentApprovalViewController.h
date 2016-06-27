@@ -11,7 +11,7 @@
 #import "Appointment.h"
 
 
-@interface AppointmentApprovalViewController : UIViewController<QBActionStatusDelegate, QBChatDelegate>
+@interface AppointmentApprovalViewController : UIViewController<UIActionSheetDelegate, QBChatDelegate>
 {
     IBOutlet UILabel *lbl_ClientReadyInTime;
     IBOutlet UILabel *lbl_ClientName;
@@ -26,6 +26,7 @@
 
 
 }
+@property(strong, nonatomic) NSString *str;
 - (IBAction)btnClicked_Connect:(id)sender;
 - (IBAction)btnClicked_Decline:(id)sender;
 @property (strong, nonatomic) NSArray *array_answersList;

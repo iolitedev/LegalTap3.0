@@ -9,7 +9,7 @@
 #import "PaymentUpdateViewController.h"
 #import "ApplyCouponViewController.h"
 #define kPayPalEnvironment PayPalEnvironmentProduction
-
+//#define kPayPalEnvironment PayPalEnvironmentSandbox
 
 @interface PaymentUpdateViewController ()
 {
@@ -29,7 +29,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"New_BackButton_blue"] style:UIBarButtonItemStylePlain target:self action:@selector(backBarButton)];
+    [backButton setTintColor:[UIColor colorWithRed:0/255.0f green:133/255.0f blue:198/255.0f alpha:1.0f]];
+    [self.navigationItem setLeftBarButtonItem:backButton];
     // Set up payPalConfig
     _payPalConfig = [[PayPalConfiguration alloc] init];
     _payPalConfig.acceptCreditCards = YES;
@@ -135,7 +137,11 @@
 
 
 }
-
+- (void)backBarButton
+{
+    //    [CommonHelper animateToHomeTabWithTabBarController:self.navigationController.tabBarController];
+    [self.navigationController popViewControllerAnimated:TRUE];
+}
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -988,7 +994,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
              
          }
@@ -1037,5 +1043,6 @@
     }
     txt_ValidDate.text = [NSString stringWithFormat:@"%@/%@",selectMonth,yearString];
 }
+
 
 @end

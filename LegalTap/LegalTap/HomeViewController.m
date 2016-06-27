@@ -8,10 +8,21 @@
 
 #import "HomeViewController.h"
 #import "SliderViewController.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import "AppointmentApprovalViewController.h"
+#import "Settings.h"
+
 SliderViewController *SliderVC;
+const NSTimeInterval kChatPresenceTimeInterval = 15;
 
 @interface HomeViewController ()
-
+@property (strong, nonatomic) QBRTCSession *session;
+@property (strong, nonatomic) Settings *settings;
+@property (copy, nonatomic) void(^chatConnectCompletionBlock)(BOOL error);
+@property (copy, nonatomic) dispatch_block_t chatDisconnectedBlock;
+@property (copy, nonatomic) dispatch_block_t chatReconnectedBlock;
+@property (strong, nonatomic) QBRTCTimer *presenceTimer;
 @end
 
 @implementation HomeViewController
@@ -19,39 +30,23 @@ SliderViewController *SliderVC;
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
     [self setNeedsStatusBarAppearanceUpdate];
     
     ShowSliderView=NO;
     // Later, you can get your instance with
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    
     [mixpanel track:@"Legal Practice Area" properties:@{
                                                         @"method": @"Legal Practice Area",
                                                         }];
-    
-    [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    //    self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
-    //    self.navigationController.navigationBar.alpha = 0.6;
     
     if (!_identifierPreviousVC.length)
     {
         _identifierPreviousVC = @"HomeTab";
         
-        //Add slider button in home view
-        
-        //        UIButton *SliderBtn =  [UIButton buttonWithType:UIButtonTypeCustom];
-        //        [SliderBtn setImage:[UIImage imageNamed:@"Slider"] forState:UIControlStateNormal];
-        //      //  [SliderBtn setTitle:@"Slider" forState:UIControlStateNormal];
-        //        [SliderBtn addTarget:self action:@selector(SliderButton:) forControlEvents:UIControlEventTouchUpInside];
-        //        [SliderBtn setFrame:CGRectMake(0,0,50,32)];
-        //        UIBarButtonItem *LeftBarBtn = [[UIBarButtonItem alloc] initWithCustomView:SliderBtn];
-        //        self.navigationItem.leftBarButtonItem = LeftBarBtn;
     }
-    
     _array_LegalPracticeList = [CommonHelper legalPracticeList];
-    
     if ([_identifierPreviousVC isEqualToString:@"MyAppointmentToHome"])
     {
         self.title= @"Legal Practice Area";
@@ -83,6 +78,7 @@ SliderViewController *SliderVC;
             SliderVC.view.frame = CGRectMake(-250, 0, 200,550);
         }
     }
+    [QBRTCClient.instance addDelegate:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -93,28 +89,12 @@ SliderViewController *SliderVC;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
-    // [self.navigationController.navigationBar
-    // setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor darkGrayColor]}];
     self.navigationController.navigationBarHidden = YES;
-    // self.navigationController.navigationBar.alpha = 1;
     
     strSelectedPractice = @"";
     [self reloadtableView];
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-    // self.navigationController.navigationBar.alpha = 1;
-    //self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
-}
-
--(void)viewDidDisappear:(BOOL)animated
-{
-    //    [self hideContentController:SliderVC];
-    //    ShowSliderView=NO;
-    
-}
 -(void)HideSlider
 {
     [self hideContentController:SliderVC];
@@ -125,6 +105,7 @@ SliderViewController *SliderVC;
 {
     return UIStatusBarStyleDefault;
 }
+
 -(IBAction)SliderButton:(id)sender
 {
     if (ShowSliderView == NO)
@@ -145,11 +126,9 @@ SliderViewController *SliderVC;
     
     [UIView animateWithDuration:0.5
                      animations:^{
-                         
                          if (IS_IPHONE_6)
                          {
                              content.view.frame = CGRectMake(0, 0, 250,650);
-                             
                          }
                          else if (IS_IPHONE_6P)
                          {
@@ -159,21 +138,18 @@ SliderViewController *SliderVC;
                          {
                              content.view.frame = CGRectMake(0, 0, 250,550);
                          }
-                         
                      }];
     
-    [content didMoveToParentViewController:self];          // 3
+    [content didMoveToParentViewController:self];
 }
 
 -(void) hideContentController: (UIViewController*) content
 {
     [UIView animateWithDuration:0.5
                      animations:^{
-                         
                          if (IS_IPHONE_6)
                          {
                              content.view.frame = CGRectMake(-250, 0, 200,650);
-                             
                          }
                          else if (IS_IPHONE_6P)
                          {
@@ -204,11 +180,6 @@ SliderViewController *SliderVC;
             viewController.appointmentDate = _appointmentDate;
         }
     }
-    //    else if ([segue.identifier isEqualToString:@"HomeToMeetUs"])
-    //    {
-    //        HowCanWeHelpYouViewController *viewController = [segue destinationViewController];
-    //        viewController.identifierPreviousVC = _identifierPreviousVC;
-    //    }
 }
 
 #pragma mark Table View Data Source Method
@@ -372,10 +343,6 @@ SliderViewController *SliderVC;
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //    if ([_identifierPreviousVC isEqualToString:@"MyAppointmentToHome"])
-    //    {
-    //        return _array_LegalPracticeList.count;; // removed +1 to hide the dropdown which was the last row
-    //    }
     NSInteger number = 1;
     switch (section)
     {
@@ -400,19 +367,6 @@ SliderViewController *SliderVC;
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CGFloat headerHeight = 0.0f;
-    //    if ([_identifierPreviousVC isEqualToString:@"MyAppointmentToHome"])
-    //    {
-    //        if (indexPath.row == _array_LegalPracticeList.count)
-    //        {
-    //            headerHeight = 20.0;
-    //        }
-    //        else
-    //        {
-    //            headerHeight = 58.0;
-    //        }
-    //        return headerHeight;
-    //    }
-    
     switch (indexPath.section)
     {
         case 0:
@@ -510,10 +464,6 @@ SliderViewController *SliderVC;
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //    if ([_identifierPreviousVC isEqualToString:@"MyAppointmentToHome"])
-    //    {
-    //        return [self legalTableView:tableView cellForRowAtIndexPath:indexPath];
-    //    }
     switch (indexPath.section)
     {
         case 0://Logo
@@ -543,7 +493,6 @@ SliderViewController *SliderVC;
             {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
             }
-            //            cell.textLabel.text = @"TEXT";
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
             
             return cell;
@@ -661,26 +610,103 @@ SliderViewController *SliderVC;
         qPassword = @"ritesharora";
     }
     
-    [self createSeesionForClientwithUserName:qUserName withUserPassword:qPassword];
+    
+    
+    // Set QuickBlox Chat delegate
+    [[QBChat instance] addDelegate:self];
+    QBUUser *user = [QBUUser user];
+    user.fullName = qUserName;
+    user.login = qUserName;
+    user.ID =  user_Profile.quickBlox_Id.intValue;
+    user.password = qPassword;
+    
+    //    user.login = qUserName;
+    //    user.password = qPassword;
+    //    user.fullName = user_Profile.name;
+    //    user.ID = user_Profile.userId.intValue;
+    
+[self logInWithUser:user completion:^(BOOL error) {
+    
+} disconnectedBlock:^{
+} reconnectedBlock:^{
+    
+}];
+    
 }
+
+- (void)applyConfiguration {
+    
+    NSMutableArray *iceServers = [NSMutableArray array];
+    
+    for (NSString *url in self.settings.stunServers) {
+        
+        QBRTCICEServer *server = [QBRTCICEServer serverWithURL:url username:@"" password:@""];
+        [iceServers addObject:server];
+    }
+    
+    [iceServers addObjectsFromArray:[self quickbloxICE]];
+    
+    [QBRTCConfig setICEServers:iceServers];
+    [QBRTCConfig setMediaStreamConfiguration:self.settings.mediaConfiguration];
+    [QBRTCConfig setStatsReportTimeInterval:60.0f];
+}
+- (NSArray *)quickbloxICE {
+    
+    NSString *password = @"baccb97ba2d92d71e26eb9886da5f1e0";
+    NSString *userName = @"quickblox";
+    
+    QBRTCICEServer * stunServer = [QBRTCICEServer serverWithURL:@"stun:turn.quickblox.com"
+                                                       username:@""
+                                                       password:@""];
+    
+    QBRTCICEServer * turnUDPServer = [QBRTCICEServer serverWithURL:@"turn:turn.quickblox.com:3478?transport=udp"
+                                                          username:userName
+                                                          password:password];
+    
+    QBRTCICEServer * turnTCPServer = [QBRTCICEServer serverWithURL:@"turn:turn.quickblox.com:3478?transport=tcp"
+                                                          username:userName
+                                                          password:password];
+    
+    
+    return@[stunServer, turnTCPServer, turnUDPServer];
+}
+
+
+
+- (void)logInWithUser:(QBUUser *)user completion:(void (^)(BOOL error))completion  disconnectedBlock:(dispatch_block_t)disconnectedBlock reconnectedBlock:(dispatch_block_t)reconnectedBlock{
+    
+    [QBChat.instance addDelegate:self];
+    
+    if (QBChat.instance.isConnected) {
+        completion(NO);
+        return;
+    }
+    
+    self.chatConnectCompletionBlock = completion;
+    self.chatDisconnectedBlock = disconnectedBlock;
+    self.chatReconnectedBlock = reconnectedBlock;
+    [QBChat.instance connectWithUser:user completion:^(NSError * _Nullable error) {
+        
+    }];
+}
+
 
 //Video Chat
 -(void)createSeesionForClientwithUserName:(NSString*)userName withUserPassword:(NSString*)password
 {
     // Your app connects to QuickBlox server here.
-    QBSessionParameters *parameters = [QBSessionParameters new];
-    parameters.userLogin = userName;
-    parameters.userPassword = password;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    // QuickBlox session creation
+    QBUUser *user = [QBUUser user];
+    user.login = userName;
+    user.password = password;
     
     
-    [QBRequest createSessionWithExtendedParameters:parameters successBlock:^(QBResponse *response, QBASession *session)
-     {
-         [self loginToChat:session withPassword:password];
-         
-     } errorBlock:[self handleError]];
+    [QBRequest logInWithUserLogin:userName password:user.password  successBlock:^(QBResponse *response, QBUUser *user) {
+        // Success, do something
+    } errorBlock:^(QBResponse *response) {
+        // error handling
+        NSLog(@"error: %@", response.error);
+    }];
 }
 
 #pragma mark - Main view delegate
@@ -691,7 +717,6 @@ SliderViewController *SliderVC;
     if (user_Profile && [user_Profile.userType isEqualToString:@"user"])
     {
         [[QBChat instance] addDelegate:self];
-        // [QBRTCClient.instance addDelegate:self];
         
         MainVC = nil;
     }
@@ -703,71 +728,131 @@ SliderViewController *SliderVC;
 {
     return ^(QBResponse *response)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", "")
-                                                        message:[response.error description]
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"OK", "")
-                                              otherButtonTitles:nil];
-        [alert show];
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     };
 }
 
-- (void)loginToChat:(QBASession *)session withPassword:(NSString*)password
+- (void)loginToChat:(QBRTCSession *)session withPassword:(NSString*)password
 {
+    
     // Set QuickBlox Chat delegate
     [[QBChat instance] addDelegate:self];
-    //    [QBChat instance].delegate = self;
-    // [QBRTCClient.instance addDelegate:self];
     
     QBUUser *user = [QBUUser user];
-    user.ID = session.userID;
+    user.login =
     user.password = password;
     
-    // Login to QuickBlox Chat
-    [[QBChat instance] loginWithUser:user];
-}
-
-#pragma mark QBChatDelegate
-
-- (void)chatDidLogin
-{
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-}
-
-- (void)chatDidNotLogin
-{
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-}
-
-#pragma mark QBChatDelegate
-// VideoChat delegate
-
--(void) chatDidReceiveCallRequestFromUser:(NSUInteger)userID
-                            withSessionID:(NSString *)_sessionID
-                           conferenceType:(enum QBVideoChatConferenceType)conferenceType
-{
     
-    NSLog(@"chatDidReceiveCallRequestFromUser %lu", (unsigned long)userID);
+     //Login to QuickBlox Chat
+    
+    [QBChat.instance connectWithUser:user completion:^(NSError * _Nullable error) {
+        
+        NSLog(@"Error:123:%@",error);
+    }];
+}
+
+#pragma mark QBChatDelegate
+- (void)session:(QBRTCSession *)session initializedLocalMediaStream:(QBRTCMediaStream *)mediaStream {
+    
+    NSLog(@"Initialized local media stream %@", mediaStream);
+}
+
+
+#pragma mark QBChatDelegate
+- (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)userInfo {
+    
     //     save  opponent data
-    videoChatOpponentID = userID;
-    videoChatConferenceType = conferenceType;
-    sessionID = _sessionID;
+    MainViewController *MainVCc = [self.storyboard instantiateViewControllerWithIdentifier:@"MainVC"];
     
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"call"] isEqualToString:@"reject"])
-    {
-        //  [[NSUserDefaults standardUserDefaults] setValue:@"accept" forKey:@"call"];
+    if (MainVCc.session) {
+        
+        [session rejectCall:@{@"reject" : @"busy"}];
+        return;
     }
-    else
-    {
-        if (!MainVC)
-        {
-            MainVC = [self.storyboard instantiateViewControllerWithIdentifier:@"MainVC"];
-            MainVC.delegate = self;
-            [self.navigationController.tabBarController.navigationController pushViewController:MainVC animated:NO];
-            
-        }
+    
+    MainVCc.session = session;
+    NSArray *num = [NSArray arrayWithObject:session.opponentsIDs];
+    MainVCc.videoCallOppId = num[0][0];
+    
+    
+    [QBRTCSoundRouter.instance initialize];
+    [self.navigationController.tabBarController.navigationController pushViewController:MainVCc animated:NO];}
+
+- (void)sessionDidClose:(QBRTCSession *)session {
+    
+    if (session == self.session) {
+        
+        [QBRTCSoundRouter.instance deinitialize];
+        self.session = nil;
+        [QBRTCClient deinitializeRTC];
+
+    }
+    
+    
+}
+- (void)chatDidNotConnectWithError:(NSError *)error {
+    
+    if (self.chatConnectCompletionBlock) {
+        
+        self.chatConnectCompletionBlock(YES);
+        self.chatConnectCompletionBlock = nil;
     }
 }
 
+- (void)chatDidAccidentallyDisconnect {
+    
+    if (self.chatConnectCompletionBlock) {
+        
+        self.chatConnectCompletionBlock(YES);
+        self.chatConnectCompletionBlock = nil;
+    }
+    if (self.chatDisconnectedBlock) {
+        self.chatDisconnectedBlock();
+    }
+}
+
+- (void)chatDidFailWithStreamError:(NSError *)error {
+    
+    if (self.chatConnectCompletionBlock) {
+        
+        self.chatConnectCompletionBlock(YES);
+        self.chatConnectCompletionBlock = nil;
+    }
+}
+
+- (void)chatDidConnect {
+    
+    [[QBChat instance] sendPresence];
+    __weak __typeof(self)weakSelf = self;
+    
+    self.presenceTimer = [[QBRTCTimer alloc] initWithTimeInterval:kChatPresenceTimeInterval
+                                                           repeat:YES
+                                                            queue:dispatch_get_main_queue()
+                                                       completion:^{
+                                                           [[QBChat instance] sendPresence];
+                                                           
+                                                       } expiration:^{
+                                                           
+                                                           if ([QBChat.instance isConnected]) {
+                                                               [QBChat.instance disconnectWithCompletionBlock:nil];
+                                                           }
+                                                           
+                                                           [weakSelf.presenceTimer invalidate];
+                                                           weakSelf.presenceTimer = nil;
+                                                       }];
+    
+    self.presenceTimer.label = @"Chat presence timer";
+    
+    if (self.chatConnectCompletionBlock) {
+        
+        self.chatConnectCompletionBlock(NO);
+        self.chatConnectCompletionBlock = nil;
+    }
+}
+
+- (void)chatDidReconnect {
+    if (self.chatReconnectedBlock) {
+        self.chatReconnectedBlock();
+    }
+}
 @end

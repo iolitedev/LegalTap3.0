@@ -74,12 +74,12 @@
     //
     AVCaptureDeviceInput *captureVideoInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
     if(error){
-        QBDLogEx(@"deviceInputWithDevice Video error: %@", error);
+      //  QBDLogEx(@"deviceInputWithDevice Video error: %@", error);
     }else{
         if ([self.captureSession  canAddInput:captureVideoInput]){
             [self.captureSession addInput:captureVideoInput];
         }else{
-            QBDLogEx(@"cantAddInput Video");
+          //  QBDLogEx(@"cantAddInput Video");
         }
     }
     
@@ -96,7 +96,7 @@
     if([self.captureSession canAddOutput:videoCaptureOutput]){
         [self.captureSession addOutput:videoCaptureOutput];
     }else{
-        QBDLogEx(@"cantAddOutput");
+       // QBDLogEx(@"cantAddOutput");
     }
     
     

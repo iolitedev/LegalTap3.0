@@ -349,7 +349,7 @@
                 [self changeStateWithBool:NO];
                 [CommonHelper removeUserDetail];
                 [SharedSingleton sharedClient].user_Profile = nil;
-                [[QBChat instance] logout];
+              //  [[QBChat instance] logout];
                 [self.navigationController.tabBarController.navigationController popToRootViewControllerAnimated:YES];
                 break;
             }
@@ -452,7 +452,7 @@
                 //LOGOUT
                 [CommonHelper removeUserDetail];
                 [SharedSingleton sharedClient].user_Profile = nil;
-                [[QBChat instance] logout];
+             //   [[QBChat instance] logout];
                 [self.navigationController.tabBarController.navigationController popToRootViewControllerAnimated:YES];
                 break;
             }

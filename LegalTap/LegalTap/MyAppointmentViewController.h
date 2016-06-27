@@ -14,8 +14,9 @@
 #import "HomeViewController.h"
 #import "AppointmentNetworkHelper.h"
 #import "Appointment.h"
+#import <Quickblox/Quickblox.h>
 
-@interface MyAppointmentViewController : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate,CalenderViewDelegates,QBActionStatusDelegate,QBChatDelegate>
+@interface MyAppointmentViewController : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate,CalenderViewDelegates,QBChatDelegate>
 {
     IBOutlet UIView *view_PageControl;
     IBOutlet UIView *view_Calender;
@@ -23,7 +24,6 @@
     IBOutlet UIView *topViewOutlet;
     
     IBOutlet UISegmentedControl *pageControl_Calender;
-    
     
     IBOutlet UIView *view_PlaceForCalenderandList;
     
@@ -49,7 +49,7 @@
     
     //Video Calling
     NSUInteger videoChatOpponentID;
-    enum QBVideoChatConferenceType videoChatConferenceType;
+    enum QBRTCConferenceType videoChatConferenceType;
     NSString *sessionID;
     NSString *LawyerIdFromSettings;
     IBOutlet UIScrollView *CalendarScrellView;

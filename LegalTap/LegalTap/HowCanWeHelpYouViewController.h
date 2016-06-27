@@ -26,6 +26,8 @@
     NSMutableArray *array_ViewQuestions;
 }
 @property (strong, nonatomic) NSDate *appointmentDate;;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (strong, nonatomic) IBOutlet UIView *QuesButtonView;
 
 - (IBAction)LinkButtonClicked:(id)sender;
 

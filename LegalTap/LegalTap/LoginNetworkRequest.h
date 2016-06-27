@@ -12,7 +12,8 @@
 
 + (void)registerUserWithParameters:(NSDictionary*)parameters
             andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
-
++(void)AppTerminateByLawyer:(NSDictionary*)parameters
+     andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
 + (void)getQuickBoxTokenWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
 
 + (void)upLoadImageForRegisterOfUserWithImage:(UIImage*)image
@@ -20,6 +21,9 @@
 
 + (void)loginUserWithParameters:(NSDictionary*)parameters
          andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
+
++(void)AppTerminate:(NSDictionary*)parameters
+andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
 
 +(void)changePasswordWithParameters:(NSDictionary*)parameters
              andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
@@ -43,6 +47,12 @@ andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlo
         andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
 +(void)RequestToRandomCallToLawyer:(NSDictionary*)parameters
             andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
++(void)RequestToCallToUser:(NSDictionary*)parameters
+    andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
++(void)UserList:(NSDictionary*)parameters
+andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
++(void)RequestCallToUser:(NSDictionary*)parameters
+  andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
 +(void)CallResponseToClient:(NSDictionary*)parameters
      andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
 +(void)RequestToGetFavLawyersList:(NSDictionary*)parameters

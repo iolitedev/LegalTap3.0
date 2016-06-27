@@ -14,7 +14,7 @@
 #import "MeetUsViewController.h"
 #import "MainViewController.h"
 
-@interface HomeViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,QBActionStatusDelegate, QBChatDelegate,HomeLegalInquryTableViewCellDelegate,MainViewControllerDelegate,LegalPracticeTableViewCellDelegate>
+@interface HomeViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate, QBChatDelegate,HomeLegalInquryTableViewCellDelegate,MainViewControllerDelegate,LegalPracticeTableViewCellDelegate,QBRTCClientDelegate>
 {
     BOOL isListExpended;
     IBOutlet UITableView *tableView_ExpendedList;
@@ -22,7 +22,7 @@
     
     //Video Calling
     NSUInteger videoChatOpponentID;
-    enum QBVideoChatConferenceType videoChatConferenceType;
+    enum QBRTCConferenceType videoChatConferenceType;
     NSString *sessionID;
     
     MainViewController *MainVC;
@@ -53,7 +53,6 @@
 @property (strong, nonatomic) NSArray *array_LegalPracticeList;
 
 @property (strong, nonatomic) NSString *identifierPreviousVC;
-
 @property (strong, nonatomic) NSDate *appointmentDate;;
 @property (strong, nonatomic) UIWindow *window;
 @property  BOOL ShowSliderView;

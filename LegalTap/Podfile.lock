@@ -1,55 +1,68 @@
 PODS:
-  - AFNetworking (2.5.4):
-    - AFNetworking/NSURLConnection (= 2.5.4)
-    - AFNetworking/NSURLSession (= 2.5.4)
-    - AFNetworking/Reachability (= 2.5.4)
-    - AFNetworking/Security (= 2.5.4)
-    - AFNetworking/Serialization (= 2.5.4)
-    - AFNetworking/UIKit (= 2.5.4)
-  - AFNetworking/NSURLConnection (2.5.4):
+  - AFNetworking (2.6.3):
+    - AFNetworking/NSURLConnection (= 2.6.3)
+    - AFNetworking/NSURLSession (= 2.6.3)
+    - AFNetworking/Reachability (= 2.6.3)
+    - AFNetworking/Security (= 2.6.3)
+    - AFNetworking/Serialization (= 2.6.3)
+    - AFNetworking/UIKit (= 2.6.3)
+  - AFNetworking/NSURLConnection (2.6.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.4):
+  - AFNetworking/NSURLSession (2.6.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.4)
-  - AFNetworking/Security (2.5.4)
-  - AFNetworking/Serialization (2.5.4)
-  - AFNetworking/UIKit (2.5.4):
+  - AFNetworking/Reachability (2.6.3)
+  - AFNetworking/Security (2.6.3)
+  - AFNetworking/Serialization (2.6.3)
+  - AFNetworking/UIKit (2.6.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - IQKeyboardManager (3.3.1)
+  - Appsee (2.1.5)
+  - CardIO (5.2.2)
+  - IQKeyboardManager (3.3.4)
   - libextobjc/EXTScope (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
   - MBProgressHUD (0.9.1)
-  - Mixpanel (2.8.3):
-    - Mixpanel/Mixpanel (= 2.8.3)
-  - Mixpanel/Mixpanel (2.8.3)
+  - Mixpanel (2.9.1):
+    - Mixpanel/Mixpanel (= 2.9.1)
+  - Mixpanel/Mixpanel (2.9.1)
   - MTBlockAlertView (0.1.1)
-  - PayPal-iOS-SDK (2.11.1)
-  - QuickBlox (2.2)
+  - PayPal-iOS-SDK (2.12.7):
+    - PayPal-iOS-SDK/CardIO (= 2.12.7)
+    - PayPal-iOS-SDK/Core (= 2.12.7)
+  - PayPal-iOS-SDK/CardIO (2.12.7):
+    - CardIO (~> 5.2.2)
+  - PayPal-iOS-SDK/Core (2.12.7)
+  - QuickBlox (2.6.6)
+  - Quickblox-WebRTC (2.1.1)
 
 DEPENDENCIES:
-  - AFNetworking
+  - AFNetworking (~> 2.6.3)
+  - Appsee
   - IQKeyboardManager
   - libextobjc/EXTScope
   - MBProgressHUD
   - Mixpanel
   - MTBlockAlertView
   - PayPal-iOS-SDK
-  - QuickBlox (= 2.2)
+  - QuickBlox
+  - Quickblox-WebRTC
 
 SPEC CHECKSUMS:
-  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
-  IQKeyboardManager: 860a5b9df32cc1435a3e967a08ed87de3e59c12e
+  AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
+  Appsee: 77f144701aa1a53d854d319a46667561849e8cf5
+  CardIO: 2460db0f4936f3441b08d51e3904b436d77ec8fc
+  IQKeyboardManager: ac803e61e5b50efae6b3aeedd95a02c7c7d3b2b3
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
-  Mixpanel: fd52e097ae0d27295d0595b2261c60b94d191fda
+  Mixpanel: 5ca24b2a05f4c77fe9bcfe7671d681d0f3f8d76f
   MTBlockAlertView: 6a37bcf0fc677da69e0c3457be41bb1eb2415484
-  PayPal-iOS-SDK: 7d08f292d009db3ba9137a6dddd84fbe829f362d
-  QuickBlox: 35885d292672c3a6bd6e7da7d2c602e1a3c68c30
+  PayPal-iOS-SDK: 401d441844bd6f0e08905dcdd7795f44c5ecef6c
+  QuickBlox: 8a860f96d8d4694f9d35fbeac9bbb5bc09ed71ec
+  Quickblox-WebRTC: e0ce2b16a793d16e86cfacb5b3fdb08d944ac77b
 
-COCOAPODS: 0.36.4
+COCOAPODS: 0.39.0

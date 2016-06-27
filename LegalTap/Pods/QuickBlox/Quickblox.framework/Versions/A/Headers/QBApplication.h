@@ -4,6 +4,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Quickblox/QBNullability.h>
+#import <Quickblox/QBGeneric.h>
 
 /**
 * Class representing Application.
@@ -16,21 +18,20 @@
 *
 * @return Instance of QBApplication
 */
-+ (QBApplication *)sharedApplication;
++ (QB_NONNULL QBApplication *)sharedApplication;
 
 /**
-* Storing and accessing Application ID
-*/
-@property (nonatomic) NSUInteger applicationId;
+ *  Storing and accessing Application ID
+ *
+ *  @warning *Deprecated in QB iOS SDK 2.5.0:* Use [QBSettings applicationID], [QBSettings setApplicationID:] instead.
+ */
+@property (nonatomic) NSUInteger applicationId DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.5. Use [QBSettings applicationID], [QBSettings setApplicationID:] instead");
 
 /**
-* Storing and accessing Rest API Version
-*/
-@property (nonatomic, copy) NSString *restAPIVersion;
-
-/**
-* Production or development environment for push notifications
-*/
-@property (nonatomic, assign) BOOL productionEnvironmentForPushesEnabled;
+ *  Storing and accessing Rest API Version
+ *
+ *  @warning *Deprecated in QB iOS SDK 2.5.0:* Use [QBSettings restAPIVersion] instead.
+ */
+@property (nonatomic, readonly, QB_NONNULL_PROPERTY) NSString *restAPIVersion DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.5. Use [QBSettings restAPIVersion] instead");
 
 @end

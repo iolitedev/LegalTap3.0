@@ -11,6 +11,7 @@
 @class QBResponse;
 @class QBUUser;
 @class QBGeneralResponsePage;
+@class QBUpdateUserParameters;
 
 @interface QBRequest (QBUsers)
 
@@ -21,10 +22,11 @@
 
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithSuccessBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-						  errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithSuccessBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                                     errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 /**
  Retrieve all Users for current account (with extended set of pagination parameters)
@@ -32,24 +34,27 @@
  @param page Pagination parameters
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersForPage:(QBGeneralResponsePage *)page successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-				 errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersForPage:(QB_NULLABLE QBGeneralResponsePage *)page
+                          successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                            errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 /**
  Retrieve all Users for current account with extended request
  
  @param extendedRequest Dictionary with extended request
- @param page Pagination parameters
+ @param responsePage Pagination parameters
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithExtendedRequest:(NSDictionary *)extendedRequest
-                                   page:(QBGeneralResponsePage *)responsePage
-                           successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-                             errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithExtendedRequest:(QB_NONNULL NSDictionary QB_GENERIC(NSString *, NSString *) *)extendedRequest
+                                              page:(QB_NULLABLE QBGeneralResponsePage *)responsePage
+                                      successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                                        errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get User with ID
 
@@ -59,10 +64,11 @@
  @param userID ID of QBUUser to be retrieved.
  @param successBlock Block with response and user instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)userWithID:(NSUInteger)userID successBlock:(void (^)(QBResponse *response, QBUUser *user))successBlock
-			   errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)userWithID:(NSUInteger)userID successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBUUser * QB_NULLABLE_S user))successBlock
+                          errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get Users with IDs
 
@@ -73,11 +79,13 @@
  @param page Pagination parameters
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithIDs:(NSArray *)IDs page:(QBGeneralResponsePage *)page
-			   successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-				 errorBlock:(void (^)(QBResponse *))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithIDs:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)IDs
+                                  page:(QB_NULLABLE QBGeneralResponsePage *)page
+                          successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                            errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get User with login
 
@@ -87,10 +95,12 @@
  @param userLogin Login of user to be retrieved.
  @param successBlock Block with response and user instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)userWithLogin:(NSString *)userLogin successBlock:(void (^)(QBResponse *response, QBUUser *user))successBlock
-				  errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)userWithLogin:(QB_NONNULL NSString *)userLogin
+                           successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBUUser * QB_NULLABLE_S user))successBlock
+                             errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get Users with Logins
 
@@ -100,10 +110,12 @@
  @param logins Logins of users which you want to retrieve
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithLogins:(NSArray *)logins successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-					errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithLogins:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)logins
+                             successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                               errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 /**
  Retrieve users with logins (with extended set of pagination parameters)
 
@@ -111,11 +123,13 @@
  @param page Pagination parameters
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithLogins:(NSArray *)logins page:(QBGeneralResponsePage *)page
-				  successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-					errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithLogins:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)logins
+                                     page:(QB_NULLABLE QBGeneralResponsePage *)page
+                             successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                               errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get Users with full name
 
@@ -125,10 +139,12 @@
  @param userFullName Full name of users to be retrieved.
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithFullName:(NSString *)userFullName successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-					  errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithFullName:(QB_NONNULL NSString *)userFullName
+                               successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                                 errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 /**
  Retrieve Users by full name for current account (with extended set of pagination parameters)
 
@@ -136,11 +152,13 @@
  @param page Pagination parameters
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithFullName:(NSString *)userFullName page:(QBGeneralResponsePage *)page
-					successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-					  errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithFullName:(QB_NONNULL NSString *)userFullName
+                                       page:(QB_NULLABLE QBGeneralResponsePage *)page
+                               successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                                 errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get Users with tags
 
@@ -150,10 +168,12 @@
  @param tags Tags of users to be retrieved.
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithTags:(NSArray *)tags successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-				  errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithTags:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)tags
+                           successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                             errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 /**
  Retrieve Users by tags for current account (with extended set of pagination parameters)
 
@@ -161,11 +181,13 @@
  @param page Pagination parameters
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithTags:(NSArray *)tags page:(QBGeneralResponsePage *)page
-				successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-				  errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithTags:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)tags
+                                   page:(QB_NULLABLE QBGeneralResponsePage *)page
+                           successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                             errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 #pragma mark - Get Users with phone numbers
 
 /**
@@ -176,8 +198,9 @@
  @param errorBlock Block with response instance if request failed
  @return An instance of QBRequest. Use this instance to cancel the operation.
  */
-+ (QBRequest *)usersWithPhoneNumbers:(NSArray *)phoneNumbers successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-						  errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithPhoneNumbers:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)phoneNumbers
+                                   successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                                     errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 /**
  Retrieve users with phone numbers (with extended set of pagination parameters)
 
@@ -185,11 +208,13 @@
  @param page Pagination parameters
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithPhoneNumbers:(NSArray *)phoneNumbers page:(QBGeneralResponsePage *)page
-						successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-						  errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithPhoneNumbers:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)phoneNumbers
+                                           page:(QB_NULLABLE QBGeneralResponsePage *)page
+                                   successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                                     errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get User with Facebook ID
 
@@ -199,184 +224,222 @@
  @param userFacebookID Facebook ID of user to be retrieved.
  @param successBlock Block with response and user instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)userWithFacebookID:(NSString *)userFacebookID successBlock:(void (^)(QBResponse *response, QBUUser *user))successBlock
-					   errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)userWithFacebookID:(QB_NONNULL NSString *)userFacebookID
+                                successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBUUser * QB_NULLABLE_S user))successBlock
+                                  errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get Users Facebook IDs
 
 /**
  Retrieve users with facebook ids (max 10 users)
-
- Type of Result - QBUUserPagedResult
-
+ 
  @param facebookIDs Facebook IDs of users which you want to retrieve
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithFacebookIDs:(NSArray *)facebookIDs successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-						 errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithFacebookIDs:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)facebookIDs
+                                  successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                                    errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 /**
  Retrieve users with facebook ids (with extended set of pagination parameters)
-
- Type of Result - QBUUserPagedResult
-
+ 
  @param facebookIDs Facebook IDs of users which you want to retrieve
  @param page Pagination parameters
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithFacebookIDs:(NSArray *)facebookIDs page:(QBGeneralResponsePage *)page
-					   successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-						 errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithFacebookIDs:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)facebookIDs
+                                          page:(QB_NULLABLE QBGeneralResponsePage *)page
+                                  successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                                    errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get User with Twitter ID
 
 /**
  Retrieve User by Twitter ID
-
+ 
  @param userTwitterID Twitter ID of user to be retrieved.
  @param successBlock Block with response and user instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)userWithTwitterID:(NSString *)userTwitterID successBlock:(void (^)(QBResponse *response, QBUUser *user))successBlock
-					  errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)userWithTwitterID:(QB_NONNULL NSString *)userTwitterID
+                               successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBUUser * QB_NULLABLE_S user))successBlock
+                                 errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get Users Twitter IDs
 
 /**
  Retrieve users with twitter ids (max 10 users)
-
+ 
  @param twitterIDs Twitter IDs of users which you want to retrieve
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithTwitterIDs:(NSArray *)twitterIDs successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-						errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithTwitterIDs:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)twitterIDs
+                                 successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                                   errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 /**
  Retrieve users with twitter ids (with extended set of pagination parameters)
-
+ 
  @param twitterIDs Twitter IDs of users which you want to retrieve
  @param page Pagination parameters
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithTwitterIDs:(NSArray *)twitterIDs page:(QBGeneralResponsePage *)page
-					  successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-						errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithTwitterIDs:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)twitterIDs
+                                         page:(QB_NULLABLE QBGeneralResponsePage *)page
+                                 successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                                   errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get User with email
 
 /**
  Retrieve User by Email
-
+ 
  @param userEmail Email of user to be retrieved.
  @param successBlock Block with response and user instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)userWithEmail:(NSString *)userEmail successBlock:(void (^)(QBResponse *response, QBUUser *user))successBlock
-				  errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)userWithEmail:(QB_NONNULL NSString *)userEmail
+                           successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBUUser * QB_NULLABLE_S user))successBlock
+                             errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get Users with emails
 
 /**
  Retrieve users with email (max 10 users)
-
+ 
  @param emails Emails of users which you want to retrieve
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithEmails:(NSArray *)emails successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-					errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithEmails:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)emails
+                             successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                               errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 /**
  Retrieve users with email (with extended set of pagination parameters)
-
+ 
  @param emails Emails of users which you want to retrieve
  @param page Pagination parameters
  @param successBlock Block with response, page and users instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)usersWithEmails:(NSArray *)emails page:(QBGeneralResponsePage *)page
-				  successBlock:(void (^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users))successBlock
-					errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)usersWithEmails:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)emails
+                                     page:(QB_NULLABLE QBGeneralResponsePage *)page
+                             successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBGeneralResponsePage * QB_NULLABLE_S page, NSArray QB_GENERIC(QBUUser *) * QB_NULLABLE_S users))successBlock
+                               errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Get User with external ID
 
 /**
  Retrieve User by External identifier
-
+ 
  @param userExternalID External ID of user to be retrieved.
  @param successBlock Block with response and user instances if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)userWithExternalID:(NSUInteger)userExternalID successBlock:(void (^)(QBResponse *response, QBUUser *user))successBlock
-					   errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)userWithExternalID:(NSUInteger)userExternalID
+                                successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBUUser * QB_NULLABLE_S user))successBlock
+                                  errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 #pragma mark - Update User
 
 /**
- Update User
-
- Type of Result - QBUUserResult
-
- @param user An instance of QBUUser, describing the user to be edited.
- @param successBlock Block with response and user instances if request succeded
- @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ Update current session user.
+ 
+ @param parameters   User parameters that could be updated.
+ @param successBlock Block with response and user instances if request succeded.
+ @param errorBlock   Block with response instance if request failed.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)updateUser:(QBUUser *)user successBlock:(void (^)(QBResponse *response, QBUUser *user))successBlock
-			   errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)updateCurrentUser:(QB_NONNULL QBUpdateUserParameters *)parameters
+                               successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response, QBUUser * QB_NULLABLE_S user))successBlock
+                                 errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
-#pragma mark - Delete User
+#pragma mark - Delete Current User
+
 
 /**
- Delete User by identifier
+ Delete Current User
+ 
+ @note You should login firstly in order to delete current user
+ 
+ @param successBlock Block with response instance if request succeded
+ @param errorBlock Block with response instance if request failed
+ 
+ @return An instance of QBRequest for cancel operation mainly.
+ */
++ (QB_NONNULL QBRequest *)deleteCurrentUserWithSuccessBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))successBlock
+												 errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
- Type of Result - QBUUserResult
-
+/**
+ Delete Current User by identifier
+ 
  @param userID ID of user to be removed.
  @param successBlock Block with response instance if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @warning *Deprecated in QB iOS SDK 2.6.2:* Use '+[QBRequest deleteCurrentUser:successBlock:errorBlock:] instead.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)deleteUserWithID:(NSUInteger)userID successBlock:(void (^)(QBResponse *response))successBlock
-					 errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)deleteUserWithID:(NSUInteger)userID
+                              successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))successBlock
+                                errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock DEPRECATED_MSG_ATTRIBUTE("use '+[QBRequest deleteCurrentUser:successBlock:errorBlock:]' instead.");
 
 #pragma mark - Delete User with external ID
 
 /**
- Delete User by external identifier
-
+ Delete Current User by external identifier
+ 
  @param userExternalID External ID of user to be removed.
  @param successBlock Block with response instance if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @warning *Deprecated in QB iOS SDK 2.6.2:* Use '+[QBRequest deleteCurrentUser:successBlock:errorBlock:] instead.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)deleteUserWithExternalID:(NSUInteger)userExternalID successBlock:(void (^)(QBResponse *response))successBlock
-							 errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)deleteUserWithExternalID:(NSUInteger)userExternalID
+                                      successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))successBlock
+                                        errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock DEPRECATED_MSG_ATTRIBUTE("use '+[QBRequest deleteCurrentUser:successBlock:errorBlock:]' instead.");
 
 #pragma mark - Reset password
 
 /**
- Reset user's password. User with this email will retrieve email instruction for reset password.
-0
+ Reset user's password. User with this email will retrieve an email instruction for reset password.
+ 
  @param email User's email
  @param successBlock Block with response instance if request succeded
  @param errorBlock Block with response instance if request failed
- @return An instance of QBRequest. Use this instance to cancel the operation.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)resetUserPasswordWithEmail:(NSString *)email successBlock:(void (^)(QBResponse *response))successBlock
-							   errorBlock:(void (^)(QBResponse *response))errorBlock;
++ (QB_NONNULL QBRequest *)resetUserPasswordWithEmail:(QB_NONNULL NSString *)email
+                                        successBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))successBlock
+                                          errorBlock:(QB_NULLABLE void (^)(QBResponse * QB_NONNULL_S response))errorBlock;
 
 @end

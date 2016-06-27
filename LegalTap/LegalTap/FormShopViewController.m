@@ -57,6 +57,12 @@
     [self getFormShop_Categories];
     [self getBundleCategory];
     
+    if (IS_IPHONE_4_OR_LESS)
+    {
+        _tableView_MainFormShop.frame = CGRectMake(0, 200, 320, 250);
+        _tableView_MainFormShop.scrollEnabled = YES;
+    }
+    
 }
 - (void)backBarButton
 {
@@ -135,7 +141,7 @@
                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                      message:errorMsg
                                                                     delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                     [alert show];
+//                     [alert show];
                  }
              }
          }];
@@ -169,7 +175,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
      }];
@@ -227,6 +233,8 @@
 {
     objView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 35)];
     objView.center = CGPointMake(self.view.center.x, self.view.center.y);
+    objView.backgroundColor = [UIColor whiteColor];
+
     UILabel *objLbl = [[UILabel alloc]initWithFrame:CGRectMake(15, 9, 200, 24)];
     objLbl.textColor=[UIColor colorWithRed:121/255.0f green:121/255.0f blue:121/255.0f alpha:1.0];
     [objLbl setFont:[UIFont fontWithName:@"OpenSans" size:17]];
@@ -258,6 +266,7 @@
         objLbl.text = @"Form Categories";
     }
     [objView addSubview:objLbl];
+    
     return objView;
 }
 

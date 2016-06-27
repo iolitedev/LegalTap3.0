@@ -8,8 +8,9 @@
 
 #import "PaypalViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#define kPayPalEnvironment PayPalEnvironmentProduction
 
-#define kPayPalEnvironment PayPalEnvironmentSandbox
+//#define kPayPalEnvironment PayPalEnvironmentSandbox
 
 
 @interface PaypalViewController ()

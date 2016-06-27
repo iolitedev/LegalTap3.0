@@ -57,7 +57,7 @@
     
     if (IS_IPHONE_4_OR_LESS)
     {
-        BgScroll.contentSize = CGSizeMake(300, 430);
+        BgScroll.contentSize = CGSizeMake(300, 450);
     }
 
 }
@@ -157,6 +157,7 @@
     ScrollView.hidden=YES;
   
 }
+
 
 - (IBAction)AgreeBtn1:(id)sender
 {
@@ -395,15 +396,16 @@
                                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                                    message:errorMsg
                                                                                   delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                                   [alert show];
+//                                      [alert show];
                                }
                            }
                            else
                            {
                                //Error
+                               NSString *errorMsg = [responseObject valueForKey:@"message"];
                                NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,error.description);
-                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                               message:@"Try Again.."
+                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                               message:errorMsg
                                                                               delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                                [alert show];
 
@@ -431,11 +433,19 @@
          }
          else
          {
-             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
-                                                             message:@"Sign-Up Failed Try again."
-                                                            delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-             [alert show];
+             
+             if ([error.localizedDescription isEqualToString:@"The request timed out."]) {
+                 [self btnClicked_SignUp:sender];
+             }else{
+                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                                                 message:@"Sign-Up Failed Try again."
+                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                 [alert show];
+
+             }
+             
+             
          }
      }];
 }

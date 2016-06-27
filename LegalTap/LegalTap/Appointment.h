@@ -10,7 +10,10 @@
 
 @interface Appointment : NSObject
 
+@property (nonatomic)BOOL hide;
 @property (strong, nonatomic) NSString *status;
+@property (strong, nonatomic) NSString *callStatus;
+@property (strong, nonatomic) NSString *appointmentId;
 @property (strong, nonatomic) NSDate *dateTime;
 @property (strong, nonatomic) NSString *lawyerId;
 @property (strong, nonatomic) NSString *lawyerImage;

@@ -302,7 +302,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
          else
@@ -400,7 +400,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
          else

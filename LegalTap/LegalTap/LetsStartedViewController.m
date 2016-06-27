@@ -82,13 +82,7 @@
                     lbl_HeaderTitle.textAlignment = NSTextAlignmentCenter;
                     
                     lbl_HeaderTitle.font = [UIFont boldSystemFontOfSize:14.0];
-                    
-                    //                    UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRect:lbl_HeaderTitle.bounds];
-                    //                    lbl_HeaderTitle.layer.masksToBounds = NO;
-                    //                    lbl_HeaderTitle.layer.shadowColor = [UIColor blackColor].CGColor;
-                    //                    lbl_HeaderTitle.layer.shadowOffset = CGSizeMake(0.0f, 3.0f);
-                    //                    lbl_HeaderTitle.layer.shadowOpacity = 0.15f;
-                    //                    lbl_HeaderTitle.layer.shadowPath = shadowPath.CGPath;
+ 
                     
                 }
                 [headerView addSubview:lbl_HeaderTitle];
@@ -266,7 +260,6 @@
 {
     
 }
-
 
 
 @end

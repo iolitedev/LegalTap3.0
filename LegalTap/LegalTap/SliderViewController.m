@@ -37,6 +37,26 @@
     EmailLbl.font = [UIFont fontWithName:@"OpenSans-Light" size:12];
     AddressLbl.font = [UIFont fontWithName:@"OpenSans-Light" size:12];
     cardInfoLbl.font = [UIFont fontWithName:@"OpenSans-Light" size:12];
+    
+    if (IS_IPHONE_4_OR_LESS)
+    {
+        _scrollView.contentSize = CGSizeMake(200,600);
+    }
+    else if (IS_IPHONE_5)
+    {
+        _scrollView.contentSize = CGSizeMake(200,600);
+    }
+    else if (IS_IPHONE_6)
+    {
+        _scrollView.contentSize = CGSizeMake(200,620);
+        
+    }
+    else{
+        _scrollView.contentSize = CGSizeMake(200,620);
+    }
+
+    
+    
 
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -76,7 +96,7 @@
     //LOGOUT
     [CommonHelper removeUserDetail];
     [SharedSingleton sharedClient].user_Profile = nil;
-    [[QBChat instance] logout];
+   // [[QBChat instance] logout];
     [self.navigationController.tabBarController.navigationController popToRootViewControllerAnimated:YES];
     [self HideSliderHomeView];
 }

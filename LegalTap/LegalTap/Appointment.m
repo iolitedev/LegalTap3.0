@@ -38,8 +38,9 @@
             dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
             dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
             self.dateTime = [dateFormatter dateFromString:strDate];
+            NSLog(@"dattteeee :%@",self.dateTime);
         }
-        
+        self.appointmentId = [CommonHelper replaceNullToBlankString:[dict valueForKey:@"appointmentId"]];
         self.lawyerId = [CommonHelper replaceNullToBlankString:[dict valueForKey:@"lawyerId"]];
         self.lawyerImage = [CommonHelper replaceNullToBlankString:[dict valueForKey:@"lawyerImage"]];
 
@@ -58,6 +59,7 @@
         self.userQuickBloxName = [CommonHelper replaceNullToBlankString:[dict valueForKey:@"userquickBloxUserName"]];
         
         self.status = [CommonHelper replaceNullToBlankString:[dict valueForKey:@"status"]];
+        self.callStatus = [CommonHelper replaceNullToBlankString:[dict valueForKey:@"callStatus"]];
 
     }
     return self;

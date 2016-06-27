@@ -17,7 +17,9 @@
 - (void)viewDidLoad
 {
     self.navigationController.navigationBarHidden=NO;
-    
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"New_BackButton_blue"] style:UIBarButtonItemStylePlain target:self action:@selector(backBarButton)];
+    [backButton setTintColor:[UIColor colorWithRed:0/255.0f green:133/255.0f blue:198/255.0f alpha:1.0f]];
+    [self.navigationItem setLeftBarButtonItem:backButton];
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
@@ -70,6 +72,11 @@
 
     
     [self showUserDetail];
+}
+- (void)backBarButton
+{
+    //    [CommonHelper animateToHomeTabWithTabBarController:self.navigationController.tabBarController];
+    [self.navigationController popViewControllerAnimated:TRUE];
 }
 
 - (void)didReceiveMemoryWarning

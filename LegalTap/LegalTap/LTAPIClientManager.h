@@ -8,8 +8,8 @@
 
 #import "AFHTTPSessionManager.h"
 
-static NSString * const CSBaseURLStringWithoutAPi = @"https://legaltap.co/";
-static NSString * const CSAPIBaseURLString = @"https://legaltap.co/apis/";
+static NSString * const CSBaseURLStringWithoutAPi = @"http://app.legaltap.co/";
+static NSString * const CSAPIBaseURLString = @"http://app.legaltap.co/apis/";
 
 //static NSString * const CSBaseURLStringWithoutAPi = @"http://dev.legaltap.co.207-244-69-7.creativehaus.com";
 //static NSString * const CSAPIBaseURLString = @"http://dev.legaltap.co.207-244-69-7.creativehaus.com/apis/";

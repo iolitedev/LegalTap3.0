@@ -439,8 +439,72 @@ andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlo
      }];
 }
 
++(void)AppTerminate:(NSDictionary*)parameters
+andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
+{
+    NSString *sorce = @"lawyerNotification.php";
+    [LTAPIClientManager addContentTypeWithOutMultiPart];
+    [[LTAPIClientManager sharedClient] POST:sorce parameters:parameters success:^(NSURLSessionDataTask * __unused task, id JSON)
+     {
+         NSDictionary *scoresData;
+         NSError *error;
+         NSDictionary *json = [NSDictionary dictionaryWithDictionary:JSON];
+         
+         if (!json)
+         {
+             NSLog(@"Error parsing JSON:ProfileUser");
+             error = [ErrorHelper parsingErrorWithDescription:@"JSON Parsing Error"];
+         }
+         else
+         {
+             scoresData  = [NSDictionary dictionaryWithDictionary:json];
+         }
+         completionBlock(error, scoresData);
+     }
+                                    failure:^(NSURLSessionDataTask *__unused task, NSError *error)
+     {
+         NSLog(@"Request Code: %@", task.response.debugDescription);
+         NSLog(@"Request URL: %@", [[task.originalRequest URL] absoluteString]);
+         NSLog(@"Request Body: %@", [[NSString alloc] initWithData:task.originalRequest.HTTPBody encoding:NSUTF8StringEncoding]);
+         NSLog(@"Error: %@", error.description);
+         completionBlock(error, nil);
+     }];
+}
++(void)AppTerminateByLawyer:(NSDictionary*)parameters
+     andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
+{
+    NSString *sorce = @"appTerminatedNotification.php";
+    [LTAPIClientManager addContentTypeWithOutMultiPart];
+    [[LTAPIClientManager sharedClient] POST:sorce parameters:parameters success:^(NSURLSessionDataTask * __unused task, id JSON)
+     {
+         NSDictionary *scoresData;
+         NSError *error;
+         NSDictionary *json = [NSDictionary dictionaryWithDictionary:JSON];
+         
+         if (!json)
+         {
+             NSLog(@"Error parsing JSON:ProfileUser");
+             error = [ErrorHelper parsingErrorWithDescription:@"JSON Parsing Error"];
+         }
+         else
+         {
+             scoresData  = [NSDictionary dictionaryWithDictionary:json];
+         }
+         completionBlock(error, scoresData);
+     }
+                                    failure:^(NSURLSessionDataTask *__unused task, NSError *error)
+     {
+         NSLog(@"Request Code: %@", task.response.debugDescription);
+         NSLog(@"Request URL: %@", [[task.originalRequest URL] absoluteString]);
+         NSLog(@"Request Body: %@", [[NSString alloc] initWithData:task.originalRequest.HTTPBody encoding:NSUTF8StringEncoding]);
+         NSLog(@"Error: %@", error.description);
+         completionBlock(error, nil);
+     }];
+}
+
+
 +(void)RequestToRandomCallToLawyer:(NSDictionary*)parameters
-              andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
+            andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
 {
     NSString *sorce = @"lawyerCall.php";
     [LTAPIClientManager addContentTypeWithOutMultiPart];
@@ -470,6 +534,71 @@ andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlo
          completionBlock(error, nil);
      }];
 }
+
+
++(void)RequestToCallToUser:(NSDictionary*)parameters
+              andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
+{
+    NSString *sorce = @"userCall.php";
+    [LTAPIClientManager addContentTypeWithOutMultiPart];
+    [[LTAPIClientManager sharedClient] POST:sorce parameters:parameters success:^(NSURLSessionDataTask * __unused task, id JSON)
+     {
+         NSDictionary *scoresData;
+         NSError *error;
+         NSDictionary *json = [NSDictionary dictionaryWithDictionary:JSON];
+         
+         if (!json)
+         {
+             NSLog(@"Error parsing JSON:ProfileUser");
+             error = [ErrorHelper parsingErrorWithDescription:@"JSON Parsing Error"];
+         }
+         else
+         {
+             scoresData  = [NSDictionary dictionaryWithDictionary:json];
+         }
+         completionBlock(error, scoresData);
+     }
+                                    failure:^(NSURLSessionDataTask *__unused task, NSError *error)
+     {
+         NSLog(@"Request Code: %@", task.response.debugDescription);
+         NSLog(@"Request URL: %@", [[task.originalRequest URL] absoluteString]);
+         NSLog(@"Request Body: %@", [[NSString alloc] initWithData:task.originalRequest.HTTPBody encoding:NSUTF8StringEncoding]);
+         NSLog(@"Error: %@", error.description);
+         completionBlock(error, nil);
+     }];
+}
++(void)RequestCallToUser:(NSDictionary*)parameters
+            andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
+{
+    NSString *sorce = @"clientCall.php";
+    [LTAPIClientManager addContentTypeWithOutMultiPart];
+    [[LTAPIClientManager sharedClient] POST:sorce parameters:parameters success:^(NSURLSessionDataTask * __unused task, id JSON)
+     {
+         NSDictionary *scoresData;
+         NSError *error;
+         NSDictionary *json = [NSDictionary dictionaryWithDictionary:JSON];
+         
+         if (!json)
+         {
+             NSLog(@"Error parsing JSON:ProfileUser");
+             error = [ErrorHelper parsingErrorWithDescription:@"JSON Parsing Error"];
+         }
+         else
+         {
+             scoresData  = [NSDictionary dictionaryWithDictionary:json];
+         }
+         completionBlock(error, scoresData);
+     }
+                                    failure:^(NSURLSessionDataTask *__unused task, NSError *error)
+     {
+         NSLog(@"Request Code: %@", task.response.debugDescription);
+         NSLog(@"Request URL: %@", [[task.originalRequest URL] absoluteString]);
+         NSLog(@"Request Body: %@", [[NSString alloc] initWithData:task.originalRequest.HTTPBody encoding:NSUTF8StringEncoding]);
+         NSLog(@"Error: %@", error.description);
+         completionBlock(error, nil);
+     }];
+}
+
 +(void)CallResponseToClient:(NSDictionary*)parameters
             andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
 {
@@ -501,6 +630,39 @@ andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlo
          completionBlock(error, nil);
      }];
 }
++(void)UserList:(NSDictionary*)parameters
+     andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
+{
+    NSString *sorce = @"userList.php";
+    [LTAPIClientManager addContentTypeWithOutMultiPart];
+    [[LTAPIClientManager sharedClient] POST:sorce parameters:parameters success:^(NSURLSessionDataTask * __unused task, id JSON)
+     {
+         NSDictionary *scoresData;
+         NSError *error;
+         NSDictionary *json = [NSDictionary dictionaryWithDictionary:JSON];
+         
+         if (!json)
+         {
+             NSLog(@"Error parsing JSON:ProfileUser");
+             error = [ErrorHelper parsingErrorWithDescription:@"JSON Parsing Error"];
+         }
+         else
+         {
+             scoresData  = [NSDictionary dictionaryWithDictionary:json];
+         }
+         completionBlock(error, scoresData);
+     }
+                                    failure:^(NSURLSessionDataTask *__unused task, NSError *error)
+     {
+         NSLog(@"Request Code: %@", task.response.debugDescription);
+         NSLog(@"Request URL: %@", [[task.originalRequest URL] absoluteString]);
+         NSLog(@"Request Body: %@", [[NSString alloc] initWithData:task.originalRequest.HTTPBody encoding:NSUTF8StringEncoding]);
+         NSLog(@"Error: %@", error.description);
+         completionBlock(error, nil);
+     }];
+}
+
+
 +(void)RequestToGetFavLawyersList:(NSDictionary*)parameters
      andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
 {
@@ -695,6 +857,7 @@ andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlo
     [LTAPIClientManager addContentTypeWithOutMultiPart];
     [[LTAPIClientManager sharedClient] POST:sorce parameters:parameters success:^(NSURLSessionDataTask * __unused task, id JSON)
      {
+         
          NSDictionary *scoresData;
          NSError *error;
          NSDictionary *json = [NSDictionary dictionaryWithDictionary:JSON];

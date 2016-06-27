@@ -16,6 +16,7 @@
 @synthesize LawyerQuickBloxId;
 - (void)viewDidLoad
 {
+    
     RatingValue=@"3";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -24,8 +25,82 @@
     DescBg.layer.borderWidth=2.0;
     DescBg.layer.cornerRadius=5.0;
     DescBg.layer.borderColor=[UIColor lightGrayColor].CGColor;
+    _arrayList = [[NSMutableArray alloc] init];
 //    [self GetLawyerDetailWithQuickBloxId:@"2603666"];
-    [self GetLawyerDetailWithQuickBloxId:LawyerQuickBloxId];
+    UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
+    NSString *ClientId=user_Profile.userId;
+    [self GetFavoriteLawyers:ClientId];
+    
+    if (IS_IPHONE_4_OR_LESS)
+    {
+        _scrollView.contentSize = CGSizeMake(320, 520);
+    }
+}
+-(void)GetFavoriteLawyers:(NSString*)UserId
+{
+    [_arrayList removeAllObjects];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [SignInAndSignUpHelper GetFavoriteLawyersList:UserId andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+     {
+         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+         if (!error)
+         {
+             NSString *strSuccess = [responseObject valueForKey:@"success"];
+             if (responseObject.count && strSuccess.integerValue)
+             {
+                 NSArray *detailUser = [responseObject objectForKey:@"data"];
+                 if (detailUser && detailUser.count)
+                 {
+                     NSMutableArray *arr = [[NSMutableArray alloc] init];
+                     arr = [detailUser mutableCopy];
+                     for (NSDictionary *dict in arr) {
+                         
+                         NSString *str = [dict valueForKey:@"lawyerId"];
+                         [_arrayList addObject:str];
+                     }
+                     
+                     NSLog(@"%@::::%@", _arrayList,[SharedSingleton sharedClient].user_Profile.lawyerId);
+//                      UIImage *selectedImage = [UIImage imageNamed:@"Heart_On"];
+                     if ([_arrayList containsObject:[SharedSingleton sharedClient].user_Profile.lawyerId] == YES) {
+                         
+                         
+                         UIImage *selectedImage = [UIImage imageNamed:@"Heart_On"];
+                         UIImage *highlightedImage = [UIImage imageNamed:@"Heart_Off"];
+                         [_favLawyer setImage:selectedImage forState:UIControlStateNormal];
+                         [self btnClickedFev:_favLawyer];
+
+                     }
+                     
+                 }
+                 else
+                 {
+                    
+                 }
+             }
+             else
+             {
+                 //Empty Response
+                 NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,@"Empty Response");
+                 
+                 NSString *errorMsg = [responseObject valueForKey:@"message"];
+                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                                 message:errorMsg
+                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//                 [alert show];
+                 //[self.navigationController popViewControllerAnimated:YES];
+             }
+         }
+         else
+         {
+             //Error
+             NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,error.description);
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                             message:@"Try Again.."
+                                                            delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//             [alert show];
+         }
+         [self GetLawyerDetailWithQuickBloxId:[SharedSingleton sharedClient].user_Profile.quickBloxLawyer_Id];
+     }];
 }
 
 -(void)GetLawyerDetailWithQuickBloxId:(NSString *)lawyerQuickBloxId
@@ -62,7 +137,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
          else
@@ -72,7 +147,7 @@
              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                              message:@"Try Again.."
                                                             delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-             [alert show];
+//             [alert show];
          }
      }];
 }
@@ -115,12 +190,13 @@
 {
     UIImage *selectedImage = [UIImage imageNamed:@"Heart_On"];
     UIImage *highlightedImage = [UIImage imageNamed:@"Heart_Off"];
-    
+  
     if (sender.tag == 1)
     {
         [sender setImage:highlightedImage forState:UIControlStateNormal];
         [sender setImage:selectedImage forState:UIControlStateHighlighted];
         sender.tag = 0;
+        
         [self RemoveLawyerToFavorite];
         
     }
@@ -132,7 +208,7 @@
         [self MakeLawyerToFavorite];
 
     }
-}
+   }
 
 -(void)blankStars
 {
@@ -165,7 +241,7 @@
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
     NSString *UserId=user_Profile.userId;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [SignInAndSignUpHelper FeedBackToLawyer:UserId withLawyerId:LawyerId withFeedback:textView_Info.text withRating:RatingValue andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+    [SignInAndSignUpHelper FeedBackToLawyer:UserId withLawyerId:[SharedSingleton sharedClient].user_Profile.lawyerId  withFeedback:textView_Info.text withRating:RatingValue andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
          [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
          if (!error)
@@ -244,18 +320,19 @@
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
     NSString *UserId=user_Profile.userId;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [SignInAndSignUpHelper MakeLawyerToFavorite:UserId withLawyerId:LawyerId withFavorite:@"1" andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+    [SignInAndSignUpHelper MakeLawyerToFavorite:UserId withLawyerId:[SharedSingleton sharedClient].user_Profile.lawyerId withFavorite:@"1" andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
          [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
          if (!error)
          {
+             
              NSString *strSuccess = [responseObject valueForKey:@"success"];
              if (responseObject.count && strSuccess.integerValue)
              {
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
-                     UIAlertView *alert=[[UIAlertView alloc] initWithTitle:nil message:@"Lawyer Added to Favorite" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                     [alert show];
+//                     UIAlertView *alert=[[UIAlertView alloc] initWithTitle:nil message:@"Lawyer Added to Favorite" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+//                     [alert show];
                  }
                  else
                  {
@@ -274,7 +351,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
          else
@@ -293,7 +370,7 @@
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
     NSString *UserId=user_Profile.userId;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [SignInAndSignUpHelper MakeLawyerToFavorite:UserId withLawyerId:LawyerId withFavorite:@"0" andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+    [SignInAndSignUpHelper MakeLawyerToFavorite:UserId withLawyerId:[SharedSingleton sharedClient].user_Profile.lawyerId withFavorite:@"0" andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
          [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
          if (!error)
@@ -303,8 +380,8 @@
              {
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
-                     UIAlertView *alert=[[UIAlertView alloc] initWithTitle:nil message:@"Lawyer Removed to Favorite" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                     [alert show];
+//                     UIAlertView *alert=[[UIAlertView alloc] initWithTitle:nil message:@"Lawyer Removed to Favorite" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+//                     [alert show];
                  }
                  else
                  {
@@ -323,7 +400,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
          else

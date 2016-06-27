@@ -8,30 +8,35 @@
 
 #import "MainViewController.h"
 #import "AppDelegate.h"
-#import "CaptureSessionManager.h"
+//#import "CaptureSessionManager.h"
 #import "OpponentVideoWriter.h"
 #import "MTBlockAlertView.h"
 #import "FeedbackToLawyerViewController.h"
 #import "FormPortalViewController.h"
+#import "Appointment.h"
+#import "Settings.h"
+#import "MyAppointmentViewController.h"
+#import "AppointmentApprovalViewController.h"
+#import "QMSoundManager.h"
+#import "QBRTCScreenCapture.h"
 #define kPayPalEnvironment PayPalEnvironmentSandbox
-
-//#import <MediaPlayer/MediaPlayer.h>
-
-
-#define VideoRecordingMode 2  // 1 is to record own video, 2 is to record opponent's video
-
-
+#import <MediaPlayer/MediaPlayer.h>
+#define VideoRecordingMode 2
 
 @interface MainViewController ()
 
 @property(nonatomic, strong, readwrite) IBOutlet UIButton *payNowButton;
 @property(nonatomic, strong, readwrite) IBOutlet UIButton *payFutureButton;
 @property(nonatomic, strong, readwrite) IBOutlet UIView *successView;
+@property (copy, nonatomic) void(^chatConnectCompletionBlock)(BOOL error);
+@property (copy, nonatomic) dispatch_block_t chatDisconnectedBlock;
+@property (copy, nonatomic) dispatch_block_t chatReconnectedBlock;
+@property (strong, nonatomic) QBRTCTimer *presenceTimer;
+@property (strong, nonatomic) Settings *settings;
+@property (strong, nonatomic)MBProgressHUD *theHud;
 
+@property (assign, nonatomic) NSTimer *beepTimer;
 @property(nonatomic, strong, readwrite) PayPalConfiguration *payPalConfig;
-
-
-@property (nonatomic) CaptureSessionManager *captureSessionManager;
 @property (nonatomic) OpponentVideoWriter *opponentVideoWriter;
 
 
@@ -44,11 +49,11 @@
 
 - (void)viewDidLoad
 {
-    
     EnableVideo=YES;
-    
     [super viewDidLoad];
-    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+
+    appDelegate.appTerminate = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveTestNotification:)
                                                  name:@"ApproveContactRequestFromClient"
@@ -56,6 +61,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveTestNotification1:)
                                                  name:@"ApproveFormRequestFromUser"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(finishApp)
+                                                 name:@"TerminateApp"
                                                object:nil];
     flag=1;
     flag1=2;
@@ -67,107 +76,113 @@
     
     IsMicroPhoneEnabled = YES;
     
-    if(!QB_SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
-        audioOutput.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.8, 0.8);
-        audioOutput.frame = CGRectMake(audioOutput.frame.origin.x-15, audioOutput.frame.origin.y, audioOutput.frame.size.width+50, audioOutput.frame.size.height);
-        videoOutput.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.8, 0.8);
+    [QBRTCClient.instance addDelegate:self];
+    
+    
+    // Setup Video output
+    AVCaptureVideoDataOutput *videoCaptureOutput = [[AVCaptureVideoDataOutput alloc] init];
+    AVCaptureSession *captureSession = [AVCaptureSession new];
+    
+    // Set the video output to store frame in BGRA (It is supposed to be faster)
+    NSString* key = (NSString*)kCVPixelBufferPixelFormatTypeKey;
+    NSNumber* value = [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA];
+    NSDictionary* videoSettings = [NSDictionary dictionaryWithObject:value forKey:key];
+    [videoCaptureOutput setVideoSettings:videoSettings];
+    /*And we create a capture session*/
+    if([captureSession canAddOutput:videoCaptureOutput]){
+        [captureSession addOutput:videoCaptureOutput];
+        
+    }else{
+        NSLog(@"cantAddOutput");
     }
     
-    // Setup Video & Audio capture
-    //
-    _captureSessionManager = [CaptureSessionManager new];
-    AVCaptureVideoPreviewLayer *videoPreviewLayer = [_captureSessionManager setupVideoCapture];
-    [videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspect];
+    /*We create a serial queue to handle the processing of our frames*/
+    dispatch_queue_t callbackQueue= dispatch_queue_create("cameraQueue", NULL);
+    [videoCaptureOutput setSampleBufferDelegate:self queue:callbackQueue];
+    
+    // Add preview layer
+    AVCaptureVideoPreviewLayer *prewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];
+    [prewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     CGRect layerRect = [[myVideoView layer] bounds];
-    [videoPreviewLayer setBounds:layerRect];
-    [videoPreviewLayer setPosition:CGPointMake(CGRectGetMidX(layerRect),CGRectGetMidY(layerRect))];
+    [prewLayer setBounds:layerRect];
+    [prewLayer setPosition:CGPointMake(CGRectGetMidX(layerRect),CGRectGetMidY(layerRect))];
     myVideoView.hidden = NO;
-    
-    [myVideoView.layer addSublayer:videoPreviewLayer];
-    //
-    //
-    [_captureSessionManager setupAudioCapture];
-    
+    [myVideoView.layer addSublayer:prewLayer];
+    [captureSession startRunning];
     
     // Setup Own video writer
-    //
+    
     _opponentVideoWriter = [OpponentVideoWriter new];
     
-    
-    // Set output blocks
-    //
-    __weak typeof(self) weakSelf = self;
-    _captureSessionManager.audioOutputBlock = ^(AudioBuffer buffer)
-    {
-        // forward audio data to video chat
-        //
-        [weakSelf.videoChat processVideoChatCaptureAudioBuffer:buffer];
-    };
-    _captureSessionManager.videoOutputBlock = ^(CMSampleBufferRef buffer){
-        // forward video data to video chat
-        //
-        [weakSelf.videoChat processVideoChatCaptureVideoSample:buffer];
-    };
+    QBRTCVideoFormat *videoFormat = [[QBRTCVideoFormat alloc] init];
+    videoFormat.frameRate = 30;
+    videoFormat.pixelFormat = QBRTCPixelFormat420f;
+    videoFormat.width = 640;
+    videoFormat.height = 480;
     
     
-    // Start sending chat presence
+    // QBRTCCameraCapture class used to capture frames using AVFoundation APIs
+    self.videoCapture = [[QBRTCCameraCapture alloc] initWithVideoFormat:videoFormat position:AVCaptureDevicePositionFront];
+    self.videoCapture.previewLayer.frame = myVideoView.bounds;
+    [self.videoCapture startSession];
+    
+    
+    [myVideoView.layer insertSublayer:self.videoCapture.previewLayer atIndex:0];
+    
     [[QBChat instance] addDelegate:self];
     [NSTimer scheduledTimerWithTimeInterval:30 target:[QBChat instance] selector:@selector(sendPresence) userInfo:nil repeats:YES];
     
-    if ([ComingFromSide isEqualToString:@"Lawyer Side"])
-    {
-        [self startVideoChat];
-        RecommendForm.hidden=NO;
+    if ([ComingFromSide isEqualToString:@"Lawyer Side"]){
+        [self startVideoChat:QBRTCConferenceTypeVideo];
+        RecommendForm.hidden=YES;
+        enableDisableVideoBtn.hidden = YES;
         SendCntctInfo.hidden=YES;
-        AcceptRejectView.hidden=YES;
-        
+        AcceptRejectView.hidden=true;
     }
-    else
-    {
-        AcceptRejectView.hidden=NO;
+    else{
+        self.dialignTimer =
+        [NSTimer scheduledTimerWithTimeInterval:[QBRTCConfig dialingTimeInterval]
+                                         target:self
+                                       selector:@selector(dialing:)
+                                       userInfo:nil
+                                        repeats:YES];
+        
+        videoChatOpponentID = _videoCallOppId.intValue;
+        
+        [self getLawyerDetail];
         RecommendForm.hidden=YES;
         SendCntctInfo.hidden=NO;
         [self GetPaymentMethod];
         sleep(3);
         
-        [TimeLeftLabel setText:@"Time Left : 15:00"];
-        currMinute=15;
-        currSeconds=00;
-        [self start];
     }
     
-    
-    [QBRTCClient.instance addDelegate:self];
-    
-    //    // Set answer time interval
-    //    [QBRTCConfig setAnswerTimeInterval:60];
-    //    // Set dialing time interval
-    //    [QBRTCConfig setDialingTimeInterval:5];
-    //    // Set disconnect time interval
-    //    [QBRTCConfig setDisconnectTimeInterval:15];
-    // Enable DTLS (Datagram Transport Layer Security)
     [QBRTCConfig setDTLSEnabled:YES];
     
     // Set custom ICE servers
     NSURL *stunUrl = [NSURL URLWithString:@"stun:turn.quickblox.com"];
-    QBICEServer *stunServer =
-    [QBICEServer serverWithURL:stunUrl username:@"quickblox" password:@"baccb97ba2d92d71e26eb9886da5f1e0"];
+    QBRTCICEServer *stunServer =
+    [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"%@",stunUrl] username:@"quickblox" password:@"baccb97ba2d92d71e26eb9886da5f1e0"];
     
     NSURL *turnUDPUrl = [NSURL URLWithString:@"turn:turn.quickblox.com:3478?transport=udp"];
-    QBICEServer *turnUDPServer =
-    [QBICEServer serverWithURL:turnUDPUrl username:@"quickblox" password:@"baccb97ba2d92d71e26eb9886da5f1e0"];
+    QBRTCICEServer *turnUDPServer =
+    [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"%@",turnUDPUrl] username:@"quickblox" password:@"baccb97ba2d92d71e26eb9886da5f1e0"];
     
     NSURL *turnTCPUrl = [NSURL URLWithString:@"turn:turn.quickblox.com:3478?transport=tcp"];
-    QBICEServer* turnTCPServer =
-    [QBICEServer serverWithURL:turnTCPUrl username:@"quickblox" password:@"baccb97ba2d92d71e26eb9886da5f1e0"];
+    QBRTCICEServer* turnTCPServer =
+    [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"%@",turnTCPUrl] username:@"quickblox" password:@"baccb97ba2d92d71e26eb9886da5f1e0"];
     
-    [QBRTCConfig setICEServers:@[stunServer, turnUDPServer, turnTCPServer]];}
+    [QBRTCConfig setICEServers:@[stunServer, turnUDPServer, turnTCPServer]];
+}
 
+- (void)dialing:(NSTimer *)timer {
+    
+    [QMSoundManager playRingtoneSound];
+}
 
--(void)start
-{
+-(void)start{
+    
     timerLeft=[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
-    
 }
 -(void)timerFired
 {
@@ -226,9 +241,6 @@
     NSDictionary *userInfo = notification.userInfo;
     NSLog(@"%@",userInfo);
     
-    //    UserIdFromNotif=[[userInfo valueForKey:@"token"] valueForKey:@"userId"];
-    //    LawyerIdFromNotif=[[userInfo valueForKey:@"token"] valueForKey:@"lawyerId"];
-    //
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
                                                     message:@"Lawyer would like to recommend a form. Do you approve?"
                                                    delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES",nil];
@@ -286,7 +298,6 @@
         // empty, this payment wouldn't be processable, and you'd want
         // to handle that here.
     }
-    
     // Update payPalConfig re accepting credit cards.
     self.payPalConfig.acceptCreditCards = self.acceptCreditCards;
     
@@ -322,13 +333,10 @@
 {
     // TODO: Send completedPayment.confirmation to server
     NSLog(@"Here is your proof of payment:\n\n%@\n\nSend this to your server for confirmation and fulfillment.", completedPayment.confirmation);
-    // TransactionId=[[completedPayment.confirmation valueForKey:@"response"] valueForKey:@"id"];
     
     FeedbackToLawyerViewController *FeedbackVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedbackToLawyer"];
-    FeedbackVc.LawyerQuickBloxId=[NSString stringWithFormat:@"%lu",(unsigned long)videoChatOpponentID];
     [self.navigationController pushViewController:FeedbackVc animated:YES];
-    if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)])
-    {
+    if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)]){
         [_delegate MainViewControllerDidEndCall];
     }
 }
@@ -345,29 +353,6 @@
     self.successView.alpha = 0.0f;
     [UIView commitAnimations];
 }
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    //   [super viewDidAppear:animated];
-    
-    //    // Start sending chat presence
-    //    [[QBChat instance] addDelegate:self];
-    //    [NSTimer scheduledTimerWithTimeInterval:30 target:[QBChat instance] selector:@selector(sendPresence) userInfo:nil repeats:YES];
-    //
-    //    if ([ComingFromSide isEqualToString:@"Lawyer Side"])
-    //    {
-    //        [self startVideoChat];
-    //        RecommendForm.hidden=NO;
-    //        SendCntctInfo.hidden=YES;
-    //    }
-    //    else
-    //    {
-    //        AcceptRejectView.hidden=NO;
-    //        RecommendForm.hidden=YES;
-    //        SendCntctInfo.hidden=NO;
-    //    }
-}
-
 #pragma mark -
 
 -(void)setUserImage
@@ -409,68 +394,15 @@
 
 #pragma mark Actions
 
-//- (IBAction)changeRecordingSwitch:(id)sender
-//{
-//    // Enable/disable recording of own video
-//    //
-//    if(VideoRecordingMode == 1)
-//    {//        // Enable/disable recording of opponent's video
-//        //
-//    }else{
-//        _captureSessionManager.enabledRecording = [sender isOn];
-//
-
-//        if([sender isOn]){
-//            __weak typeof(_opponentVideoWriter) weakWriter = _opponentVideoWriter;
-//            opponentVideoView.opponentVideoViewCallbackBlock = ^(id data){
-//                [weakWriter writeVideoData:(CGImageRef)data];
-//            };
-//        }else{
-//            opponentVideoView.opponentVideoViewCallbackBlock = nil;
-//
-//            __weak typeof(self) weakSelf = self;
-//            [_opponentVideoWriter finishWithCompletionBlock:^(NSURL *videoFileUrl) {
-//
-//                [MTBlockAlertView showWithTitle:nil
-//                                        message:@"Would you like to watch the recorded video?"
-//                              cancelButtonTitle:@"No"
-//                               otherButtonTitle:@"Yes"
-//                                 alertViewStyle:UIAlertViewStyleDefault
-//                                completionBlock:^(UIAlertView *alertView, NSInteger buttonIndex) {
-//                                    // Yes
-//                                    if (buttonIndex == 1) {
-//                                        //  MPMoviePlayerViewController *playerVC = [[MPMoviePlayerViewController alloc] initWithContentURL:videoFileUrl];
-//
-//                                        // Present the movie player view controller
-//                                        // [weakSelf presentViewController:playerVC animated:YES completion:nil];
-//
-//
-//                                        // stop video chat
-//                                        [weakSelf finishVideoChat];
-//                                    }
-//                                }];
-//
-//            }];
-//        }
-//    }
-//}
-
-//- (IBAction)audioOutputDidChange:(UISegmentedControl *)sender
-//{
-//    if(sender.selectedSegmentIndex == 0){
-//        [[QBAudioIOService shared] routeToSpeaker];
-//    }else{
-//        [[QBAudioIOService shared] routeToHeadphone];
-//    }
-//}
-
 - (IBAction)videoOutputDidChange:(UISegmentedControl *)sender
 {
-    [_captureSessionManager changeVideoOutput:sender.selectedSegmentIndex != 0];
 }
 
 - (IBAction)EnableDisableVideo:(id)sender
 {
+    self.session.localMediaStream.audioTrack.enabled = !self.session.localMediaStream.audioTrack.isEnabled;
+    self.session.localMediaStream.videoTrack.enabled = !self.session.localMediaStream.videoTrack.isEnabled;
+    
     if (EnableVideo==YES)
     {
         //hide video here
@@ -478,21 +410,6 @@
         opponentVideoView.hidden=YES;
         EnableVideo=NO;
         myVideoView.hidden=YES;
-        
-        
-        __weak typeof(self) weakSelf = self;
-        _captureSessionManager.audioOutputBlock = ^(AudioBuffer buffer)
-        {
-            // forward audio data to video chat
-            //
-            [weakSelf.videoChat processVideoChatCaptureAudioBuffer:buffer];
-        };
-        _captureSessionManager.videoOutputBlock = ^(CMSampleBufferRef buffer){
-            // forward video data to video chat
-            //
-            [weakSelf.videoChat processVideoChatCaptureVideoSample:nil];
-        };
-        
     }
     else
     {
@@ -501,57 +418,27 @@
         opponentVideoView.hidden=NO;
         EnableVideo=YES;
         myVideoView.hidden=NO;
-        
-        __weak typeof(self) weakSelf = self;
-        _captureSessionManager.audioOutputBlock = ^(AudioBuffer buffer)
-        {
-            // forward audio data to video chat
-            ////
-            [weakSelf.videoChat processVideoChatCaptureAudioBuffer:buffer];
-        };
-        _captureSessionManager.videoOutputBlock = ^(CMSampleBufferRef buffer)
-        {
-            // forward video data to video chat
-            //
-            [weakSelf.videoChat processVideoChatCaptureVideoSample:buffer];
-        };
     }
 }
 
 - (IBAction)call:(id)sender
 {
+    
     [timerLeft invalidate];
     
-    // Call
-        if(callButton.tag == 101){
-    //        [self startVideoChat];
-    
-            // Finish
-        }else{
-    [self finishVideoChat];
-        }
-    
-}
-
-- (void)startVideoChat
-{
-    callButton.tag = 102;
-    
-    //  Setup video chat
-    
-    if(self.videoChat == nil){
-        self.videoChat = [[QBChat instance] createAndRegisterVideoChatInstance];
-        self.videoChat.viewToRenderOpponentVideoStream = opponentVideoView;
-        self.videoChat.viewToRenderOwnVideoStream = myVideoView;
+    if(callButton.tag == 101){
+        
+    }else{
+        
+        [self finishVideoChat];
     }
     
-    // setup custom captures
-    //
-    self.videoChat.isUseCustomAudioChatSession = YES;
-    self.videoChat.isUseCustomVideoChatCaptureSession = YES;
+}
+- (void)startVideoChat:(QBRTCConferenceType)conferenceType {
     
+    callButton.tag = 102;
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
-    
+    [QBRTCSoundRouter.instance initialize];
     NSString *qUserName;
     NSString *qPassword;
     if (user_Profile.quickBlox_UserName.length)
@@ -567,140 +454,127 @@
     NSMutableArray *marr=[[NSMutableArray alloc] init];
     [marr addObject:qUserName];
     [marr addObject:qPassword];
-    
+    NSLog(@"%d",opponentID.intValue);
     NSMutableDictionary *dict=[[NSMutableDictionary alloc] init];
     [dict setObject:qUserName forKey:@"username"];
     [dict setObject:qPassword forKey:@"password"];
-    
-    
-    
-    // Call user by ID
-    //
-    
-    
-    NSLog(@"///%@",[NSArray arrayWithObject:opponentID]);
-    NSLog(@"++++++%@",dict);
-    
-    //
-    //   [QBRTCClient.instance addDelegate:self];
-    //
-    //
-    //    QBRTCSession *session =
-    //    [QBRTCClient.instance createNewSessionWithOpponents:[NSArray arrayWithObject:opponentID]  withConferenceType:QBConferenceTypeVideo];
-    //
-    //    if (session) {
-    //
-    //        self.session = session;
-    //
-    //    }
-    //    NSLog(@".....%@",self.session);
-    //
-    
-    NSLog(@"video chat is is %lu",(unsigned long)videoChatOpponentID);
-    NSLog(@"opponent id id %@",opponentID);
     //start call
     
-    //[QBRTCClient.instance addDelegate:self];
+    [QBRTCClient.instance addDelegate:self];
+    QBRTCSession *session  = [QBRTCClient.instance
+                              createNewSessionWithOpponents:@[@(opponentID.intValue)]
+                              withConferenceType:QBRTCConferenceTypeVideo];
     
-    //  [session startCall:dict];
+    if (session) {
+        self.session = session;
+    }
+    NSLog(@".....%@",self.session);
+    
+    NSDictionary *userInfo = @{@"startCall" : @"userInfo"};
+    NSLog(@"%@",session);
+    NSLog(@"%@",self.session);
+    
+    [session startCall:userInfo];
     
     
-    [self.videoChat callUser:[opponentID integerValue] conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
+    //  [self startCall];
+    [QBRTCSoundRouter instance].currentSoundRoute = QBRTCSoundRouteReceiver;
     
-    //  QBRTCSession *newSession = [QBRTCClient.instance createNewSessionWithOpponents:[NSArray arrayWithObject:opponentID]
-    //                                                         withConferenceType:QBConferenceTypeVideo];
-    //    // userInfo - the custom user information dictionary for the call. May be nil.
-    //  //  NSDictionary *userInfo = @{ @"key" : @"value" };
-    //
-    
-    
-    
-    // callButton.hidden = YES;
     ringigngLabel.hidden = NO;
     ringigngLabel.text = @"Calling...";
     ringigngLabel.frame = CGRectMake(128, 375, 90, 37);
     callingActivityIndicator.hidden = NO;
     [callingActivityIndicator startAnimating];
-    
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
+    [MBProgressHUD showHUDAddedTo:opponentVideoView animated:YES];
 }
 
+- (void)finishApp
+{
+    if ([ComingFromSide isEqualToString:@"Lawyer Side"]){
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        if (appDelegate.appTerminate == NO)
+        {
+            [self reject];
+            return;
+        }
+        else
+        {
+            [self finishVideoChat];
+        }
+    }
+    else
+    {
+        
+        [self finishVideoChat];
+        
+    }
+}
+- (void)startCall {
+    //Begin play calling sound
+    self.beepTimer = [NSTimer scheduledTimerWithTimeInterval:[QBRTCConfig dialingTimeInterval]
+                                                      target:self
+                                                    selector:@selector(playCallingSound:)
+                                                    userInfo:nil
+                                                     repeats:YES];
+    [self playCallingSound:nil];
+    //Start call
+    NSDictionary *userInfo = @{@"startCall" : @"userInfo"};
+    NSLog(@"%@",self.session);
+    [self.session startCall:userInfo];
+}
 
-
+- (void)playCallingSound:(id)sender {
+    
+    [QMSoundManager playCallingSound];
+}
 
 
 -(void)MicroPhoneIsEnabledOrNot
 {
     if (IsMicroPhoneEnabled==YES)
     {
-        self.videoChat.microphoneEnabled=NO;
+        self.session.localMediaStream.audioTrack.enabled = NO;
         IsMicroPhoneEnabled=NO;
         [MuteUnmuteBtn setImage:[UIImage imageNamed:@"MicroPhone_Disabled"] forState:UIControlStateNormal];
-        // [MuteUnmuteBtn setTitle:@"UnMute" forState:UIControlStateNormal];
     }
     else
     {
-        self.videoChat.microphoneEnabled=YES;
+        self.session.localMediaStream.audioTrack.enabled = YES;
         IsMicroPhoneEnabled=YES;
         [MuteUnmuteBtn setImage:[UIImage imageNamed:@"MicroPhone_Enabled"] forState:UIControlStateNormal];
-        //  [MuteUnmuteBtn setTitle:@"Mute" forState:UIControlStateNormal];
     }
 }
 
 - (void)finishVideoChat
 {
-    callButton.tag = 101;
+        callButton.tag = 101;
+    
     // Finish call
-    //
-    [self.videoChat finishCall];
+    NSLog(@"+++++%@",self.session);
+    
+    __weak __typeof(self)weakSelf = self;
+    NSDictionary *userInfo = @{ @"key" : @"value" };
+    [weakSelf.session hangUp:userInfo];
+    
+    self.remoteVideoChat = nil;
+    self.videoCapture = nil;
+    [self.videoCapture stopSession];
     
     myVideoView.hidden = YES;
     opponentVideoView.layer.contents = (id)[[UIImage imageNamed:@"person.png"] CGImage];
-    //  opponentVideoView.image = [UIImage imageNamed:@"person.png"];
-    // AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    //    [callButton setTitle:appDelegate.currentUser == 1 ? @"Call User2" : @"Call User1" forState:UIControlStateNormal];
-    
-    //    opponentVideoView.layer.borderWidth = 1;
-    
     [startingCallActivityIndicator stopAnimating];
-    
-    
-    // release video chat
-    //
-    [[QBChat instance] unregisterVideoChatInstance:self.videoChat];
-    self.videoChat = nil;
     
     
     if ([ComingFromSide isEqualToString:@"Lawyer Side"])
     {
+        
         [self.navigationController popViewControllerAnimated:YES];
-        // [[QBChat instance] logout];
     }
     else
     {
         chatFinished=YES;
         
-        //Push to feedback screen
-        
         NSLog(@"2222222222222222222222222");
-        
-        
-        //        NSString *CardStatus=[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"PaymentType"]];
-        //
-        //        if ([CardStatus isEqualToString:@"0"])
-        //        {
-        //            [self PaymentThroughPaypal];
-        //        }
-        //
-        //        else if ([CardStatus isEqualToString:@"1"])
-        //        {
-        //            [self DirectPayment];
-        //        }
-        //        else
-        //        {
-        //            [self PaymentThroughCoupons];
-        //        }
         
         if ([PaymentMethod isEqualToString:@"Skip"])
         {
@@ -722,54 +596,29 @@
             
         }else{
             [self.navigationController popViewControllerAnimated:YES];
-            
         }
         
-        //
-        //
-        //        FeedbackToLawyerViewController *FeedbackVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedbackToLawyer"];
-        //        FeedbackVc.LawyerQuickBloxId=[NSString stringWithFormat:@"%lu",(unsigned long)videoChatOpponentID];
-        //        [self.navigationController pushViewController:FeedbackVc animated:YES];
-        //
-        //
-        //
-        //        if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)])
-        //        {
-        //            [_delegate MainViewControllerDidEndCall];
-        //        }
     }
 }
 
 - (void)reject
 {
-    // Reject call
-    //
-    if(self.videoChat == nil)
-    {
-        self.videoChat = [[QBChat instance] createAndRegisterVideoChatInstanceWithSessionID:sessionID];
-    }
-    [self.videoChat rejectCallWithOpponentID:videoChatOpponentID];
-    //
-    //
-    [[QBChat instance] unregisterVideoChatInstance:self.videoChat];
-    self.videoChat = nil;
-    
-    // update UI
-    //  callButton.hidden = NO;
     ringigngLabel.hidden = YES;
     
     // release player
     ringingPlayer = nil;
+    
+    NSLog(@"----%@",self.session);
+    [self.session rejectCall:@{@"reject" : @"busy"}];
+    
     if ([ComingFromSide isEqualToString:@"Lawyer Side"])
     {
         [self.navigationController popViewControllerAnimated:YES];
-        // [[QBChat instance] logout];
     }
     else
     {
         [self.navigationController popViewControllerAnimated:YES];
-        if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)])
-        {
+        if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)]){
             [_delegate MainViewControllerDidEndCall];
         }
     }
@@ -778,69 +627,42 @@
 - (void)accept
 {
     NSLog(@"accept");
+    NSLog(@"self.session%@",self.session);
+    [self.dialignTimer invalidate];
     
-    
-    //    // Setup video chat
-    //
-    if(self.videoChat == nil)
-    {
-        self.videoChat = [[QBChat instance] createAndRegisterVideoChatInstanceWithSessionID:sessionID];
-        self.videoChat.viewToRenderOpponentVideoStream = opponentVideoView;
-        self.videoChat.viewToRenderOwnVideoStream = myVideoView;
-    }
-    
-    // setup custom capture
-    //
-    self.videoChat.isUseCustomAudioChatSession = YES;
-    self.videoChat.isUseCustomVideoChatCaptureSession = YES;
-    
-    //   Accept call
-    
-    
-    
-    // NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%lu",(unsigned long)videoChatOpponentID] forKey:@"ID"];
-    // [self.session acceptCall:nil];
-    [self.videoChat acceptCallWithOpponentID:videoChatOpponentID conferenceType:videoChatConferenceType];
+    NSDictionary *userInfo = @{@"acceptCall" : @"userInfo"};
+    [self.session acceptCall:userInfo];
     
     ringigngLabel.hidden = YES;
-    //  callButton.hidden = NO;
-    //    [callButton setTitle:@"Hang up" forState:UIControlStateNormal];
     callButton.tag = 102;
-    
     opponentVideoView.layer.borderWidth = 0;
-    
     [startingCallActivityIndicator startAnimating];
-    
     myVideoView.hidden = NO;
-    
     ringingPlayer = nil;
+    [TimeLeftLabel setText:@"Time Left : 15:00"];
+    currMinute=15;
+    currSeconds=00;
+    [self start];
 }
 
-- (IBAction)EndCallButton:(id)sender
-{
+- (IBAction)EndCallButton:(id)sender{
     [timerLeft invalidate];
-    
     badConnection=NO;
     
-    if ([ComingFromApprovelView isEqualToString:@"Yes"])
-    {
+    if ([ComingFromApprovelView isEqualToString:@"Yes"]){
         [[NSUserDefaults standardUserDefaults] setValue:@"reject" forKey:@"call"];
-    }
-    else
-    {
+    }else{
     }
     
     [self reject];
-    AcceptRejectView.hidden=YES;}
+    AcceptRejectView.hidden=YES;
+}
 
 - (IBAction)AnswerButton:(id)sender
 {
     [[NSUserDefaults standardUserDefaults] setValue:@"accept" forKey:@"call"];
     
     [self accept];
-    
-    
-    
     AcceptRejectView.hidden=YES;
     
 }
@@ -859,9 +681,6 @@
 
 - (IBAction)RecommendFormBtnAction:(id)sender
 {
-    //    FormPortalViewController *FormPortalVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FormPortal"];
-    //    FormPortalVc.ComingFrom=@"CallView";
-    //    [self.navigationController pushViewController:FormPortalVc animated:YES];
     [self AskFromUserAboutRecommndForm];
 }
 
@@ -869,7 +688,6 @@
 {
     [self.callAlert dismissWithClickedButtonIndex:-1 animated:YES];
     self.callAlert = nil;
-    // callButton.hidden = NO;
 }
 
 #pragma mark -
@@ -881,8 +699,6 @@
 }
 -(void)GetLawyerDetailWithQuickBloxId:(NSString *)lawyerQuickBloxId
 {
-    //  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
     [SignInAndSignUpHelper LawyerDetailWithQuickBloxId:lawyerQuickBloxId andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
          [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -893,13 +709,7 @@
              {
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
-                     //  NSString *UserName=[[responseObject valueForKey:@"data"] valueForKey:@"firstName"];
-                     
-                     //  NSString *imageUrl=[[responseObject valueForKey:@"data"] valueForKey:@"userImage"];
-                     
                      LawyerId=[[responseObject valueForKey:@"data"] valueForKey:@"id"];
-                     
-                     
                  }
                  else
                  {
@@ -914,11 +724,11 @@
                  //Empty Response
                  NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,@"Empty Response");
                  
-                 NSString *errorMsg = [responseObject valueForKey:@"message"];
-                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                 message:errorMsg
-                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 NSString *errorMsg = [responseObject valueForKey:@"message"];
+//                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+//                                                                 message:errorMsg
+//                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//                 [alert show];
              }
          }
          else
@@ -936,10 +746,6 @@
 
 -(void)SendContactdetailsToLawyer
 {
-    //    UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
-    //    NSString *UserId=user_Profile.userId;
-    
-    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     [SignInAndSignUpHelper SendContactDetailsToLawyer:UserIdFromNotif withLawyerId:LawyerIdFromNotif andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
@@ -968,13 +774,12 @@
                  //Empty Response
                  NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,@"Empty Response");
                  
-                 NSString *errorMsg = [responseObject valueForKey:@"message"];
-                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                 message:errorMsg
-                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 NSString *errorMsg = [responseObject valueForKey:@"message"];
+//                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+//                                                                 message:errorMsg
+//                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//                 [alert show];
              }
-             
          }
          else
          {
@@ -985,8 +790,69 @@
                                                             delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
              [alert show];
          }
-         
      }];
+}
+#pragma mark - QBChatDelegate
+
+- (void)chatDidNotConnectWithError:(NSError *)error {
+    
+    if (self.chatConnectCompletionBlock) {
+        
+        self.chatConnectCompletionBlock(YES);
+        self.chatConnectCompletionBlock = nil;
+    }
+}
+
+- (void)chatDidAccidentallyDisconnect {
+    
+    if (self.chatConnectCompletionBlock) {
+        
+        self.chatConnectCompletionBlock(YES);
+        self.chatConnectCompletionBlock = nil;
+    }
+    if (self.chatDisconnectedBlock) {
+        self.chatDisconnectedBlock();
+    }
+}
+
+- (void)chatDidFailWithStreamError:(NSError *)error {
+    
+    if (self.chatConnectCompletionBlock) {
+        
+        self.chatConnectCompletionBlock(YES);
+        self.chatConnectCompletionBlock = nil;
+    }
+}
+
+- (void)chatDidConnect {
+    
+    [[QBChat instance] sendPresence];
+    __weak __typeof(self)weakSelf = self;
+    
+    self.presenceTimer = [[QBRTCTimer alloc] initWithTimeInterval:45
+                                                           repeat:YES
+                                                            queue:dispatch_get_main_queue()
+                                                       completion:^{
+                                                           [[QBChat instance] sendPresence];
+                                                           
+                                                       } expiration:^{
+                                                           [weakSelf.presenceTimer invalidate];
+                                                           weakSelf.presenceTimer = nil;
+                                                       }];
+    
+    self.presenceTimer.label = @"Chat presence timer";
+    
+    if (self.chatConnectCompletionBlock) {
+        
+        self.chatConnectCompletionBlock(NO);
+        self.chatConnectCompletionBlock = nil;
+    }
+}
+
+- (void)chatDidReconnect {
+    if (self.chatReconnectedBlock) {
+        self.chatReconnectedBlock();
+    }
 }
 
 #pragma mark -
@@ -999,293 +865,75 @@
     [self.view setUserInteractionEnabled:YES];
     
 }
-
--(void) chatDidReceiveCallRequestFromUser:(NSUInteger)userID withSessionID:(NSString *)_sessionID conferenceType:(enum QBVideoChatConferenceType)conferenceType
+- (void)session:(QBRTCSession *)session userDidNotRespond:(NSNumber *)userID;
 {
-    if (flag1==2)
-    {
-        flag1=3;
-        
-        //        [newIndicator startAnimating];
-        //        [self.view setUserInteractionEnabled:NO];
-        //        timer = [NSTimer scheduledTimerWithTimeInterval:2
-        //                                                 target: self
-        //                                               selector:@selector(ShowAcceptCallView)
-        //                                               userInfo: nil repeats:NO];
-        
-        NSLog(@"chatDidReceiveCallRequestFromUser %lu", (unsigned long)userID);
-        
-        // play call music
-        //
-        if(ringingPlayer == nil)
-        {
-            NSString *path =[[NSBundle mainBundle] pathForResource:@"ringing" ofType:@"wav"];
-            NSURL *url = [NSURL fileURLWithPath:path];
-            ringingPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:NULL];
-            ringingPlayer.delegate = self;
-            [ringingPlayer setVolume:1.0];
-            [ringingPlayer play];
-        }
-        
-        
-        // save  opponent data
-        videoChatOpponentID = userID;
-        videoChatConferenceType = conferenceType;
-        sessionID = _sessionID;
-        
-        // if (flag1==2)
-        // {
-        // flag1=3;
-        
-        // }
-        [self GetLawyerDetailWithQuickBloxId:[NSString stringWithFormat:@"%lu",(unsigned long)videoChatOpponentID]];
-        
-        
-        //  callButton.hidden = YES;
-        
-        // show call alert
-        //
-        if (self.callAlert == nil)
-        {
-            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            NSString *message = [NSString stringWithFormat:@"%@ is calling. Would you like to answer?", appDelegate.currentUser == 1 ? @"User 2" : @"User 1"];
-            self.callAlert = [[UIAlertView alloc] initWithTitle:@"Call" message:message delegate:self cancelButtonTitle:@"Decline" otherButtonTitles:@"Accept", nil];
-            //[self.callAlert show];
-            if ([ComingFromSide isEqualToString:@"Lawyer Side"])
-            {
-                AcceptRejectView.hidden=YES;
-                
-            }
-            else
-            {
-                AcceptRejectView.hidden=NO;
-                
-            }
-            
-            [[QBAudioIOService shared] routeToSpeaker];
-        }
-        
-        // hide call alert if opponent has canceled call
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCallAlert) object:nil];
-        [self performSelector:@selector(hideCallAlert) withObject:nil afterDelay:4];
-        
-        //    // play call music
-        //    //
-        //    if(ringingPlayer == nil){
-        //        NSString *path =[[NSBundle mainBundle] pathForResource:@"ringing" ofType:@"wav"];
-        //        NSURL *url = [NSURL fileURLWithPath:path];
-        //        ringingPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:NULL];
-        //        ringingPlayer.delegate = self;
-        //        [ringingPlayer setVolume:1.0];
-        //        [ringingPlayer play];
-        //    }
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        
-    }
+    [QMSysPlayer stopAllSounds];
     
-}
-
--(void) chatCallUserDidNotAnswer:(NSUInteger)userID
-{
+    [self.dialignTimer invalidate];
     NSLog(@"chatCallUserDidNotAnswer %lu", (unsigned long)userID);
-    //  callButton.hidden = NO;
     ringigngLabel.hidden = YES;
     callingActivityIndicator.hidden = YES;
     callButton.tag = 101;
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"user isn't answering, Please try again later." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-    [alert show];
+    if ([ComingFromSide isEqualToString:@"Lawyer Side"]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"user isn't answering, Please try again later." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+        
+    }
     [self.navigationController popViewControllerAnimated:YES];
     
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [MBProgressHUD hideAllHUDsForView:opponentVideoView animated:YES];
     
 }
 
--(void) chatCallDidRejectByUser:(NSUInteger)userID
+
+- (void)session:(QBRTCSession *)session rejectedByUser:(NSNumber *)userID userInfo:(NSDictionary *)userInfo
 {
     NSLog(@"chatCallDidRejectByUser %lu", (unsigned long)userID);
     
-    // callButton.hidden = NO;
     ringigngLabel.hidden = YES;
     callingActivityIndicator.hidden = YES;
     
     callButton.tag = 101;
     
     UIAlertView *alert;
-    if (badConnection==YES)
+    if (badConnection == YES){
         alert= [[UIAlertView alloc] initWithTitle:@"" message:@"User has rejected your call." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    }
     else
+        
         alert= [[UIAlertView alloc] initWithTitle:@"" message:@"Connection Lost." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
     [alert show];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [MBProgressHUD hideAllHUDsForView:opponentVideoView animated:YES];
+    
     [self.navigationController popViewControllerAnimated:YES];
     
 }
 
-/**
- * Called in case when you are calling to user, but he hasn't answered
- */
-- (void)session:(QBRTCSession *)session userDoesNotRespond:(NSNumber *)userID {
-    
-    NSLog(@"userDoesNotRespond");
-    
-}
-
-- (void)session:(QBRTCSession *)session acceptByUser:(NSNumber *)userID userInfo:(NSDictionary *)userInfo {
-    NSLog(@"acceptByUser");
-    
-}
-
-/**
- * Called in case when opponent has rejected you call
- */
-- (void)session:(QBRTCSession *)session rejectedByUser:(NSNumber *)userID userInfo:(NSDictionary *)userInfo {
-    NSLog(@"rejectedByUser");
-    
-}
-
--(void) chatCallDidAcceptByUser:(NSUInteger)userID
+- (void)session:(QBRTCSession *)session acceptedByUser:(NSNumber *)userID userInfo:(NSDictionary *)userInfo
 {
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+
+    NSLog(@"acceptByUser");
     NSLog(@"chatCallDidAcceptByUser %lu", (unsigned long)userID);
-    
+    appDelegate.appTerminate = YES;
     ringigngLabel.hidden = YES;
     callingActivityIndicator.hidden = YES;
     
     opponentVideoView.layer.borderWidth = 0;
-    
-    //  callButton.hidden = NO;
-    //    [callButton setTitle:@"Hang up" forState:UIControlStateNormal];
     callButton.tag = 102;
     
     myVideoView.hidden = NO;
     
     [startingCallActivityIndicator startAnimating];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [MBProgressHUD hideAllHUDsForView:opponentVideoView animated:YES];
     
     [TimeLeftLabel setText:@"Time Left : 15:00"];
     currMinute=15;
     currSeconds=00;
     [self start];
-    
-    
-}
-
--(void) chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status
-{
-    NSLog(@"chatCallDidStopByUser %lu purpose %@", (unsigned long)userID, status);
-    if([status isEqualToString:kStopVideoChatCallStatus_OpponentDidNotAnswer])
-    {
-        
-        self.callAlert.delegate = nil;
-        [self.callAlert dismissWithClickedButtonIndex:0 animated:YES];
-        self.callAlert = nil;
-        
-        ringigngLabel.hidden = YES;
-        
-        ringingPlayer = nil;
-        
-    }
-    //kStopVideoChatCallStatus_Manually
-    
-    else if([status isEqualToString:kStopVideoChatCallStatus_BadConnection]||[status isEqualToString:kStopVideoChatCallStatus_Manually])
-    {
-        badConnection=YES;
-        
-        NSLog(@"kStopVideoChatCallStatus_BadConnection/////");
-        if ([ComingFromApprovelView isEqualToString:@"Yes"])
-        {
-            [[NSUserDefaults standardUserDefaults] setValue:@"reject" forKey:@"call"];
-        }
-        
-        
-        if ([ComingFromSide isEqualToString:@"Lawyer Side"])
-        {
-            [self finishVideoChat];
-        }
-        
-        myVideoView.hidden = YES;
-        opponentVideoView.layer.contents = (id)[[UIImage imageNamed:@"person.png"] CGImage];
-        callButton.tag = 101;
-        AcceptRejectView.hidden=YES;
-        
-        
-    }
-    else{
-        
-        myVideoView.hidden = YES;
-        opponentVideoView.layer.contents = (id)[[UIImage imageNamed:@"person.png"] CGImage];
-        //        opponentVideoView.layer.borderWidth = 1;
-        //        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        //        [callButton setTitle:appDelegate.currentUser == 1 ? @"Call User2" : @"Call User1" forState:UIControlStateNormal];
-        callButton.tag = 101;
-        if ([ComingFromApprovelView isEqualToString:@"Yes"])
-        {
-            [[NSUserDefaults standardUserDefaults] setValue:@"reject" forKey:@"call"];
-        }
-        else
-        {
-        }
-        
-        //  [self reject];
-        AcceptRejectView.hidden=YES;
-
-    }
-    
-    //  callButton.hidden = NO;
-    
-    // release video chat
-    //
-    [[QBChat instance] unregisterVideoChatInstance:self.videoChat];
-    self.videoChat = nil;
-    if ([ComingFromSide isEqualToString:@"Lawyer Side"])
-    {
-        NSArray *aRR=[self.navigationController viewControllers];
-        
-        NSLog(@"arr is%@ ",aRR);
-        [self.navigationController popToViewController:[aRR lastObject] animated:YES];        //[[QBChat instance] logout];
-    }
-    else
-    {
-        //Push to feedback screen
-        if (chatFinished==NO) {
-            
-            if (flag==1)
-            {
-                flag=0;
-                NSLog(@"111111111111111111111111");
-                
-                if ([PaymentMethod isEqualToString:@"Skip"])
-                {
-                    UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Error!" message:@"Please Select Payment Method First" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                    [alert show];
-                    return;
-                }
-                else if ([PaymentMethod isEqualToString:@"Card"])
-                {
-                    [self DirectPayment];
-                }
-                else if ([PaymentMethod isEqualToString:@"Paypal"])
-                {
-                    [self PaymentThroughPaypal];
-                }
-                else if ([PaymentMethod isEqualToString:@"Cupon"])
-                {
-                    [self PaymentThroughCoupons];
-                    
-                }
-            }
-            //
-            //        FeedbackToLawyerViewController *FeedbackVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedbackToLawyer"];
-            //        FeedbackVc.LawyerQuickBloxId=[NSString stringWithFormat:@"%lu",(unsigned long)videoChatOpponentID];
-            //        [self.navigationController pushViewController:FeedbackVc animated:YES];
-            //        if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)])
-            //        {
-            //            [_delegate MainViewControllerDidEndCall];
-            //        }
-            
-            //  [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        }
-    }
     
 }
 
@@ -1299,11 +947,9 @@
 }
 
 - (void)didReceiveAudioBuffer:(AudioBuffer)buffer{
-    [_captureSessionManager processAudioBuffer:buffer];
 }
 
 
-#pragma mark -
 #pragma mark UIAlertView
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -1312,7 +958,6 @@
     {
         if (buttonIndex==1)
         {
-            //            [self SendContactdetailsToLawyer];
             [self AskFromLawyerToSendContactInfo];
         }
         return;
@@ -1336,8 +981,6 @@
         {
             //Yes form request approved by user
             [self AcceptFormRequestFromLawyer];
-            
-            
         }
         else if (buttonIndex==0)
         {
@@ -1370,27 +1013,14 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
 - (IBAction)btnClicked_ChangeCamera:(UIButton*)sender
 {
-    [_captureSessionManager changeVideoOutput:sender.tag == 0];
-    
-    if (sender.tag == 0)
-    {
-        sender.tag = 1;
-    }
-    else
-    {
-        sender.tag = 0;
+    AVCaptureDevicePosition position = [self.videoCapture currentPosition];
+    AVCaptureDevicePosition newPosition = position == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+    // check whether videoCapture has or has not camera position
+    // for example, some iPods do not have front camera
+    if ([self.videoCapture hasCameraForPosition:newPosition]) {
+        [self.videoCapture selectCameraPosition:newPosition];
     }
 }
 
@@ -1448,9 +1078,7 @@
                  //                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                  //                 [alert show];
                  [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                 
              }
-             
          }
          else
          {
@@ -1462,7 +1090,6 @@
              //             [alert show];
              [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
          }
-         
      }];
 }
 
@@ -1470,7 +1097,7 @@
 {
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
     NSString *userId=user_Profile.userId;
-    
+    NSLog(@"%@",[SharedSingleton sharedClient].user_Profile.lawyerId);
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     //39
     [SignInAndSignUpHelper DirectPayWithCard:userId
@@ -1478,25 +1105,49 @@
                                     withtype:@"call"
                                   withFormId:@""
                                 withBundleId:@""
-                                withLawyerId:LawyerId
+                                withLawyerId:[SharedSingleton sharedClient].user_Profile.lawyerId
                       andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
          [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
          if (!error)
          {
+             if ([ComingFromSide isEqualToString:@"Lawyer Side"])
+             {
+                 [AppointmentNetworkHelper checkAppointmentStatus:userId withAppointmentId:[[NSUserDefaults standardUserDefaults] valueForKey:@"appID"] withStatus:@"Done" andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+                  {
+                      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                      if (!error)
+                      {
+                          NSString *strSuccess = [responseObject valueForKey:@"success"];
+                          NSLog(@"%@",strSuccess);
+                      }
+                  }];
+             }
+             else
+             {
+                 [AppointmentNetworkHelper checkAppointmentStatus:userId withAppointmentId:[SharedSingleton sharedClient].appID withStatus:@"Done" andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+                  {
+                      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                      if (!error)
+                      {
+                          NSString *strSuccess = [responseObject valueForKey:@"success"];
+                          NSLog(@"%@",strSuccess);
+                      }
+                  }];
+             }
+             
              NSString *strSuccess = [responseObject valueForKey:@"success"];
              if (responseObject.count && strSuccess.integerValue)
              {
                  // NSDictionary *detailUser = [responseObject objectForKey:@"details"];
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
-                     FeedbackToLawyerViewController *FeedbackVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedbackToLawyer"];
-                     FeedbackVc.LawyerQuickBloxId=[NSString stringWithFormat:@"%lu",(unsigned long)videoChatOpponentID];
-                     [self.navigationController pushViewController:FeedbackVc animated:YES];
-                     if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)])
-                     {
+                     if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)]){
                          [_delegate MainViewControllerDidEndCall];
                      }
+                     FeedbackToLawyerViewController *FeedbackVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedbackToLawyer"];
+                     [self.navigationController pushViewController:FeedbackVc animated:YES];
+                     
                  }
                  else
                  {
@@ -1505,20 +1156,17 @@
                                                                     delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                      [alert show];
                      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                     
                  }
              }
              else
              {
                  //Empty Response
                  NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,@"Empty Response");
-                 //    NSString *errorMsg = [responseObject valueForKey:@"message"];
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:@"Please Check Your Account Details For Payment"
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                  [alert show];
                  [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                 
              }
          }
          else
@@ -1538,7 +1186,7 @@
 {
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
     NSString *userId=user_Profile.userId;
-    
+    NSLog(@"%@",[SharedSingleton sharedClient].user_Profile.lawyerId);
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     //39
     [SignInAndSignUpHelper PayWithPaypal:userId
@@ -1546,27 +1194,49 @@
                                 withtype:@"call"
                               withFormId:@""
                             withBundleId:@""
-                            withLawyerId:LawyerId
+                            withLawyerId:[SharedSingleton sharedClient].user_Profile.lawyerId
                   andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
          [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
          if (!error)
          {
+             
+             if ([ComingFromSide isEqualToString:@"Lawyer Side"])
+             {
+                 [AppointmentNetworkHelper checkAppointmentStatus:userId withAppointmentId:[[NSUserDefaults standardUserDefaults] valueForKey:@"appID"] withStatus:@"Done" andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+                  {
+                      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                      if (!error)
+                      {
+                          NSString *strSuccess = [responseObject valueForKey:@"success"];
+                          NSLog(@"%@",strSuccess);
+                      }
+                  }];
+             }
+             else
+             {
+                 [AppointmentNetworkHelper checkAppointmentStatus:userId withAppointmentId:[SharedSingleton sharedClient].appID withStatus:@"Done" andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+                  {
+                      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                      if (!error)
+                      {
+                          NSString *strSuccess = [responseObject valueForKey:@"success"];
+                          NSLog(@"%@",strSuccess);
+                          
+                      }
+                  }];
+             }
+             
              NSString *strSuccess = [responseObject valueForKey:@"success"];
              if (responseObject.count && strSuccess.integerValue)
              {
-                 // NSDictionary *detailUser = [responseObject objectForKey:@"details"];
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
-                     FeedbackToLawyerViewController *FeedbackVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedbackToLawyer"];
-                     FeedbackVc.LawyerQuickBloxId=[NSString stringWithFormat:@"%lu",(unsigned long)videoChatOpponentID];
-                     [self.navigationController pushViewController:FeedbackVc animated:YES];
-                     
-                     if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)])
-                     {
+                     if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)]){
                          [_delegate MainViewControllerDidEndCall];
-                         
                      }
+                     FeedbackToLawyerViewController *FeedbackVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedbackToLawyer"];
+                     [self.navigationController pushViewController:FeedbackVc animated:YES];
                  }
                  else
                  {
@@ -1580,7 +1250,6 @@
              {
                  //Empty Response
                  NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,@"Empty Response");
-                 //    NSString *errorMsg = [responseObject valueForKey:@"message"];
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:@"Please Check Your Account Details For Payment"
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -1597,16 +1266,16 @@
                                                             delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
              [alert show];
              [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-             
          }
-         
      }];
 }
+
 
 -(void)PaymentThroughCoupons
 {
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
-    NSString *userId=user_Profile.userId;
+    NSString *userId = user_Profile.userId;
+    NSLog(@"LawyerId%@", LawyerId);
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     //39
@@ -1615,31 +1284,47 @@
                                  withtype:@"call"
                                withFormId:@""
                              withBundleId:@""
-                             withLawyerId:LawyerId
+                             withLawyerId:[SharedSingleton sharedClient].user_Profile.lawyerId
                    andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
-         // [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
          if (!error)
          {
+             if ([ComingFromSide isEqualToString:@"Lawyer Side"])
+             {
+                 [AppointmentNetworkHelper checkAppointmentStatus:userId withAppointmentId:[[NSUserDefaults standardUserDefaults] valueForKey:@"appID"] withStatus:@"Done" andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+                  {
+                      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                      if (!error)
+                      {
+                          NSString *strSuccess = [responseObject valueForKey:@"success"];
+                          NSLog(@"%@",strSuccess);
+                      }
+                  }];
+             }
+             else
+             {
+                 
+                 [AppointmentNetworkHelper checkAppointmentStatus:userId withAppointmentId:[SharedSingleton sharedClient].appID withStatus:@"Done" andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+                  {
+                      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                      if (!error)
+                      {
+                          NSString *strSuccess = [responseObject valueForKey:@"success"];
+                          NSLog(@"%@",strSuccess);
+                      }
+                  }];
+             }
+             
              NSString *strSuccess = [responseObject valueForKey:@"success"];
              if (responseObject.count && strSuccess.integerValue)
              {
-                 // NSDictionary *detailUser = [responseObject objectForKey:@"details"];
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
-                     
-                     if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)])
-                     {
+                     if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)]){
                          [_delegate MainViewControllerDidEndCall];
                      }
-                     
                      FeedbackToLawyerViewController *FeedbackVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedbackToLawyer"];
-                     FeedbackVc.LawyerQuickBloxId=[NSString stringWithFormat:@"%lu",(unsigned long)videoChatOpponentID];
                      [self.navigationController pushViewController:FeedbackVc animated:YES];
-                     
-                     
-                     
-                     
                  }
                  else
                  {
@@ -1653,15 +1338,12 @@
              {
                  //Empty Response
                  NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,@"Empty Response");
-                 //    NSString *errorMsg = [responseObject valueForKey:@"message"];
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:@"Please Check Your Balance For Payment"
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                  [alert show];
                  [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                 
              }
-             
          }
          else
          {
@@ -1672,19 +1354,14 @@
                                                             delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
              [alert show];
              [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-             
          }
-         
      }];
 }
 
--(void)callDelegate{
-    
+-(void)callDelegate
+{
     FeedbackToLawyerViewController *FeedbackVc = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedbackToLawyer"];
-    FeedbackVc.LawyerQuickBloxId=[NSString stringWithFormat:@"%lu",(unsigned long)videoChatOpponentID];
     [self.navigationController pushViewController:FeedbackVc animated:YES];
-    
-    
 }
 -(void)AskFromLawyerToSendContactInfo
 {
@@ -1701,11 +1378,10 @@
              NSString *strSuccess = [responseObject valueForKey:@"success"];
              if (responseObject.count && strSuccess.integerValue)
              {
-                 // NSDictionary *detailUser = [responseObject objectForKey:@"details"];
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                     message:@"Approvel Sent to Lawyer"
+                                                                     message:@"Approval Sent to Lawyer"
                                                                     delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                      [alert show];
                  }
@@ -1723,7 +1399,6 @@
              {
                  //Empty Response
                  NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,@"Empty Response");
-                 //    NSString *errorMsg = [responseObject valueForKey:@"message"];
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:@"Error"
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -1742,9 +1417,7 @@
                                                             delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
              [alert show];
              [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-             
          }
-         
      }];
 }
 -(void)AskFromUserAboutRecommndForm
@@ -1762,11 +1435,10 @@
              NSString *strSuccess = [responseObject valueForKey:@"success"];
              if (responseObject.count && strSuccess.integerValue)
              {
-                 // NSDictionary *detailUser = [responseObject objectForKey:@"details"];
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                     message:@"Approvel Sent to User"
+                                                                     message:@"Approval Sent to User"
                                                                     delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                      [alert show];
                  }
@@ -1803,9 +1475,7 @@
                                                             delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
              [alert show];
              [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-             
          }
-         
      }];
 }
 -(void)AcceptFormRequestFromLawyer
@@ -1823,11 +1493,10 @@
              NSString *strSuccess = [responseObject valueForKey:@"success"];
              if (responseObject.count && strSuccess.integerValue)
              {
-                 // NSDictionary *detailUser = [responseObject objectForKey:@"details"];
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                     message:@"Your Form Request has been sent to admin for Approovel"
+                                                                     message:@"Your Form Request has been sent to admin for Approval"
                                                                     delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                      [alert show];
                  }
@@ -1851,9 +1520,7 @@
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                  [alert show];
                  [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                 
              }
-             
          }
          else
          {
@@ -1864,28 +1531,53 @@
                                                             delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
              [alert show];
              [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-             
          }
-         
      }];
 }
 
-#pragma mark -
-#pragma mark QBRTCClientDelegate
-
-- (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)userInfo {
-    
-    
-    NSLog(@"session created");
-    if (self.session) {
-        // userInfo - the custom user information dictionary for the call from caller. May be nil.
-        //   NSDictionary *userInfo = @{ @"key" : @"value" };
-        [session rejectCall:nil];
-        return;
+-(void)getLawyerDetail
+{
+    NSLog(@"New Session Created");
+    {
+        if (flag1==2)
+        {
+            flag1=3;
+            
+            [self GetLawyerDetailWithQuickBloxId:[NSString stringWithFormat:@"%lu",(unsigned long)videoChatOpponentID]];
+            if (self.callAlert == nil)
+            {
+                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                NSString *message = [NSString stringWithFormat:@"%@ is calling. Would you like to answer?", appDelegate.currentUser == 1 ? @"User 2" : @"User 1"];
+                self.callAlert = [[UIAlertView alloc] initWithTitle:@"Call" message:message delegate:self cancelButtonTitle:@"Decline" otherButtonTitles:@"Accept", nil];
+                if ([ComingFromSide isEqualToString:@"Lawyer Side"])
+                {
+                    AcceptRejectView.hidden=YES;
+                }
+                else
+                {
+                    
+                    if (appDelegate.isCallStart == YES) {
+                        
+                        AcceptRejectView.hidden = YES;
+                        [self accept];
+                    }
+                    else
+                    {
+                        AcceptRejectView.hidden=NO;
+                        [QBRTCSoundRouter.instance initialize];
+                        [QMSoundManager playRingtoneSound];
+                    }
+                }
+            }
+            
+            // hide call alert if opponent has canceled call
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCallAlert) object:nil];
+            [self performSelector:@selector(hideCallAlert) withObject:nil afterDelay:4];
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        }
     }
-    self.session = session;
 }
-
 
 #pragma mark -
 #pragma mark QBRTCClientDelegate
@@ -1901,28 +1593,37 @@
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
     
     NSLog(@"Connection with user %@ is established", userID);
+    
+    NSParameterAssert(self.session == session);
+    
+    if (self.beepTimer) {
+        
+        [self.beepTimer invalidate];
+        self.beepTimer = nil;
+        [QMSysPlayer stopAllSounds];
+    }
 }
 #pragma mark -
 #pragma mark QBRTCClientDelegate
 
 //Called in case when receive remote video track from opponent
-- (void)session:(QBRTCSession *)session didReceiveRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
+- (void)session:(QBRTCSession *)session receivedRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
     
-    NSLog(@"remote video calllll");
-    QBUUser *user = [QBUUser user];
-    NSNumber *testID = @(user.ID);
-    
-    
-    QBRTCVideoTrack *videoTrackTEST = [self.session remoteVideoTrackWithUserID:testID];
-    [opponentVideoView setVideoTrack:videoTrackTEST];
-    
-    
-    
+    [opponentVideoView setVideoTrack:videoTrack];
 }
 
-
+/**
+ *  Called in case when connection state changed
+ */
+- (void)session:(QBRTCSession *)session connectionClosedForUser:(NSNumber *)userID {
+    
+    NSLog(@"Connection Clsed");
+    [self.session connectionStateForUser:userID];
+    myVideoView = nil;
+}
 //Called in case when receive local video track
 - (void)session:(QBRTCSession *)session didReceiveLocalVideoTrack:(QBRTCVideoTrack *)videoTrack {
+    
     NSLog(@"local video callllll");
     
     [myVideoView setVideoTrack:videoTrack];
@@ -1933,8 +1634,73 @@
 
 - (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID userInfo:(NSDictionary *)userInfo {
     
-    //For example:Update GUI
-    NSLog(@"hungUpByUser");
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+
+    appDelegate.appTerminate = NO;
+    self.remoteVideoChat = nil;
+    self.videoCapture = nil;
+    [self.videoCapture stopSession];
+    [self.session connectionStateForUser:userID],
+    badConnection=YES;
+    
+    NSLog(@"kStopVideoChatCallStatus_BadConnection/////");
+    if ([ComingFromApprovelView isEqualToString:@"Yes"])
+    {
+        [[NSUserDefaults standardUserDefaults] setValue:@"reject" forKey:@"call"];
+    }
+    if ([ComingFromSide isEqualToString:@"Lawyer Side"])
+    {
+        [self finishVideoChat];
+    }
+    myVideoView.hidden = YES;
+    opponentVideoView.layer.contents = (id)[[UIImage imageNamed:@"person.png"] CGImage];
+    callButton.tag = 101;
+    AcceptRejectView.hidden=YES;
+    if ([ComingFromApprovelView isEqualToString:@"Yes"])
+    {
+        [[NSUserDefaults standardUserDefaults] setValue:@"reject" forKey:@"call"];
+    }
+    else
+    {
+    }
+    AcceptRejectView.hidden=YES;
+    
+    if ([ComingFromSide isEqualToString:@"Lawyer Side"])
+    {
+        NSArray *aRR=[self.navigationController viewControllers];
+        NSLog(@"arr is%@ ",aRR);
+        [self.navigationController popToViewController:[aRR lastObject] animated:YES];
+    }
+    else
+    {
+        //Push to feedback screen
+        if (chatFinished==NO) {
+            if (flag==1)
+            {
+                flag=0;
+                NSLog(@"111111111111111111111111");
+                if ([PaymentMethod isEqualToString:@"Skip"])
+                {
+                    UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Error!" message:@"Please Select Payment Method First" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert show];
+                    return;
+                }
+                else if ([PaymentMethod isEqualToString:@"Card"])
+                {
+                    [self DirectPayment];
+                }
+                else if ([PaymentMethod isEqualToString:@"Paypal"])
+                {
+                    [self PaymentThroughPaypal];
+                }
+                else if ([PaymentMethod isEqualToString:@"Cupon"])
+                {
+                    [self PaymentThroughCoupons];
+                    
+                }
+            }
+        }
+    }
 }
 
 #pragma mark -
@@ -1942,11 +1708,147 @@
 
 - (void)sessionDidClose:(QBRTCSession *)session {
     
-    // release session instance
-    self.session = nil;
+    if (session == self.session) {
+        
+        [QBRTCSoundRouter.instance deinitialize];
+        [self.dialignTimer invalidate];
+        if (self.beepTimer) {
+            
+            [self.beepTimer invalidate];
+            self.beepTimer = nil;
+            [QMSysPlayer stopAllSounds];
+            [QBRTCClient deinitializeRTC];
+            self.session = nil;
+        }
+    }
+}
+/**
+ *  Called in case when connection initiated
+ */
+- (void)session:(QBRTCSession *)session startedConnectionToUser:(NSNumber *)userID {
+    
+    if (session == self.session) {
+        NSLog(@"Start Connected");
+        [self.session connectionStateForUser:userID];
+    }
 }
 
-- (void)sessionWillClose:(QBRTCSession *)session {
+- (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)userInfo {
     
+    NSLog(@"efgr");
+    if (self.session) {
+        // we already have a video/audio call session, so we reject another one
+        NSDictionary *userInfo = @{ @"key" : @"value" };
+        [session rejectCall:userInfo];
+        return;
+    }
+    self.session = session;
 }
+
+//---------------------------- test delegates---------------------------//
+
+#pragma mark - QBRTCClientDelegate
+
+- (void)session:(QBRTCSession *)session updatedStatsReport:(QBRTCStatsReport *)report forUserID:(NSNumber *)userID {
+    
+    NSMutableString *result = [NSMutableString string];
+//    NSString *systemStatsFormat = @"(cpu)%ld%%\n";
+    // Connection stats.
+    NSString *connStatsFormat = @"CN %@ms | %@->%@/%@ | (s)%@ | (r)%@\n";
+    [result appendString:[NSString stringWithFormat:connStatsFormat,
+                          report.connectionRoundTripTime,
+                          report.localCandidateType, report.remoteCandidateType, report.transportType,
+                          report.connectionSendBitrate, report.connectionReceivedBitrate]];
+    
+    if (session.conferenceType == QBRTCConferenceTypeVideo) {
+        
+        // Video send stats.
+        NSString *videoSendFormat = @"VS (input) %@x%@@%@fps | (sent) %@x%@@%@fps\n"
+        "VS (enc) %@/%@ | (sent) %@/%@ | %@ms | %@\n";
+        [result appendString:[NSString stringWithFormat:videoSendFormat,
+                              report.videoSendInputWidth, report.videoSendInputHeight, report.videoSendInputFps,
+                              report.videoSendWidth, report.videoSendHeight, report.videoSendFps,
+                              report.actualEncodingBitrate, report.targetEncodingBitrate,
+                              report.videoSendBitrate, report.availableSendBandwidth,
+                              report.videoSendEncodeMs,
+                              report.videoSendCodec]];
+        
+        // Video receive stats.
+        NSString *videoReceiveFormat =
+        @"VR (recv) %@x%@@%@fps | (decoded)%@ | (output)%@fps | %@/%@ | %@ms\n";
+        [result appendString:[NSString stringWithFormat:videoReceiveFormat,
+                              report.videoReceivedWidth, report.videoReceivedHeight, report.videoReceivedFps,
+                              report.videoReceivedDecodedFps,
+                              report.videoReceivedOutputFps,
+                              report.videoReceivedBitrate, report.availableReceiveBandwidth,
+                              report.videoReceivedDecodeMs]];
+    }
+    // Audio send stats.
+    NSString *audioSendFormat = @"AS %@ | %@\n";
+    [result appendString:[NSString stringWithFormat:audioSendFormat,
+                          report.audioSendBitrate, report.audioSendCodec]];
+    
+    // Audio receive stats.
+    NSString *audioReceiveFormat = @"AR %@ | %@ | %@ms | (expandrate)%@";
+    [result appendString:[NSString stringWithFormat:audioReceiveFormat,
+                          report.audioReceivedBitrate, report.audioReceivedCodec, report.audioReceivedCurrentDelay,
+                          report.audioReceivedExpandRate]];
+    NSLog(@"%@", result);
+}
+
+- (void)session:(QBRTCSession *)session initializedLocalMediaStream:(QBRTCMediaStream *)mediaStream {
+    
+    NSLog(@"Initialized local media stream %@", mediaStream);
+    mediaStream.videoTrack.videoCapture = self.videoCapture;
+}
+
+- (void)session:(QBRTCSession *)session startedConnectingToUser:(NSNumber *)userID {
+    
+    NSLog(@"Started connecting to user %@", userID);
+}
+
+- (void)session:(QBRTCSession *)session disconnectedFromUser:(NSNumber *)userID {
+    
+    if (session == self.session) {
+        
+        [QBRTCSoundRouter.instance deinitialize];
+        [self.dialignTimer invalidate];
+        if (self.beepTimer) {
+            
+            [self.beepTimer invalidate];
+            self.beepTimer = nil;
+            [QMSysPlayer stopAllSounds];
+            [QBRTCClient deinitializeRTC];
+            self.session = nil;
+            
+                }
+        if ([ComingFromSide isEqualToString:@"Lawyer Side"])
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        else
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+            if ([_delegate respondsToSelector:@selector(MainViewControllerDidEndCall)]){
+                [_delegate MainViewControllerDidEndCall];
+            }
+        }
+
+    }
+
+    NSLog(@"Disconnected");
+}
+
+
+- (void)session:(QBRTCSession *)session disconnectedByTimeoutFromUser:(NSNumber *)userID {
+    
+    NSLog(@"disconnectedByTimeoutFromUser");
+}
+
+- (void)captureOutput:(AVCaptureOutput*)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
+       fromConnection:(AVCaptureConnection*)connection{
+    
+    NSLog(@"CMSampleBufferRef called");
+}
+
 @end

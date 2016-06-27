@@ -33,6 +33,7 @@
         {
             statusBarView = [[UIView alloc] initWithFrame:CGRectMake(0, -20, 420, 22)];
         }
+        
         else
         {
             statusBarView = [[UIView alloc] initWithFrame:CGRectMake(0, -20, 320, 22)];
@@ -52,16 +53,19 @@
     
     if (IS_IPHONE_4_OR_LESS)
     {
-        ScrollView.contentSize = CGSizeMake(320,490);
+        ScrollView.contentSize = CGSizeMake(320,600);
     }
     else if (IS_IPHONE_5)
     {
-        ScrollView.contentSize = CGSizeMake(320,600);
+        ScrollView.contentSize = CGSizeMake(320,620);
     }
     else if (IS_IPHONE_6)
     {
         ScrollView.contentSize = CGSizeMake(320,620);
         label1.frame=CGRectMake(label1.frame.origin.x,label1.frame.origin.y+15,label1.frame.size.width,label1.frame.size.height);
+    }
+    else{
+        ScrollView.contentSize = CGSizeMake(320,620);
     }
     [super viewDidLoad];
     // Do any additional setup after loading the view.

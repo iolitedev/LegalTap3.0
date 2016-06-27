@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Quickblox/QBNullability.h>
+#import <Quickblox/QBGeneric.h>
 #import "ChatEnums.h"
 
 /**
@@ -27,10 +29,10 @@
 /**
  User subscription state. Read more about states http://xmpp.org/rfcs/rfc3921.html#roster
  */
-@property (nonatomic, assign) enum QBPresenseSubscriptionState subscriptionState;
+@property (nonatomic, assign) QBPresenseSubscriptionState subscriptionState;
 
 // Helpers: translate subscriptionState to and from string to and from enum
-+ (enum QBPresenseSubscriptionState)subscriptionStateFromString:(NSString *)subscriptionState;
-+ (NSString *)subscriptionStateToString:(enum QBPresenseSubscriptionState)subscriptionState;
++ (QBPresenseSubscriptionState)subscriptionStateFromString:(QB_NULLABLE NSString *)subscriptionState;
++ (QB_NULLABLE NSString *)subscriptionStateToString:(QBPresenseSubscriptionState)subscriptionState;
 
 @end

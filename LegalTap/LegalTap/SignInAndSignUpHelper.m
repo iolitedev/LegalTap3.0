@@ -1,3 +1,4 @@
+
 //
 //  SignInAndSignUpHelper.m
 //  LegalTap
@@ -393,9 +394,25 @@
 }
 
 //questions, answers
++(void)UserCall:(NSMutableArray*)lawyerIds
+   andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    {
+        if (lawyerIds.count>0)
+        {
+            [param setValue:lawyerIds forKey:@"user_id"];
+        }
+    }
+    [LoginNetworkRequest RequestToCallToUser:param andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+     {
+         completionBlock(error, responseObject);
+     }];
+}
 
 +(void)RandomCallToLawyer:(NSMutableArray*)lawyerIds
                  withUserId:(NSString*)userId
+               LawyerType:(NSString*)type
                WithQuestionArray:(NSArray*)questionArray
             WithAnswerArray:(NSArray*)AnswerArray
      andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
@@ -409,6 +426,10 @@
         if (userId.length > 0)
         {
             [param setValue:userId forKey:@"userId"];
+        }
+        if (type.length>0)
+        {
+            [param setValue:type forKey:@"LawyerType"];
         }
         if (questionArray.count>0)
         {
@@ -424,6 +445,80 @@
          completionBlock(error, responseObject);
      }];
 }
++(void)TerminateAppByLawyer:(NSString*)UserId
+     andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    {
+        if (UserId.length > 0)
+        {
+            [param setValue:UserId forKey:@"userId"];
+        }
+        
+    }
+    [LoginNetworkRequest AppTerminateByLawyer:param andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+     {
+         completionBlock(error, responseObject);
+     }];
+    
+}
+
++(void)TerminateApp:(NSString*)UserId
+andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    {
+        if (UserId.length > 0)
+        {
+            [param setValue:UserId forKey:@"userId"];
+        }
+        
+    }
+    [LoginNetworkRequest AppTerminate:param andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+     {
+         completionBlock(error, responseObject);
+     }];
+    
+}
+
+
++(void)CallToUser:(NSString*)userId
+               withUserId:(NSString*)lawyerId
+             withAppointmentId:(NSString*)appintmentId
+//        WithQuestionArray:(NSArray*)questionArray
+//          WithAnswerArray:(NSArray*)AnswerArray
+   andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    {
+        if (userId.length>0)
+        {
+            [param setValue:userId forKey:@"clientId"];
+        }
+        if (lawyerId.length > 0)
+        {
+            [param setValue:lawyerId forKey:@"userId"];
+        }
+        if (appintmentId.length > 0)
+        {
+            [param setValue:appintmentId forKey:@"appointmentId"];
+        }
+//        if (questionArray.count>0)
+//        {
+//            [param setValue:questionArray forKey:@"questions"];
+//        }
+//        if (AnswerArray.count>0)
+//        {
+//            [param setValue:AnswerArray forKey:@"answers"];
+//        }
+    }
+     [LoginNetworkRequest RequestCallToUser:param andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+     {
+         completionBlock(error, responseObject);
+         
+     }];
+}
+
 
 +(void)CallResponseToClient:(NSString*)clientId
                withUserId:(NSString*)userId
@@ -450,6 +545,30 @@
          completionBlock(error, responseObject);
      }];
 }
+
++(void)GetUsersList:(NSString*)Type
+            withUserId:(NSString*)UserId
+andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
+{
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    {
+        if (Type.length>0)
+        {
+            [param setValue:Type forKey:@"type"];
+        }
+        if (UserId.length > 0)
+        {
+            [param setValue:UserId forKey:@"user_id"];
+        }
+        
+    }
+    [LoginNetworkRequest UserList:param andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+     {
+         completionBlock(error, responseObject);
+     }];
+}
+
+
 +(void)GetFavoriteLawyersList:(NSString*)UserId
 andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock
 {

@@ -32,6 +32,7 @@
 - (IBAction)Help:(id)sender;
 - (IBAction)LogOut:(id)sender;
 - (IBAction)sLIDERbUTTON:(id)sender;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
 - (IBAction)AccountBalanceBtn:(id)sender;
 - (IBAction)ApplyCouponBtn:(id)sender;

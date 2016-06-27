@@ -4,27 +4,43 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Quickblox/QBNullability.h>
+#import <Quickblox/QBGeneric.h>
 
 @class QBUUser;
 @class QBASession;
 
+/** QBSession class declaration. */
+/** Overview */
+/** This class represents session information. */
 
-@interface QBSession : NSObject
+@interface QBSession : NSObject <NSCoding>
 
-+ (QBSession *)currentSession;
+/**
+ *  Current session instance.
+ *
+ *  @return QBSession instance.
+ */
++ (QB_NONNULL QBSession *)currentSession;
 
-@property (nonatomic, readonly) QBUUser *currentUser;
-@property (nonatomic, readonly) QBASession *sessionDetails;
-@property (nonatomic, readonly) NSDate *sessionExpirationDate;
+/**
+ *  Session user
+ */
+@property (nonatomic, readonly, QB_NULLABLE_PROPERTY) QBUUser *currentUser;
 
-@property (nonatomic, readonly) NSString *socialProviderToken;
-@property (nonatomic, readonly) NSDate *socialProviderTokenExpirationDate;
+/**
+ *  Session details
+ */
+@property (nonatomic, readonly, QB_NULLABLE_PROPERTY) QBASession *sessionDetails;
 
+/**
+ *  Session expiration date
+ */
+@property (nonatomic, readonly, QB_NULLABLE_PROPERTY) NSDate *sessionExpirationDate;
+
+/**
+ *  Token valid state
+ */
 @property (nonatomic, readonly, getter=isTokenValid) BOOL tokenValid;
-
-- (void)startSessionWithDetails:(QBASession *)session expirationDate:(NSDate *)sessionDate;
-- (void)updateSessionUser:(QBUUser *)user;
-- (void)saveSocialProviderDetailsFromHeaders:(NSDictionary *)headers;
-- (void)endSession;
 
 @end

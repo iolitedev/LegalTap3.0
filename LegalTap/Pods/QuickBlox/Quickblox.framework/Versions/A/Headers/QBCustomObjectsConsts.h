@@ -6,11 +6,22 @@
 //  Copyright (c) 2013 QuickBlox. All rights reserved.
 //
 
+#import <Quickblox/QBNullability.h>
+#import <Quickblox/QBGeneric.h>
+
 #define dataElement @"data"
 #define permissionsElement @"permissions"
 
 // Permissions access types
-extern NSString *const kQBCOPermissionsAccessOpen;
-extern NSString *const kQBCOPermissionsAccessOwner;
-extern NSString *const kQBCOPermissionsAccessOpenForUsersIDs;
-extern NSString *const kQBCOPermissionsAccessOpenForGroups;
+extern NSString *const QB_NONNULL_S kQBCOPermissionsAccessOpen;
+extern NSString *const QB_NONNULL_S kQBCOPermissionsAccessOwner;
+extern NSString *const QB_NONNULL_S kQBCOPermissionsAccessOpenForUsersIDs;
+extern NSString *const QB_NONNULL_S kQBCOPermissionsAccessOpenForGroups;
+
+typedef NS_ENUM(NSUInteger, QBCOAggregationOperator) {
+    QBCOAggregationOperatorNone,
+    QBCOAggregationOperatorAverage,
+    QBCOAggregationOperatorMinimum,
+    QBCOAggregationOperatorMaximum,
+    QBCOAggregationOperatorSummary
+};

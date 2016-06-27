@@ -90,7 +90,7 @@ enum {
 //	It adds a number of convenience routines, but otherwise adds nothing
 //	to the footprint of the original struct.
 //=============================================================================
-class CAStreamBasicDescription : 
+class CAStreamBasicDescription :
 	public AudioStreamBasicDescription
 {
 

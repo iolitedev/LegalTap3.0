@@ -18,6 +18,8 @@
     int year;
     NSString *NewdateString;
     IBOutlet UIView *QueAnsView;
+    IBOutlet UIScrollView *scrollViewQandA;
+    
 }
 - (IBAction)btnClicked_Continue:(UIButton *)sender;
 

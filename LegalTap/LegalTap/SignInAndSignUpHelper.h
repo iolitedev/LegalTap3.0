@@ -54,7 +54,10 @@
                 withContactNumber:(NSString*)contactNumber
                      withLastName:(NSString*)LastName
            andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
-
++(void)TerminateAppByLawyer:(NSString*)UserId
+     andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
++(void)TerminateApp:(NSString*)UserId
+andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
 +(void)changeStatusWithUserId:(NSString*)userId
                    withStatus:(BOOL)status
        andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBloc;
@@ -74,14 +77,26 @@
             withState:(NSString*)State
 andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
 
++(void)CallToUser:(NSString*)userId
+       withUserId:(NSString*)lawyerId
+withAppointmentId:(NSString*)appintmentId
 
+//        WithQuestionArray:(NSArray*)questionArray
+//          WithAnswerArray:(NSArray*)AnswerArray
+andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
 
 +(void)RandomCallToLawyer:(NSMutableArray*)lawyerIds
                withUserId:(NSString*)userId
+               LawyerType:(NSString*)type
         WithQuestionArray:(NSArray*)questionArray
           WithAnswerArray:(NSArray*)AnswerArray
    andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
 
++(void)GetUsersList:(NSString*)Type
+          withUserId:(NSString*)UserId
+andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
++(void)UserCall:(NSMutableArray*)lawyerIds
+andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlock;
 +(void)CallResponseToClient:(NSString*)clientId
                  withUserId:(NSString*)userId
                withResponse:(NSString*)response

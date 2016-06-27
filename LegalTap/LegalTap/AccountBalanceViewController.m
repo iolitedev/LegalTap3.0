@@ -17,7 +17,10 @@
 - (void)viewDidLoad
 {
     self.navigationController.navigationBarHidden=NO;
-    
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"New_BackButton_blue"] style:UIBarButtonItemStylePlain target:self action:@selector(backBarButton)];
+    [backButton setTintColor:[UIColor colorWithRed:0/255.0f green:133/255.0f blue:198/255.0f alpha:1.0f]];
+    [self.navigationItem setLeftBarButtonItem:backButton];
+
     UIView *statusBarView;
     if (IS_IPHONE_6)
     {
@@ -51,7 +54,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
-
+- (void)backBarButton
+{
+    //    [CommonHelper animateToHomeTabWithTabBarController:self.navigationController.tabBarController];
+    [self.navigationController popViewControllerAnimated:TRUE];
+}
 -(void)GetAccountBalance
 {
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
@@ -76,9 +83,9 @@
                  }
                  else
                  {
-//                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-//                                                                     message:@""
-//                                                                    delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                                     message:@""
+                                                                    delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 //                     [alert show];
                  }
              }
@@ -87,10 +94,10 @@
                  //Empty Response
                  NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,@"Empty Response");
                      NSString *errorMsg = [responseObject valueForKey:@"message"];
-                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                 message:errorMsg
-                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+//                                                                 message:errorMsg
+//                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//                 [alert show];
                  [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                  
              }

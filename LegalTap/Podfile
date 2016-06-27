@@ -3,14 +3,15 @@
 
 target 'LegalTap' do
 	
-pod 'AFNetworking'
+pod 'AFNetworking','~> 2.6.3'
 pod 'MBProgressHUD'
 pod 'IQKeyboardManager'
-#pod 'CardIO'
-
-pod 'libextobjc/EXTScope
+# pod 'CardIO'
+pod 'Appsee'
+pod 'libextobjc/EXTScope'
 pod 'MTBlockAlertView'
-pod 'QuickBlox', '= 2.2'
+#pod 'QuickBlox'
+#pod 'Quickblox-WebRTC'
 pod 'PayPal-iOS-SDK'
 
 pod 'Mixpanel'

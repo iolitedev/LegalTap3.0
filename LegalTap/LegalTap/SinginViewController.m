@@ -50,6 +50,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -190,7 +191,7 @@
                     //                formPortalNavigationController.navigationBar.tintColor = defColor_TOPBAR;
                     //                settingsNavigationController.navigationBar.tintColor = defColor_TOPBAR;
                 }
-                else
+                else if (IS_IPHONE_4_OR_LESS)
                 {
                     UIImage *BlueBackground = [UIImage imageNamed:@"blueImage1"];
                     [[UITabBar appearance] setSelectionIndicatorImage:BlueBackground];
@@ -198,6 +199,10 @@
                     myAppointmentNavigationController.navigationBar.tintColor = defColor_TOPBAR;
                     //                formPortalNavigationController.navigationBar.tintColor = defColor_TOPBAR;
                     //                settingsNavigationController.navigationBar.tintColor = defColor_TOPBAR;
+                }
+                else
+                {
+                    
                 }
                 
             }
@@ -250,6 +255,7 @@
     }
     if ([CommonHelper validEmail:strEmail])
     {
+        NSLog(@"detail%@",strEmail);
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [SignInAndSignUpHelper userLoginWithUserEmail:strEmail
                                          withPassword:strPassword
@@ -310,7 +316,7 @@
                 //Error
                 NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,error.description);
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                message:@"Please check your internet connection."
+                                                                message:@"Login Error"
                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert show];
             }

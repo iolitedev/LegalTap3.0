@@ -1,4 +1,4 @@
-//
+ //
 //  MyAppointmentCollectionViewCell.m
 //  LegalTap
 //
@@ -88,8 +88,20 @@
     
     if (_clientAppointment && [_userType isEqualToString:@"user"])
     {
+        NSDate *today = [NSDate date]; // it will give you current date
         
-        if ([self.clientAppointment.status isEqualToString:@"Lawyer Assigned"])
+        NSComparisonResult result;
+        //has three possible values: NSOrderedSame,NSOrderedDescending, NSOrderedAscending
+        
+        result = [today compare:self.clientAppointment.dateTime]; // comparing two dates
+        
+        if(result == NSOrderedDescending)
+        {
+            self.pendingFlagLabel.hidden=NO;
+            self.pendingFlagLabel.text=@"Previous Appointment";
+            self.pendingFlagLabel.backgroundColor=[UIColor colorWithRed:(0/255.0) green:(133/255.0) blue:(198/255.0) alpha:1];
+        }
+        else if ([self.clientAppointment.status isEqualToString:@"Lawyer Assigned"])
         {
             self.pendingFlagLabel.hidden=NO;
             self.pendingFlagLabel.text=@"Confirmed";

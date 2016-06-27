@@ -9,9 +9,16 @@
 
 #import "MyAppointmentViewController.h"
 #import "CalenderView.h"
+//#import "Settings.h"
+
 
 @interface MyAppointmentViewController ()
 
+@property (copy, nonatomic) void(^chatConnectCompletionBlock)(BOOL error);
+@property (copy, nonatomic) dispatch_block_t chatDisconnectedBlock;
+@property (copy, nonatomic) dispatch_block_t chatReconnectedBlock;
+@property (strong, nonatomic) QBRTCTimer *presenceTimer;
+//@property (strong, nonatomic) Settings *settings;
 @end
 
 @implementation MyAppointmentViewController
@@ -42,6 +49,7 @@
             //[[UITabBar appearance] setSelectionIndicatorImage:BlueBackground];
             self.tabBarController.tabBar.selectionIndicatorImage = [UIImage imageNamed:@"blueImage4"];
         }
+       
         else if (IS_IPHONE_6P)
         {
             self.tabBarController.tabBar.selectionIndicatorImage = [UIImage imageNamed:@"blueImage5"];
@@ -119,7 +127,8 @@
         
         statusBarView.backgroundColor = [UIColor colorWithRed:70/255.0f green:130/255.0f blue:180/255.0f alpha:1.0f];
         [self.navigationController.navigationBar addSubview:statusBarView];
-//
+        
+        
         UIImage *navBarImg = [UIImage imageNamed:@"Navigation_bg"];
         [self.navigationController.navigationBar setBackgroundImage:navBarImg forBarMetrics:UIBarMetricsDefault];
         self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:3/255.0f green:136/255.0f blue:201/255.0f alpha:1.0];
@@ -282,11 +291,14 @@
                      for (NSDictionary *dict in arrAppointmetsData)
                      {
                          Appointment *ap = [[Appointment alloc] initWithDictionary:dict];
-                         [arrAppointmentsObjectes addObject:ap];
-                         [array_calenderList addObject:ap.dateTime];
+                         user_Profile.appointmentId = ap.appointmentId;
+                         if ([ap.callStatus  isEqual: @""])
+                         {
+                             [arrAppointmentsObjectes addObject:ap];
+                             [array_calenderList addObject:ap.dateTime];
+                         }
                      }
                      [self reloadAppointmentsListWithArray:arrAppointmentsObjectes];
-
                  }
              }
              else
@@ -395,6 +407,14 @@
                                                            CGRectGetMinY(collectionView_Calender.frame) - 80,
                                                            CGRectGetWidth(collectionView_Calender.frame),
                                                            CGRectGetHeight(collectionView_Calender.frame) + 50);
+            }
+            else if (IS_IPHONE_4_OR_LESS)
+            {
+                collectionView_Calender.frame = CGRectMake(CGRectGetMinX(collectionView_Calender.frame),
+                                                           CGRectGetMinY(collectionView_Calender.frame) + 40,
+                                                           CGRectGetWidth(collectionView_Calender.frame),
+                                                           CGRectGetHeight(collectionView_Calender.frame));
+
             }
             
             
@@ -828,7 +848,8 @@
     {
         app = [array_List objectAtIndex:indexPath.row];
         date = app.dateTime;
-    }
+        NSString *str = app.appointmentId;
+           }
     else
     {
         date = [array_List objectAtIndex:indexPath.row];
@@ -935,77 +956,275 @@
     
     NSString *qUserName;
     NSString *qPassword;
-    if (user_Profile.quickBlox_UserName.length)
-    {
+    if (user_Profile.quickBlox_UserName.length){
         qUserName = user_Profile.quickBlox_UserName;
         qPassword = user_Profile.quickBlox_UserName;
-    }
-    else
-    {
+    }else{
         qUserName = @"ritesharora";
         qPassword = @"ritesharora";
     }
     
-    [self createSeesionForClientwithUserName:qUserName withUserPassword:qPassword];
+    
+    
+        // Set QuickBlox Chat delegate
+    [[QBChat instance] addDelegate:self];
+    QBUUser *user = [QBUUser user];
+    user.fullName = qUserName;
+    user.login = qUserName;
+    user.ID =  user_Profile.quickBlox_Id.intValue;
+    user.password = qPassword;
+
+    
+    [self logInWithUser:user completion:^(BOOL error) {
+        NSLog(@"connect");
+
+        if (!error) {
+            
+         //   [weakSelf applyConfiguration];
+//            [weakSelf performSegueWithIdentifier:kSettingsCallSegueIdentifier sender:nil];
+        }
+        else {
+            NSLog(@"error");
+
+           // [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Login chat error!", nil)];
+        }
+    } disconnectedBlock:^{
+        NSLog(@"Disconnect");
+    } reconnectedBlock:^{
+//        [weakSelf applyConfiguration];
+
+        NSLog(@"Reconnect");
+    }];
+    
+
+   // [self createSeesionForClientwithUserName:qUserName withUserPassword:qPassword];
     
 }
-//Video Chat
--(void)createSeesionForClientwithUserName:(NSString*)userName withUserPassword:(NSString*)password
-{
-    // Create extended session request with user authorization
-    QBSessionParameters *parameters = [QBSessionParameters new];
-    parameters.userLogin = userName;
-    parameters.userPassword = password;
-     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//- (void)applyConfiguration {
+//    
+//    NSMutableArray *iceServers = [NSMutableArray array];
+//    
+//    for (NSString *url in self.settings.stunServers) {
+//        
+//        QBRTCICEServer *server = [QBRTCICEServer serverWithURL:url username:@"" password:@""];
+//        [iceServers addObject:server];
+//    }
+//    
+//    [iceServers addObjectsFromArray:[self quickbloxICE]];
+//    
+//    [QBRTCConfig setICEServers:iceServers];
+//    [QBRTCConfig setMediaStreamConfiguration:self.settings.mediaConfiguration];
+//    [QBRTCConfig setStatsReportTimeInterval:1.f];
+//}
+//- (NSArray *)quickbloxICE {
+//    
+//    NSString *password = @"baccb97ba2d92d71e26eb9886da5f1e0";
+//    NSString *userName = @"quickblox";
+//    
+//    QBRTCICEServer * stunServer = [QBRTCICEServer serverWithURL:@"stun:turn.quickblox.com"
+//                                                       username:@""
+//                                                       password:@""];
+//    
+//    QBRTCICEServer * turnUDPServer = [QBRTCICEServer serverWithURL:@"turn:turn.quickblox.com:3478?transport=udp"
+//                                                          username:userName
+//                                                          password:password];
+//    
+//    QBRTCICEServer * turnTCPServer = [QBRTCICEServer serverWithURL:@"turn:turn.quickblox.com:3478?transport=tcp"
+//                                                          username:userName
+//                                                          password:password];
+//    
+//    
+//    return@[stunServer, turnTCPServer, turnUDPServer];
+//}
+//
 
-    [QBRequest createSessionWithExtendedParameters:parameters successBlock:^(QBResponse *response, QBASession *session)
-     {
-         [self loginToChat:session withPassword:password];
-         
-     } errorBlock:[self handleError]];
+- (void)logInWithUser:(QBUUser *)user completion:(void (^)(BOOL error))completion  disconnectedBlock:(dispatch_block_t)disconnectedBlock reconnectedBlock:(dispatch_block_t)reconnectedBlock{
+    
+    [QBChat.instance addDelegate:self];
+    if (QBChat.instance.isConnected) {
+        completion(NO);
+        return;
+    }
+    
+    self.chatConnectCompletionBlock = completion;
+    self.chatDisconnectedBlock = disconnectedBlock;
+    self.chatReconnectedBlock = reconnectedBlock;
+    [QBChat.instance connectWithUser:user completion:^(NSError * _Nullable error) {
+    // NSLog(@"error");
+        
+    }];
 }
 
+//
+//
+//-(void)createSeesionForClientwithUserName:(NSString*)userName withUserPassword:(NSString*)password
+//{
+//    // Your app connects to QuickBlox server here.
+//    
+//    
+//    
+//    
+//    
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    
+//        UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
+//        [[QBChat instance] addDelegate:self];
+//
+//    QBUUser *user = [QBUUser user];
+//    user.login = userName;
+//    user.password = password;
+//    
+//
+//    
+//    [QBRequest logInWithUserLogin:userName password:user.password  successBlock:^(QBResponse *response, QBUUser *user) {
+//        // Success, do something
+//        NSLog(@"success:Response");
+//        [QBChat.instance addDelegate:self];
+//
+////        [QBChat.instance loginWithUser:user];
+//        
+//
+//
+//    } errorBlock:^(QBResponse *response) {
+//        // error handling
+//        NSLog(@"error: %@", response.error);
+//        NSLog(@"error:Response");
+//
+//    }];
+//    
+//    
+
+    
+    
+//    
+//    [QBRequest signUp:user successBlock:^(QBResponse *response, QBUUser *user) {
+//        // Success, do something
+//        
+//        
+//        
+//        //        [self loginToChat:self.session withPassword:password];
+//    } errorBlock:^(QBResponse *response) {
+//        // error handling
+//        NSLog(@"error: %@", response.error);
+//    }];
+    
+//}
 #pragma mark - QuickBlox
 - (void(^)(QBResponse *))handleError
 {
     return ^(QBResponse *response)
     {
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", "")
-                                                        message:[response.error description]
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"OK", "")
-                                              otherButtonTitles:nil];
-        [alert show];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", "")
+//                                                        message:[response.error description]
+//                                                       delegate:nil
+//                                              cancelButtonTitle:NSLocalizedString(@"OK", "")
+//                                              otherButtonTitles:nil];
+//        [alert show];
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     };
 }
-
-- (void)loginToChat:(QBASession *)session withPassword:(NSString*)password
-{
-    // Set QuickBlox Chat delegate
-    [[QBChat instance] addDelegate:self];
-    //    [QBChat instance].delegate = self;
-    
-    QBUUser *user = [QBUUser user];
-    user.ID = session.userID;
-    user.password = password;
-    
-    // Login to QuickBlox Chat
-    [[QBChat instance] loginWithUser:user];
-}
+//
+//- (void)loginToChat:(QBASession *)session withPassword:(NSString*)password
+//{
+//    // Set QuickBlox Chat delegate
+//    [[QBChat instance] addDelegate:self];
+//    //    [QBChat instance].delegate = self;
+//    
+//    QBUUser *user = [QBUUser user];
+//    user.ID = session.userID;
+//    user.password = password;
+//    
+//    // Login to QuickBlox Chat
+//    [[QBChat instance] loginWithUser:user];
+//}
 
 #pragma mark QBChatDelegate
+#pragma mark - QBChatDelegate
 
-- (void)chatDidLogin
-{
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+- (void)chatDidNotConnectWithError:(NSError *)error {
+    
+    if (self.chatConnectCompletionBlock) {
+        self.chatReconnectedBlock();
+
+        self.chatConnectCompletionBlock(YES);
+        self.chatConnectCompletionBlock = nil;
+    }
 }
 
-- (void)chatDidNotLogin
-{
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+- (void)chatDidAccidentallyDisconnect {
+    
+    if (self.chatConnectCompletionBlock) {
+        
+        self.chatConnectCompletionBlock(YES);
+        self.chatConnectCompletionBlock = nil;
+    }
+    if (self.chatDisconnectedBlock) {
+        self.chatDisconnectedBlock();
+    }
+
 }
+
+- (void)chatDidFailWithStreamError:(NSError *)error {
+    
+    if (self.chatConnectCompletionBlock) {
+        
+        self.chatConnectCompletionBlock(YES);
+        self.chatConnectCompletionBlock = nil;
+        self.chatReconnectedBlock();
+
+    }
+}
+
+- (void)chatDidConnect {
+    
+    [[QBChat instance] sendPresence];
+    __weak __typeof(self)weakSelf = self;
+    
+    self.presenceTimer = [[QBRTCTimer alloc] initWithTimeInterval:5
+                                                           repeat:YES
+                                                            queue:dispatch_get_main_queue()
+                                                       completion:^{
+                                                           [[QBChat instance] sendPresence];
+                                                           
+                                                       } expiration:^{
+                                                           
+                                                           if ([QBChat.instance isConnected]) {
+                                                               [QBChat.instance disconnectWithCompletionBlock:nil];
+                                                           }
+                                                           
+                                                           [weakSelf.presenceTimer invalidate];
+                                                           weakSelf.presenceTimer = nil;
+                                                       }];
+    
+    self.presenceTimer.label = @"Chat presence timer";
+    
+    if (self.chatConnectCompletionBlock) {
+        
+        self.chatConnectCompletionBlock(NO);
+        self.chatConnectCompletionBlock = nil;
+    }
+}
+
+- (void)chatDidReconnect {
+    if (self.chatReconnectedBlock) {
+        self.chatReconnectedBlock();
+    }
+}
+- (void)session:(QBRTCSession *)session initializedLocalMediaStream:(QBRTCMediaStream *)mediaStream {
+    
+    NSLog(@"Initialized local media stream %@", mediaStream);
+}
+
+//- (void)chatDidConnect {
+//    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+//    
+//}
+//- (void)chatDidNotConnectWithError:(NSError *)error {
+//    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+//    
+//}
+
 
 
 

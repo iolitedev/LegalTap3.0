@@ -11,8 +11,9 @@
 #import "SignInAndSignUpHelper.h"
 #import "PayPalMobile.h"
 #import "PamentHelper.h"
+#import "Appointment.h"
 
-@interface AlmostAtEndViewController : UIViewController<UIAlertViewDelegate,PayPalPaymentDelegate,UIPopoverControllerDelegate>
+@interface AlmostAtEndViewController : UIViewController<UIAlertViewDelegate,PayPalPaymentDelegate,UIPopoverControllerDelegate,QBRTCClientDelegate>
 {
     IBOutlet UIView *view_FeeDetail;
     IBOutlet UIImageView *imageView_UserBGImage;
@@ -21,19 +22,17 @@
     IBOutlet UITextField *txt_Duration;
     IBOutlet UITextField *txt_Fee;
     IBOutlet UITextField *txt_CardNumber;
-    
     NSMutableArray *LawyerListArray;
     NSUInteger randomIndex;
     NSString *OpponenntLawyerQBId;
     NSMutableArray *LawyerIdsArray;
     NSTimer *timer;
     UIView *BlackView;
-    
     IBOutlet UILabel *lbl_SelectedLeagalTap;
     NSInteger RejectedCount;
     IBOutlet UIButton *LetsLegalTapBtn;
     int Balance;
-      UILabel *Timelabel;
+    UILabel *Timelabel;
     NSTimer *CountDownTimer;
     int startTime;
     IBOutlet UILabel *legalLbl;
@@ -47,6 +46,9 @@
 
 @property(nonatomic, strong, readwrite) NSString *environment;
 @property(nonatomic, assign, readwrite) BOOL acceptCreditCards;
+@property(nonatomic, assign, readwrite) BOOL goingCall;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+
 
 
 - (IBAction)BackArrowBtn:(id)sender;
@@ -55,7 +57,7 @@
 @property (strong, nonatomic) NSString *strSelectedPractice;
 
 @property (strong, nonatomic) NSDate *appointmentDate;;
-
+@property (strong, nonatomic) Appointment *app;
 @property (strong, nonatomic) NSString *identifierPreviousVC;
 @property (strong, nonatomic) NSMutableArray *array_QuestionsList;
 @property (strong, nonatomic) NSMutableArray *array_AnswersList;

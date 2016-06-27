@@ -74,7 +74,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
          else
@@ -97,6 +97,7 @@
         
     }
 }
+
 
 #pragma mark - Text Field Delegate
 -(BOOL)textFieldShouldReturn:(UITextField *)textField

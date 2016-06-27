@@ -108,6 +108,10 @@ andWithCompletionBlock:(RequestCompletionHandler_ResponseDictonary)completionBlo
         {
             [param setValue:UserDateTime forKey:@"userDatetime"];
         }
+        if (LawyerId && LawyerId.length > 0)
+        {
+            [param setValue:LawyerId forKey:@"lawyerId"];
+        }
     }
     [AppointmentNetworkRequest makeFavoriteAppointment_WithParameters:param andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {

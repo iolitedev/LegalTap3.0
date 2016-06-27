@@ -643,7 +643,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
          else
@@ -653,7 +653,7 @@
              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                              message:@"Try Again.."
                                                             delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-             [alert show];
+//             [alert show];
          }
      }];
 }
@@ -696,7 +696,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
          else
@@ -813,7 +813,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
              
          }
@@ -880,7 +880,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
          else

@@ -89,7 +89,7 @@ static BOOL alertViewed = NO;
     
     if ([self connected])
     {
-        [[self requestSerializer] setTimeoutInterval:30];
+        [[self requestSerializer] setTimeoutInterval:60];
         
         [LTAPIClientManager alertViewed:NO];
         
@@ -169,7 +169,7 @@ static BOOL alertViewed = NO;
     
     if ([self connected])
     {
-        [[self requestSerializer] setTimeoutInterval:30];
+        [[self requestSerializer] setTimeoutInterval:60];
         
         [LTAPIClientManager alertViewed:NO];
         
@@ -226,7 +226,7 @@ static BOOL alertViewed = NO;
     
     if ([self connected])
     {
-        [[self requestSerializer] setTimeoutInterval:30];
+        [[self requestSerializer] setTimeoutInterval:60];
         
         [LTAPIClientManager alertViewed:NO];
         

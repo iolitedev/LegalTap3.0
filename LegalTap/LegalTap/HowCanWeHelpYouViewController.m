@@ -41,7 +41,9 @@
     [self.navigationController.navigationBar addSubview:statusBarView];
     UIImage *navBarImg = [UIImage imageNamed:@"Navigation_bg_white"];
     [self.navigationController.navigationBar setBackgroundImage:navBarImg forBarMetrics:UIBarMetricsDefault];
-
+  
+    
+    
 //    [self.navigationController.navigationBar addSubview:statusBarView];
     
     [super viewDidLoad];
@@ -76,7 +78,13 @@
         _array_AnswersList = [[NSMutableArray alloc] init];
         [self loadQuestionsFirst];
     }
-}
+    [_scrollView addSubview:view_QuestionArea];
+    
+    if (IS_IPHONE_4_OR_LESS)
+    {
+        _scrollView.contentSize = CGSizeMake(300, 320);
+    }
+    }
 -(void)viewWillAppear:(BOOL)animated
 {
     UIImage *navBarImg = [UIImage imageNamed:@"Navigation_bg"];

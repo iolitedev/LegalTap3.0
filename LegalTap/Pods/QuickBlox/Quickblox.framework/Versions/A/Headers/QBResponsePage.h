@@ -4,16 +4,20 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Quickblox/QBNullability.h>
+#import <Quickblox/QBGeneric.h>
 
 
 @interface QBResponsePage : NSObject
 
 @property (nonatomic) NSInteger skip;
 @property (nonatomic) NSInteger limit;
+@property (nonatomic, readonly) NSUInteger totalEntries;
 
-+ (QBResponsePage *)responsePageWithLimit:(NSInteger)limit;
-+ (QBResponsePage *)responsePageWithLimit:(NSInteger)limit skip:(NSInteger)skip;
++ (QB_NONNULL QBResponsePage *)responsePageWithLimit:(NSInteger)limit;
++ (QB_NONNULL QBResponsePage *)responsePageWithLimit:(NSInteger)limit skip:(NSInteger)skip;
++ (QB_NONNULL QBResponsePage *)responsePageForLastRecord;
 
-+ (QBResponsePage *)responsePageForLastRecord;
++ (QB_NONNULL QBResponsePage *)responsePageWithLimit:(NSInteger)limit skip:(NSInteger)skip totalEntries:(NSUInteger)totalEntries;
 
 @end

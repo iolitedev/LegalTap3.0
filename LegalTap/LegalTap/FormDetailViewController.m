@@ -290,6 +290,7 @@
 
 -(void)DirectPayment
 {
+  
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
     NSString *userId=user_Profile.userId;
     
@@ -303,6 +304,8 @@
     {
         isForm = NO;
     }
+    
+    NSLog(@"adsdsd:%@%@%@",userId,strPayment_Amout,form_Type);
 
     [SignInAndSignUpHelper DirectPayWithCard:userId
                                   withAmount:strPayment_Amout
@@ -312,6 +315,7 @@
                                 withLawyerId:@""
                       andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
+         
          // [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
          if (!error)
          {

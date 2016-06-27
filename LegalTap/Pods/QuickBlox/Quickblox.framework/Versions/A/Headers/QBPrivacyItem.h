@@ -7,12 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Quickblox/QBNullability.h>
+#import <Quickblox/QBGeneric.h>
 
 
 typedef enum QBPrivacyItemType {
-	USER_ID,
+	USER_ID = 1,
+    GROUP_USER_ID,
 	GROUP,
-	SUBSCRIPTION,
+	SUBSCRIPTION
 } QBPrivacyItemType;
 
 typedef enum QBPrivacyItemAction {
@@ -20,32 +23,29 @@ typedef enum QBPrivacyItemAction {
     DENY,
 } QBPrivacyItemAction;
 
-#import "QBDDXMLElement.h"
+@class DDXMLElement;
 /** QBPrivacyItem structure represents privacy object for managing privacy lists . */
 @interface QBPrivacyItem : NSObject
 
+- (QB_NONNULL instancetype)init __attribute__((unavailable("'init' is not a supported initializer for this class.")));;
++ (QB_NONNULL instancetype)new __attribute__((unavailable("'new' is not a supported initializer for this class.")));;
+
 /**
- @param type can be USER_ID, SUBSCRIPTION or GROUP
+ @param type can be USER_ID, SUBSCRIPTION, GROUP or GROUP_USER_ID
  @param valueForType value for type
  @param action can be ALLOW or DENY
  @return QBPrivacyItem instance
  */
-- (instancetype)initWithType:(QBPrivacyItemType)type valueForType:(NSUInteger)valueForType action:(QBPrivacyItemAction)action;
+- (QB_NONNULL instancetype)initWithType:(QBPrivacyItemType)type valueForType:(NSUInteger)valueForType action:(QBPrivacyItemAction)action;
 
-/// type can be USER_ID, SUBSCRIPTION or GROUP
-@property (assign) QBPrivacyItemType type;
+/// type can be USER_ID, SUBSCRIPTION, GROUP OR GROUP_USER_ID( to block user in all group chats )
+@property (assign, readonly) QBPrivacyItemType type;
 
 /// valueForType value for type
-@property (assign) NSUInteger valueForType;
+@property (assign, readonly) NSUInteger valueForType;
 
 /// action can be ALLOW or DENY
-@property (assign) QBPrivacyItemAction action;
+@property (assign, readonly) QBPrivacyItemAction action;
 
-- (QBDDXMLElement *)convertToNSXMLElement;
-@end
-
-
-@interface QBDDXMLElement (QBPrivacyItem)
-
-- (QBPrivacyItem *)convertToQBPrivacyItem;
+- (QB_NULLABLE DDXMLElement *)convertToNSXMLElementWithOrder:(NSUInteger) order;
 @end

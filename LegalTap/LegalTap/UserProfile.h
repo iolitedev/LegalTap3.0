@@ -18,7 +18,7 @@
 @property (strong, nonatomic) NSString *email;
 @property (strong, nonatomic) NSString *imageURL;
 @property (strong, nonatomic) NSString *userType;
-
+@property (strong, nonatomic) NSString *quickBloxLawyer_Id;
 @property (strong, nonatomic) NSString *quickBlox_Id;
 @property (strong, nonatomic) NSString *quickBlox_UserName;
 
@@ -29,6 +29,8 @@
 
 @property (strong, nonatomic) NSString *mobileNumber;
 @property (strong, nonatomic) UIImage *image;
+@property (strong, nonatomic)NSString *lawyerId;
+@property (strong, nonatomic)NSString *appointmentId;
 
 @property (nonatomic) BOOL onlineStatus;
 

@@ -90,7 +90,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
                  //[self.navigationController popViewControllerAnimated:YES];
              }
          }
@@ -108,7 +108,7 @@
 -(void)MakeLawyerToFavorite:(NSString *)LawyerId
 {
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
-    NSString *UserId=user_Profile.userId;
+    NSString *UserId = user_Profile.userId;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [SignInAndSignUpHelper MakeLawyerToFavorite:UserId withLawyerId:LawyerId withFavorite:@"1" andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
@@ -118,7 +118,7 @@
              NSString *strSuccess = [responseObject valueForKey:@"success"];
              if (responseObject.count && strSuccess.integerValue)
              {
-                 if ([[responseObject valueForKey:@"success"] integerValue]==1)
+                 if ([[responseObject valueForKey:@"success"] integerValue] == 1)
                  {
                      UIAlertView *alert=[[UIAlertView alloc] initWithTitle:nil message:@"Lawyer Added to Favorite" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                      [alert show];
@@ -140,7 +140,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
          else

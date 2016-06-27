@@ -342,14 +342,12 @@
         if (IS_IPHONE_4_OR_LESS)
         {
             Y = 100;
-   
         }
         else
         {
-            Y = 130;
-  
+            Y = 110;
         }
-
+        
         for (UIView *view in view_AnswerList.subviews)
         {
             [view removeFromSuperview];
@@ -369,13 +367,15 @@
                 
             }
             [view_AnswerList addSubview:lbl];
-            
             UILabel *lblAns = [[UILabel alloc] init];
             {
                 lblAns.frame = CGRectMake(10, CGRectGetMaxY(lbl.frame), Width-20, 20);
                 lblAns.text = [NSString stringWithFormat:@"%@",dict[@"answers"]];
                 lblAns.textColor = [UIColor lightGrayColor];
                 lblAns.font = [UIFont systemFontOfSize:14.0];
+                lblAns.lineBreakMode = NSLineBreakByWordWrapping;
+                lblAns.numberOfLines = 0;
+                [lblAns sizeToFit];
             }
             [view_AnswerList addSubview:lblAns];
             Y = CGRectGetMaxY(lblAns.frame);
@@ -393,6 +393,7 @@
 }
 +(UIView*)loadAnswersOnViewWithWindowArray:(NSMutableArray*)array withWidth:(CGFloat)Width
 {
+    Width = Width-10;
     UIView *view_AnswerList = [[UIView alloc] init];
     {
         CGFloat Y;
@@ -420,9 +421,14 @@
                 lbl.frame = CGRectMake(10, Y?Y+20:10, Width-20, 20);
                 lbl.text = [NSString stringWithFormat:@"%@",dict[@"question"]];
                 lbl.font = [UIFont systemFontOfSize:15.0];
+                lbl.numberOfLines = 0;
                 
+//                lbl.adjustsFontSizeToFitWidth = true;
             }
             [view_AnswerList addSubview:lbl];
+            
+            [lbl sizeToFit];
+            lbl.frame = CGRectMake(10, Y?Y+20:10, Width-20, CGRectGetHeight(lbl.frame));
             
             UILabel *lblAns = [[UILabel alloc] init];
             {

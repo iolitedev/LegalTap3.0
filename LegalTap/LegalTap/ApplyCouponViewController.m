@@ -17,6 +17,10 @@
 
 - (void)viewDidLoad
 {
+    
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"New_BackButton_blue"] style:UIBarButtonItemStylePlain target:self action:@selector(backBarButton)];
+    [backButton setTintColor:[UIColor colorWithRed:0/255.0f green:133/255.0f blue:198/255.0f alpha:1.0f]];
+    [self.navigationItem setLeftBarButtonItem:backButton];
     if ([ComingFromView isEqualToString:@"RegisterPayment"])
     {
         cancelBtn.hidden=NO;
@@ -59,7 +63,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
-
+- (void)backBarButton
+{
+    //    [CommonHelper animateToHomeTabWithTabBarController:self.navigationController.tabBarController];
+    [self.navigationController popViewControllerAnimated:TRUE];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

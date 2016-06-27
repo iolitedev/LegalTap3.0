@@ -16,6 +16,7 @@
 {
     DropDownList *dropDownLegalPractice;
     BOOL isNavigationBarHidden;
+    NSString *type;
 }
 
 @property(nonatomic, strong, readwrite) IBOutlet UIButton *payNowButton;
@@ -34,62 +35,10 @@
         return self;
 }
 
-- (void) receiveTestNotification:(NSNotification *) notification
-{
-    if ([[notification name] isEqualToString:@"TestNotification"])
-        NSLog (@"Successfully received the test notification!");
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//    self.tabBarController.tabBar.hidden=NO;
-//    [BlackView removeFromSuperview];
-//    [timer invalidate];
-     NSDictionary *userInfo = notification.userInfo;
-     NSLog(@"%@",userInfo);
-    RejectedCount=0;
-}
-- (void) receiveTestNotification1:(NSNotification *) notification
-{
-    if ([[notification name] isEqualToString:@"TestNotification"])
-        NSLog (@"Successfully received the test notification!");
-//    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    RejectedCount=RejectedCount+1;
-    NSInteger LawyersCount=[LawyerIdsArray count];
-    if (LawyersCount == RejectedCount)
-    {
-        [timer invalidate];
-        [self HideIndicator];
-    }
-}
 - (void)viewDidLoad
 {
     RejectedCount=0;
-//    UIView *statusBarView;
-//    if (IS_IPHONE_6)
-//    {
-//        statusBarView = [[UIView alloc] initWithFrame:CGRectMake(0, -20, 380, 22)];
-//        
-//    }
-//    else
-//    {
-//        statusBarView = [[UIView alloc] initWithFrame:CGRectMake(0, -20, 320, 22)];
-//        
-//    }
-//    
-//    statusBarView.backgroundColor = [UIColor colorWithRed:70/255.0f green:130/255.0f blue:180/255.0f alpha:1.0f];
-//    [self.navigationController.navigationBar addSubview:statusBarView];
-    
-//    // Set up payPalConfig
-//    _payPalConfig = [[PayPalConfiguration alloc] init];
-//    _payPalConfig.acceptCreditCards = YES;
-//    _payPalConfig.merchantName = @"Awesome Shirts, Inc.";
-//    _payPalConfig.merchantPrivacyPolicyURL = [NSURL URLWithString:@"https://www.paypal.com/webapps/mpp/ua/privacy-full"];
-//    _payPalConfig.merchantUserAgreementURL = [NSURL URLWithString:@"https://www.paypal.com/webapps/mpp/ua/useragreement-full"];
-//    
-//    _payPalConfig.languageOrLocale = [NSLocale preferredLanguages][0];
-//    _payPalConfig.payPalShippingAddressOption = PayPalShippingAddressOptionPayPal;
-//    self.successView.hidden = YES;
-//    self.environment = kPayPalEnvironment;
-//    
-//    [self setAcceptCreditCards:YES];
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveTestNotification:)
                                                  name:@"YesFromLaywer"
@@ -110,7 +59,6 @@
         UIView *viewImg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetHeight(txt_Duration.frame), CGRectGetHeight(txt_Duration.frame))];
         imageViewLock.center = CGPointMake(CGRectGetHeight(txt_Duration.frame)/2, CGRectGetHeight(txt_Duration.frame)/2);
         [viewImg addSubview:imageViewLock];
-       // txt_Duration.rightView = viewImg;
         txt_Duration.rightViewMode = UITextFieldViewModeAlways;
     }
     {
@@ -121,7 +69,6 @@
         UIView *viewImg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetHeight(txt_Duration.frame), CGRectGetHeight(txt_Duration.frame))];
         imageViewLock.center = CGPointMake(CGRectGetHeight(txt_Duration.frame)/2, CGRectGetHeight(txt_Duration.frame)/2);
         [viewImg addSubview:imageViewLock];
-      //  txt_Fee.rightView = viewImg;
         txt_Fee.rightViewMode = UITextFieldViewModeAlways;
     }
     
@@ -133,7 +80,6 @@
         UIView *viewImg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetHeight(txt_Duration.frame), CGRectGetHeight(txt_Duration.frame))];
         imageViewLock.center = CGPointMake(CGRectGetHeight(txt_Duration.frame)/2, CGRectGetHeight(txt_Duration.frame)/2);
         [viewImg addSubview:imageViewLock];
-       // txt_CardNumber.rightView = viewImg;
         txt_CardNumber.rightViewMode = UITextFieldViewModeAlways;
     }
     
@@ -150,10 +96,37 @@
     {
         appointmentType=@"LetsLegalTap";
     }
+    
+    if (IS_IPHONE_4_OR_LESS)
+    {
+        _scrollView.contentSize = CGSizeMake(320, 420);
+    }
+    
 }
 
+- (void) receiveTestNotification:(NSNotification *) notification
+{
+    if ([[notification name] isEqualToString:@"TestNotification"])
+        NSLog (@"Successfully received the test notification!");
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    NSDictionary *userInfo = notification.userInfo;
+    NSLog(@"---%@",userInfo);
+    RejectedCount=0;
+}
+- (void) receiveTestNotification1:(NSNotification *) notification
+{
+    if ([[notification name] isEqualToString:@"TestNotification"])
+        NSLog (@"Successfully received the test notification!");
+    RejectedCount=RejectedCount+1;
+    NSInteger LawyersCount=[LawyerIdsArray count];
+    if (LawyersCount > RejectedCount)
+    {
+    }
+
+}
 -(void)viewWillAppear:(BOOL)animated
 {
+    
     legalLbl.textColor =[UIColor blackColor];
     legalLbl.textAlignment = NSTextAlignmentLeft;
     legalLbl.font = [UIFont fontWithName:@"OpenSans-Light" size:20];
@@ -169,11 +142,11 @@
     [super viewWillAppear:animated];
     isNavigationBarHidden = self.navigationController.navigationBarHidden;
     self.navigationController.navigationBarHidden = YES;
-   // [self setUserImage];
     [super viewWillAppear:YES];
     // Preconnect to PayPal early
  //   [self setPayPalEnvironment:self.environment];
     [self GetAccountBalance];
+    
 //    NSString *CardStatus=[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"PaymentType"]];
 //    if ([CardStatus isEqualToString:@"0"])
 //    {
@@ -189,6 +162,10 @@
 //        txt_CardNumber.text=@"   Account Balance";
 //    }
     [self GetPaymentMethod];
+    if (![[LTAPIClientManager sharedClient] connected])
+    {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }
 }
 - (void)setPayPalEnvironment:(NSString *)environment
 {
@@ -257,6 +234,7 @@
     //    UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Zira24/7" message:@"Your Payment has been sent" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     //    [alert show];
     NSString *FavLawyerId=[[NSUserDefaults standardUserDefaults] valueForKey:@"FavoriteLawyerId"];
+    
     if (FavLawyerId==nil)
     {
          [self setAppointment];
@@ -296,6 +274,7 @@
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
     NSString *userId=user_Profile.userId;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     [SignInAndSignUpHelper GetAccountBalance:userId andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
          [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -304,7 +283,6 @@
              NSString *strSuccess = [responseObject valueForKey:@"success"];
              if (responseObject.count && strSuccess.integerValue)
              {
-                 // NSDictionary *detailUser = [responseObject objectForKey:@"details"];
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
                     Balance=[[responseObject valueForKey:@"balance"] intValue];
@@ -325,14 +303,13 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
                  [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
              }
          }
          else
          {
              //Error
-           //  NSString *errorMsg = [responseObject valueForKey:@"message"];
              NSLog(@"%s - Error - %@",__PRETTY_FUNCTION__,error.description);
 //             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
 //                                                             message:errorMsg
@@ -347,18 +324,15 @@
 -(void)cardDetailUpdateInFields
 {
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
-  //  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [PamentHelper getserCardDetailWithUserId:user_Profile.userId
                       andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
-        // [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
          NSString *strSuccess = [responseObject valueForKey:@"success"];
          if (!error && responseObject && strSuccess.integerValue)
          {
              NSDictionary *dict = [responseObject objectForKey:@"data"];
              NSString *cardNumber = [CommonHelper replaceNullToBlankString:dict[@"cardNumber"]];
              NSString *trimmedString=[cardNumber substringFromIndex:MAX((int)[cardNumber length]-4, 0)];
-//             txt_CardNumber.text=[NSString stringWithFormat:@"%@%@",@"        ************",trimmedString];
              txt_CardNumber.text=trimmedString;
          }
          else
@@ -380,7 +354,6 @@
              NSString *strSuccess = [responseObject valueForKey:@"success"];
              if (responseObject.count && strSuccess.integerValue)
              {
-                 // NSDictionary *detailUser = [responseObject objectForKey:@"details"];
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
                      NSString *PaymentMethod=[responseObject valueForKey:@"data"];
@@ -394,11 +367,11 @@
                      }
                      else if ([PaymentMethod isEqualToString:@"Paypal"])
                      {
-                          txt_CardNumber.text=@"   Paypal";
+                          txt_CardNumber.text=@"Paypal";
                      }
                      else if ([PaymentMethod isEqualToString:@"Cupon"])
                      {
-                         txt_CardNumber.text=@"    Balance";
+                         txt_CardNumber.text=@"Balance";
                      }
                  }
                  else
@@ -436,6 +409,8 @@
 }
 - (IBAction)btnClicked_LetsLegalTap:(id)sender
 {
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.isCallStart = YES;
     //Mixpanel analytics
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Lets Legal Tap" properties:@{
@@ -464,20 +439,17 @@
     }
     LawyerIdsArray=[[NSMutableArray alloc] init];
     NSString *FavLawyerId=[[NSUserDefaults standardUserDefaults] valueForKey:@"FavoriteLawyerId"];
-    if (FavLawyerId==nil)
+    if (FavLawyerId == nil)
     {
         [self setAppointment];
     }
-    else
-    {
+    else{
+        
         [self SetAppointmentForFavoriteLawyer:FavLawyerId];
-
     }
-    if ([_identifierPreviousVC isEqualToString:@"MyAppointmentToHome"])
-    {
+    if ([_identifierPreviousVC isEqualToString:@"MyAppointmentToHome"]){
     }
-    else if ([_identifierPreviousVC isEqualToString:@"HomeTab"])
-    {
+    else if ([_identifierPreviousVC isEqualToString:@"HomeTab"]){
         //Woring For Home tab
         [self AddConnectingViewInScreen];
         //Get List Of Lawyers
@@ -489,36 +461,25 @@
                                                      userInfo: nil repeats:NO];
     }
 }
--(void)CallToAllLawyers
-{
-    if (LawyerListArray.count>0)
-    {
-//    randomIndex = arc4random() % [LawyerListArray count];
-//    NSLog(@"%lu",(unsigned long)randomIndex);
-        for (int i=0; i<[LawyerListArray count]; i++)
-        {
+-(void)CallToAllLawyers{
+    if (LawyerListArray.count>0){
+        for (int i=0; i<[LawyerListArray count]; i++){
             NSString *LawyerId=[[LawyerListArray objectAtIndex:i] valueForKey:@"userId"];
             [LawyerIdsArray addObject:LawyerId];
         }
     [self CallToAllLawyers:LawyerIdsArray];
-    OpponenntLawyerQBId=@"2603666";
-    // [self VideoCallWithRandomUser];
     }
 }
 
 -(void)VideoCallWithRandomUser
 {
     // Show Main controller
-  //  AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     MainViewController *MainVC = [self.storyboard instantiateViewControllerWithIdentifier:@"MainVC"];
     {
-//        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        //        UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
             NSNumber *num = [NSNumber numberWithLongLong:OpponenntLawyerQBId.longLongValue];
             MainVC.opponentID = num;
     }
-    //    [self presentViewController:MainVC animated:YES completion:nil];
-    MainVC.ComingFromSide=@"Lawyer Side";
+   MainVC.ComingFromSide=@"Lawyer Side";
     [self.navigationController.tabBarController.navigationController pushViewController:MainVC animated:YES];
 }
 
@@ -555,7 +516,6 @@
     if (user_Profile.image)
     {
         imageView_UserImage.image = user_Profile.image;
-       // imageView_UserBGImage.image = user_Profile.image;
         return;
     }
     if(![strUrl isEqualToString:@""])
@@ -571,7 +531,6 @@
         {
                                      weakCell.image = image;
                                      imageView_UserImage.image = image;
-                                   //  imageView_UserBGImage.image = image;
                                      [weakCell setNeedsLayout];
                                  } failure:nil];
     }
@@ -593,7 +552,6 @@
         NSArray *arrAns = _array_AnswersList;
         MBProgressHUD *obj = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         obj.labelText = @"Scheduling Your Appointment";
-//[_strSelectedPractice lowercaseString]
         [AppointmentNetworkHelper makeAppointmentWithUserid:user_Profile.userId
                                                    withType:lbl_SelectedLeagalTap.text
                                                withDatetime:strDate
@@ -658,7 +616,7 @@
         NSArray *arrAns = _array_AnswersList;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         
-        //[_strSelectedPractice lowercaseString]
+        NSLog(@"%@ %@ %@ %@ %@",user_Profile.userId, FavLawyerId, arrQuestions, strUserDate, strDate);
         [AppointmentNetworkHelper makeFavoriteAppointmentWithUserid:user_Profile.userId withType:@"All" withDatetime:strDate withLawyerId:FavLawyerId withQuestions:arrQuestions withAnswers:arrAns withUserDatetime:strUserDate andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
          {
              [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -695,66 +653,65 @@
     {
     }
 }
-
-//-(void)makeAppointmentAtTheTimeCall
-//{
-//    if (![_identifierPreviousVC isEqualToString:@"MyAppointmentToHome"])
-//    {
-//        UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
-//        NSString *strDate = @"";//(2015-03-15 22:55:22)
-//        {
-//            NSDateFormatter *dateFormatter= [NSDateFormatter new];
-//            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-//            dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
-//            strDate = [dateFormatter stringFromDate:_appointmentDate];
-//            
-//        }
-//        NSArray *arrQuestions = _array_QuestionsList;
-//        NSArray *arrAns = _array_AnswersList;
-//        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//        
-//        //[_strSelectedPractice lowercaseString]
-//        [AppointmentNetworkHelper makeAppointmentWithUserid:user_Profile.userId
-//                                                   withType:@"All"
-//                                               withDatetime:strDate
-//                                              withQuestions:arrQuestions
-//                                                withAnswers:arrAns
-//                                     andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
-//         {
-//             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//             if (!error)
-//             {
-//                 NSString *strSuccess = [responseObject valueForKey:@"success"];
-//                 if (responseObject.count && strSuccess.integerValue)
-//                 {
-//                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-//                                                                     message:@"You have successfully scheduled your appointment!"
-//                                                                    delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                     [alert show];
-//                     [self.navigationController popToRootViewControllerAnimated:YES];
-//                 }
-//                 else
-//                 {
-//                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                     message:@"Appointment is not added"
-//                                                                    delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                     [alert show];
-//                 }
-//                 
-//             }
-//             else
-//             {
-//                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                 message:@"Appointment is not added"
-//                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                 [alert show];
-//                 
-//             }
-//         }];
-//
-//    }
-//}
-
+/*
+-(void)makeAppointmentAtTheTimeCall
+{
+    if (![_identifierPreviousVC isEqualToString:@"MyAppointmentToHome"])
+    {
+        UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
+        NSString *strDate = @"";//(2015-03-15 22:55:22)
+        {
+            NSDateFormatter *dateFormatter= [NSDateFormatter new];
+            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+            strDate = [dateFormatter stringFromDate:_appointmentDate];
+            
+        }
+        NSArray *arrQuestions = _array_QuestionsList;
+        NSArray *arrAns = _array_AnswersList;
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        //[_strSelectedPractice lowercaseString]
+        [AppointmentNetworkHelper makeAppointmentWithUserid:user_Profile.userId
+                                                   withType:@"All"
+                                               withDatetime:strDate
+                                              withQuestions:arrQuestions
+                                                withAnswers:arrAns
+                                     andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+         {
+             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+             if (!error)
+             {
+                 NSString *strSuccess = [responseObject valueForKey:@"success"];
+                 if (responseObject.count && strSuccess.integerValue)
+                 {
+                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                                     message:@"You have successfully scheduled your appointment!"
+                                                                    delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                     [alert show];
+                     [self.navigationController popToRootViewControllerAnimated:YES];
+                 }
+                 else
+                 {
+                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                     message:@"Appointment is not added"
+                                                                    delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                     [alert show];
+                 }
+                 
+             }
+             else
+             {
+                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                 message:@"Appointment is not added"
+                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                 [alert show];
+                 
+             }
+         }];
+    }
+}
+*/
 -(void)AddConnectingViewInScreen
 {
     startTime=90;
@@ -765,17 +722,16 @@
     BlackView=[[UIView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:BlackView];
     [self.view bringSubviewToFront:BlackView];
-//    BlackView.backgroundColor=[UIColor colorWithRed:70/255.0f green:130/255.0f blue:180/255.0f alpha:1.0f];
     BlackView.backgroundColor=[UIColor whiteColor];
-   // BlackView.alpha=0.7;
     self.tabBarController.tabBar.hidden=YES;
     UILabel *lbl;
     UIImageView *LogoImageView;
     if (IS_IPHONE_4_OR_LESS)
     {
-        lbl=[[UILabel alloc] initWithFrame:CGRectMake(35, 190, 270, 20)];
+        lbl=[[UILabel alloc] initWithFrame:CGRectMake(30, 190, 270, 20)];
         Timelabel=[[UILabel alloc] initWithFrame:CGRectMake(170, 30, 150, 20)];
         LogoImageView=[[UIImageView alloc] initWithFrame:CGRectMake(70, 80, 165, 42)];
+        lbl.adjustsFontSizeToFitWidth = YES;
     }
     else if (IS_IPHONE_5)
     {
@@ -783,15 +739,22 @@
         lbl=[[UILabel alloc] initWithFrame:CGRectMake(20, 190, 285, 20)];
         LogoImageView=[[UIImageView alloc] initWithFrame:CGRectMake(70, 80, 165, 42)];
     }
+    else if (IS_IPHONE_6)
+    {
+        lbl=[[UILabel alloc] initWithFrame:CGRectMake(50, 250, 280, 30)];
+        Timelabel=[[UILabel alloc] initWithFrame:CGRectMake(220, 40, 150, 20)];
+        LogoImageView=[[UIImageView alloc] initWithFrame:CGRectMake(100, 90, 165, 42)];
+    }
     else
     {
-        lbl=[[UILabel alloc] initWithFrame:CGRectMake(60, 250, 280, 30)];
-        Timelabel=[[UILabel alloc] initWithFrame:CGRectMake(220, 40, 150, 20)];
-        LogoImageView=[[UIImageView alloc] initWithFrame:CGRectMake(90, 90, 165, 42)];
+        lbl=[[UILabel alloc] initWithFrame:CGRectMake(70, 250, 280, 30)];
+        Timelabel=[[UILabel alloc] initWithFrame:CGRectMake(260, 40, 150, 20)];
+        LogoImageView=[[UIImageView alloc] initWithFrame:CGRectMake(130, 90, 165, 42)];
     }
     Timelabel.text=[NSString stringWithFormat:@"%@%@",@"Time Left : ",@"90"];
     lbl.textColor=[UIColor blackColor];
     lbl.text=@"Connecting You With a Lawyer Now!";
+    
     [BlackView addSubview:lbl];
     [LogoImageView setImage:[UIImage imageNamed:@"Logo"]];
     [BlackView addSubview:LogoImageView];
@@ -805,9 +768,13 @@
     {
         ImageView=[[UIImageView alloc] initWithFrame:CGRectMake(105, 235, 100, 100)];
     }
-    else
+    else if (IS_IPHONE_6)
     {
         ImageView=[[UIImageView alloc] initWithFrame:CGRectMake(135, 310, 100, 100)]; 
+    }
+    else
+    {
+        ImageView=[[UIImageView alloc] initWithFrame:CGRectMake(160, 310, 100, 100)];
     }
     ImageView.image=[UIImage imageNamed:@"Indicator"];
     [BlackView addSubview:ImageView];
@@ -839,11 +806,12 @@
 
 -(void)GetListOfLawyers
 {
-   // [MBProgressHUD showHUDAddedTo:self.view animated:YES];
   //  DUI, PERSONAL INJURY, DIVORCE, TAX , EMPLOYMENT ,SMALL BUSINESS, REAL ESTATE, TRADEMARKS AND COPYRIGHTS, PATENTS, WILL, FAMILY, LGBT, OTHER
     UserProfile *user_Profile = [SharedSingleton sharedClient].user_Profile;
     NSString *state=user_Profile.state;
     NSString *LawyerType=[[NSUserDefaults standardUserDefaults] valueForKey:@"LawyerType"];
+    type = LawyerType;
+    
     if ([LawyerType isEqualToString:@"Divorce"])
     {
         LawyerType=@"DIVORCE";
@@ -864,7 +832,7 @@
     {
         LawyerType=@"TRADEMARKS AND COPYRIGHTS";
     }
-    if ([LawyerType isEqualToString:@"WILL AND TRUSTS"])
+    if ([LawyerType isEqualToString:@"Will and Trusts"])
     {
         LawyerType=@"WILL";
     }
@@ -912,7 +880,7 @@
 //                 
 //                 [timer invalidate];
                  [timer invalidate];
-                 [self HideIndicator];
+//                 [self HideIndicator];
              }
          }
          else
@@ -934,8 +902,35 @@
     NSString *UserId=user_Profile.userId;
     NSArray *arrQuestions = _array_QuestionsList;
     NSArray *arrAns = _array_AnswersList;
+    NSString *LawyerType=[[NSUserDefaults standardUserDefaults] valueForKey:@"LawyerType"];
+    
+    if ([LawyerType isEqualToString:@"Divorce"])
+    {
+        LawyerType=@"DIVORCE";
+    }
+    if ([LawyerType isEqualToString:@"Tax"])
+    {
+        LawyerType=@"TAX";
+    }
+    if ([LawyerType isEqualToString:@"Employment"])
+    {
+        LawyerType=@"EMPLOYMENT";
+    }
+    if ([LawyerType isEqualToString:@"Business"])
+    {
+        LawyerType=@"SMALL BUSINESS";
+    }
+    if ([LawyerType isEqualToString:@"TRADEMARKS & COPYRIGHTS"])
+    {
+        LawyerType=@"TRADEMARKS AND COPYRIGHTS";
+    }
+    if ([LawyerType isEqualToString:@"WILL AND TRUSTS"])
+    {
+        LawyerType=@"WILL";
+    }
+
    // [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [SignInAndSignUpHelper RandomCallToLawyer:LawyerIds withUserId:UserId WithQuestionArray:arrQuestions WithAnswerArray:arrAns andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
+    [SignInAndSignUpHelper RandomCallToLawyer:LawyerIds withUserId:UserId LawyerType:LawyerType WithQuestionArray:arrQuestions WithAnswerArray:arrAns andWithCompletionBlock:^(NSError *error, NSDictionary *responseObject)
      {
        //  [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
          if (!error)
@@ -970,7 +965,7 @@
                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                                  message:errorMsg
                                                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                 [alert show];
+//                 [alert show];
              }
          }
          else
@@ -984,6 +979,55 @@
          }
      }];
 }
+- (void)session:(QBRTCSession *)session receivedRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID
+{
+    
+    NSLog(@"chatDidReceiveCallRequestFromUser %lu", (unsigned long)userID);
+    
+}
+
+- (void)session:(QBRTCSession *)session initializedLocalMediaStream:(QBRTCMediaStream *)mediaStream {
+    
+    
+}
+- (void)session:(QBRTCSession *)session startedConnectingToUser:(NSNumber *)userID
+{
+
+}
+- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID
+{
+
+}
+- (void):(QBRTCSession *)session userInfo:(NSDictionary *)userInfo {
+    
+   
+
+    MainViewController *MainVC = [self.storyboard instantiateViewControllerWithIdentifier:@"MainVC"];
+    if (MainVC.session) {
+        
+        [session rejectCall:@{@"reject" : @"busy"}];
+        return;
+    }
+
+    MainVC.session = session;
+    NSArray *num = [NSArray arrayWithObject:session.opponentsIDs];
+    MainVC.videoCallOppId = num[0][0];
+    
+    
+    [QBRTCSoundRouter.instance initialize];
+    [self.navigationController.tabBarController.navigationController pushViewController:MainVC animated:NO];
+}
+- (void)sessionDidClose:(QBRTCSession *)session {
+    
+[QBRTCClient.instance removeDelegate:self];
+    
+}
+
+- (void)session:(QBRTCSession *)session acceptedByUser:(NSNumber *)userID userInfo:(NSDictionary *)userInfo
+{
+
+}
+
 
 - (IBAction)BackArrowBtn:(id)sender
 {

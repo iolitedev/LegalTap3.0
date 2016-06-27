@@ -37,8 +37,11 @@
     NSString *LawyerId;
     IBOutlet UIView *DescBg;
 }
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @property(nonatomic,retain)NSString *LawyerQuickBloxId;
+@property (strong, nonatomic) IBOutlet UIButton *favLawyer;
+@property (strong, nonatomic) NSMutableArray *arrayList;
 
 
 - (IBAction)SubmitButton:(id)sender;

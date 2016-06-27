@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		425352A41B53B19E00927568 /* LegalPractice.plist in Resources */ = {isa = PBXBuildFile; fileRef = 425352A31B53B19E00927568 /* LegalPractice.plist */; };
-		425352BC1B53B85D00927568 /* CaptureSessionManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 425352A51B53B85D00927568 /* CaptureSessionManager.mm */; };
 		425352BD1B53B85D00927568 /* OpponentVideoWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 425352A61B53B85D00927568 /* OpponentVideoWriter.m */; };
 		425352BE1B53B85D00927568 /* AQRecorder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 425352A81B53B85D00927568 /* AQRecorder.mm */; };
 		425352BF1B53B85D00927568 /* CADebugMacros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 425352A91B53B85D00927568 /* CADebugMacros.cpp */; };
@@ -89,31 +88,31 @@
 		428883361B53A66F00B3DEF3 /* ForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 428883331B53A66F00B3DEF3 /* ForgotPasswordViewController.m */; };
 		428883371B53A66F00B3DEF3 /* ConformCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 428883351B53A66F00B3DEF3 /* ConformCodeViewController.m */; };
 		4288833A1B53A67A00B3DEF3 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 428883391B53A67A00B3DEF3 /* TutorialViewController.m */; };
-		4288834C1B53A89600B3DEF3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4288833B1B53A89600B3DEF3 /* Accelerate.framework */; };
-		4288834D1B53A89600B3DEF3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4288833C1B53A89600B3DEF3 /* AudioToolbox.framework */; };
 		4288834E1B53A89600B3DEF3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4288833D1B53A89600B3DEF3 /* AVFoundation.framework */; };
 		4288834F1B53A89600B3DEF3 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4288833E1B53A89600B3DEF3 /* CFNetwork.framework */; };
 		428883501B53A89600B3DEF3 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4288833F1B53A89600B3DEF3 /* CoreData.framework */; };
 		428883511B53A89600B3DEF3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883401B53A89600B3DEF3 /* CoreLocation.framework */; };
 		428883521B53A89600B3DEF3 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883411B53A89600B3DEF3 /* CoreMedia.framework */; };
 		428883531B53A89600B3DEF3 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883421B53A89600B3DEF3 /* CoreVideo.framework */; };
-		428883541B53A89600B3DEF3 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883431B53A89600B3DEF3 /* GLKit.framework */; };
 		428883551B53A89600B3DEF3 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883441B53A89600B3DEF3 /* libsqlite3.dylib */; };
-		428883561B53A89600B3DEF3 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883451B53A89600B3DEF3 /* libxml2.dylib */; };
 		428883571B53A89600B3DEF3 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883461B53A89600B3DEF3 /* MediaPlayer.framework */; };
 		428883581B53A89600B3DEF3 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883471B53A89600B3DEF3 /* MessageUI.framework */; };
 		428883591B53A89600B3DEF3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883481B53A89600B3DEF3 /* MobileCoreServices.framework */; };
-		4288835A1B53A89600B3DEF3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883491B53A89600B3DEF3 /* QuartzCore.framework */; };
 		4288835B1B53A89600B3DEF3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4288834A1B53A89600B3DEF3 /* Security.framework */; };
 		4288835C1B53A89600B3DEF3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4288834B1B53A89600B3DEF3 /* SystemConfiguration.framework */; };
 		4288835E1B53A8B100B3DEF3 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4288835D1B53A8B100B3DEF3 /* libresolv.dylib */; };
 		428883601B53A8C500B3DEF3 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4288835F1B53A8C400B3DEF3 /* libc++.dylib */; };
 		428883621B53A8D600B3DEF3 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883611B53A8D600B3DEF3 /* libicucore.dylib */; };
-		428883641B53A8EB00B3DEF3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883631B53A8EB00B3DEF3 /* libz.dylib */; };
 		428883691B53AA6900B3DEF3 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883651B53AA6800B3DEF3 /* Crashlytics.framework */; };
 		4288836A1B53AA6900B3DEF3 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883661B53AA6800B3DEF3 /* Fabric.framework */; };
-		4288836B1B53AA6900B3DEF3 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883671B53AA6800B3DEF3 /* Quickblox.framework */; };
-		4288836C1B53AA6900B3DEF3 /* QuickbloxWebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428883681B53AA6800B3DEF3 /* QuickbloxWebRTC.framework */; };
+		4E598BEA1CEC5C9200EA984B /* AirshipKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E598BE91CEC5C7D00EA984B /* AirshipKit.framework */; };
+		4E598BEB1CEC5C9200EA984B /* AirshipKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E598BE91CEC5C7D00EA984B /* AirshipKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7116DFB61C86C25900F78051 /* QMSoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7116DFB51C86C25900F78051 /* QMSoundManager.m */; };
+		7116DFB91C86CF4400F78051 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 7116DFB81C86CF4400F78051 /* Settings.m */; };
+		713181B61C8801550016841D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4288833C1B53A89600B3DEF3 /* AudioToolbox.framework */; };
+		713181C21C88140C0016841D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 713181C11C88140C0016841D /* Foundation.framework */; };
+		71D1376E1C8FE66A00265FFB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71D1376D1C8FE66A00265FFB /* GLKit.framework */; };
+		71F4E6871C85B69500BD3D0C /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71F4E6861C85B69500BD3D0C /* VideoToolbox.framework */; };
 		AC429FA11BC3937700A9B3B5 /* bundle_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = AC429FA01BC3937700A9B3B5 /* bundle_dark.png */; };
 		AC429FA21BC3A0D500A9B3B5 /* OpenSans-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC86E66D1BC295AB00FB79CF /* OpenSans-Semibold.ttf */; };
 		AC429FA91BC3CD1C00A9B3B5 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC429FA81BC3CCEA00A9B3B5 /* OpenSans-Regular.ttf */; };
@@ -134,24 +133,29 @@
 		ACCDEF9D1BB1105100B4E974 /* FormShopListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ACCDEF9B1BB1105100B4E974 /* FormShopListTableViewCell.xib */; };
 		ACCEA26C1BB1400800BA7DD7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACCEA26B1BB1400800BA7DD7 /* Main.storyboard */; };
 		ACCEA2711BB1629300BA7DD7 /* FormDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ACCEA2701BB1629300BA7DD7 /* FormDetailViewController.m */; };
+		B5033C1F1C98339700351CDC /* busy.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5033C1B1C98339700351CDC /* busy.wav */; };
+		B5033C201C98339700351CDC /* calling.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5033C1C1C98339700351CDC /* calling.wav */; };
+		B5033C211C98339700351CDC /* end_of_call.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5033C1D1C98339700351CDC /* end_of_call.wav */; };
+		B5033C221C98339700351CDC /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = B5033C1E1C98339700351CDC /* ringtone.wav */; };
+		B558D4951C92FB91002DD157 /* QBRTCScreenCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = B558D4941C92FB91002DD157 /* QBRTCScreenCapture.m */; };
+		B5AA77711C96FD0E00FE7CF1 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5AA776F1C96FD0E00FE7CF1 /* Quickblox.framework */; };
+		B5AA77721C96FD0E00FE7CF1 /* QuickbloxWebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5AA77701C96FD0E00FE7CF1 /* QuickbloxWebRTC.framework */; };
 		EF26991F1B69BBE2005CE18D /* libPods-LegalTap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF26991E1B69BBE2005CE18D /* libPods-LegalTap.a */; };
 		EF4CB8321B7152E3004E9BE8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4288822E1B539D9900B3DEF3 /* Images.xcassets */; };
-		EFD32C0B1B81388C00F62FCC /* AirshipKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFD32C0A1B81386700F62FCC /* AirshipKit.framework */; };
-		EFD32C0C1B81388C00F62FCC /* AirshipKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EFD32C0A1B81386700F62FCC /* AirshipKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EFD32C111B81390A00F62FCC /* AirshipConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = EFD32C101B81390A00F62FCC /* AirshipConfig.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		EFD32C091B81386700F62FCC /* PBXContainerItemProxy */ = {
+		4E598BE81CEC5C7D00EA984B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = EFD32C051B81386700F62FCC /* AirshipKit.xcodeproj */;
+			containerPortal = 4E598BE41CEC5C7D00EA984B /* AirshipKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 494DD9571B0EB677009C134E;
 			remoteInfo = AirshipKit;
 		};
-		EFD32C0D1B81388C00F62FCC /* PBXContainerItemProxy */ = {
+		4E598BEC1CEC5C9200EA984B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = EFD32C051B81386700F62FCC /* AirshipKit.xcodeproj */;
+			containerPortal = 4E598BE41CEC5C7D00EA984B /* AirshipKit.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 494DD9561B0EB677009C134E;
 			remoteInfo = AirshipKit;
@@ -159,13 +163,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		EFD32C0F1B81388C00F62FCC /* Embed Frameworks */ = {
+		4EE432DA1CAE3F70007177F9 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				EFD32C0C1B81388C00F62FCC /* AirshipKit.framework in Embed Frameworks */,
+				4E598BEB1CEC5C9200EA984B /* AirshipKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -174,7 +178,6 @@
 
 /* Begin PBXFileReference section */
 		425352A31B53B19E00927568 /* LegalPractice.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LegalPractice.plist; sourceTree = "<group>"; };
-		425352A51B53B85D00927568 /* CaptureSessionManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CaptureSessionManager.mm; sourceTree = "<group>"; };
 		425352A61B53B85D00927568 /* OpponentVideoWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpponentVideoWriter.m; sourceTree = "<group>"; };
 		425352A71B53B85D00927568 /* AQRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQRecorder.h; sourceTree = "<group>"; };
 		425352A81B53B85D00927568 /* AQRecorder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AQRecorder.mm; sourceTree = "<group>"; };
@@ -183,7 +186,6 @@
 		425352AB1B53B85D00927568 /* CADebugPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CADebugPrintf.cpp; sourceTree = "<group>"; };
 		425352AC1B53B85D00927568 /* CADebugPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CADebugPrintf.h; sourceTree = "<group>"; };
 		425352AD1B53B85D00927568 /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAMath.h; sourceTree = "<group>"; };
-		425352AE1B53B85D00927568 /* CaptureSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptureSessionManager.h; sourceTree = "<group>"; };
 		425352AF1B53B85D00927568 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
 		425352B01B53B85D00927568 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAStreamBasicDescription.h; sourceTree = "<group>"; };
 		425352B11B53B85D00927568 /* CAXException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAXException.cpp; sourceTree = "<group>"; };
@@ -330,7 +332,6 @@
 		428883351B53A66F00B3DEF3 /* ConformCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConformCodeViewController.m; sourceTree = "<group>"; };
 		428883381B53A67A00B3DEF3 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		428883391B53A67A00B3DEF3 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
-		4288833B1B53A89600B3DEF3 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		4288833C1B53A89600B3DEF3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		4288833D1B53A89600B3DEF3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4288833E1B53A89600B3DEF3 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -338,13 +339,11 @@
 		428883401B53A89600B3DEF3 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		428883411B53A89600B3DEF3 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		428883421B53A89600B3DEF3 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
-		428883431B53A89600B3DEF3 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		428883441B53A89600B3DEF3 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		428883451B53A89600B3DEF3 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		428883461B53A89600B3DEF3 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		428883471B53A89600B3DEF3 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		428883481B53A89600B3DEF3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		428883491B53A89600B3DEF3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4288834A1B53A89600B3DEF3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4288834B1B53A89600B3DEF3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4288835D1B53A8B100B3DEF3 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
@@ -353,8 +352,17 @@
 		428883631B53A8EB00B3DEF3 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		428883651B53AA6800B3DEF3 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		428883661B53AA6800B3DEF3 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
-		428883671B53AA6800B3DEF3 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Quickblox.framework; sourceTree = "<group>"; };
-		428883681B53AA6800B3DEF3 /* QuickbloxWebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QuickbloxWebRTC.framework; sourceTree = "<group>"; };
+		4E598BE41CEC5C7D00EA984B /* AirshipKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AirshipKit.xcodeproj; path = "../../../../Downloads/libUAirship-7.0.3/AirshipKit/AirshipKit.xcodeproj"; sourceTree = "<group>"; };
+		7116DFB41C86C25900F78051 /* QMSoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSoundManager.h; sourceTree = "<group>"; };
+		7116DFB51C86C25900F78051 /* QMSoundManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSoundManager.m; sourceTree = "<group>"; };
+		7116DFB71C86CF4400F78051 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		7116DFB81C86CF4400F78051 /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
+		7116DFBA1C86CFE900F78051 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		713181B91C880AAE0016841D /* lazydylib1.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = lazydylib1.o; path = usr/lib/lazydylib1.o; sourceTree = SDKROOT; };
+		713181BB1C880B8E0016841D /* libMBProgressHUD.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMBProgressHUD.a; path = "Pods/../build/Debug-iphoneos/libMBProgressHUD.a"; sourceTree = "<group>"; };
+		713181C11C88140C0016841D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		71D1376D1C8FE66A00265FFB /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		71F4E6861C85B69500BD3D0C /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		7F1706FBCE1C29DB432DAC50 /* Pods-LegalTap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LegalTap.release.xcconfig"; path = "Pods/Target Support Files/Pods-LegalTap/Pods-LegalTap.release.xcconfig"; sourceTree = "<group>"; };
 		8A7097190C11E60614ABB117 /* Pods-LegalTap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LegalTap.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LegalTap/Pods-LegalTap.debug.xcconfig"; sourceTree = "<group>"; };
 		9256C0024BA2AAC76B0577FA /* libPods-LegalTap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LegalTap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -388,8 +396,15 @@
 		ACCEA26B1BB1400800BA7DD7 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		ACCEA26F1BB1629300BA7DD7 /* FormDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FormDetailViewController.h; sourceTree = "<group>"; };
 		ACCEA2701BB1629300BA7DD7 /* FormDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FormDetailViewController.m; sourceTree = "<group>"; };
+		B5033C1B1C98339700351CDC /* busy.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = busy.wav; sourceTree = "<group>"; };
+		B5033C1C1C98339700351CDC /* calling.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = calling.wav; sourceTree = "<group>"; };
+		B5033C1D1C98339700351CDC /* end_of_call.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = end_of_call.wav; sourceTree = "<group>"; };
+		B5033C1E1C98339700351CDC /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
+		B558D4931C92FB91002DD157 /* QBRTCScreenCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QBRTCScreenCapture.h; sourceTree = "<group>"; };
+		B558D4941C92FB91002DD157 /* QBRTCScreenCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QBRTCScreenCapture.m; sourceTree = "<group>"; };
+		B5AA776F1C96FD0E00FE7CF1 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Quickblox.framework; sourceTree = "<group>"; };
+		B5AA77701C96FD0E00FE7CF1 /* QuickbloxWebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QuickbloxWebRTC.framework; sourceTree = "<group>"; };
 		EF26991E1B69BBE2005CE18D /* libPods-LegalTap.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-LegalTap.a"; path = "Pods/../build/Debug-iphoneos/libPods-LegalTap.a"; sourceTree = "<group>"; };
-		EFD32C051B81386700F62FCC /* AirshipKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AirshipKit.xcodeproj; path = "libUAirship-6.1.4/AirshipKit/AirshipKit.xcodeproj"; sourceTree = "<group>"; };
 		EFD32C101B81390A00F62FCC /* AirshipConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AirshipConfig.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -398,31 +413,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71D1376E1C8FE66A00265FFB /* GLKit.framework in Frameworks */,
+				713181C21C88140C0016841D /* Foundation.framework in Frameworks */,
+				713181B61C8801550016841D /* AudioToolbox.framework in Frameworks */,
+				71F4E6871C85B69500BD3D0C /* VideoToolbox.framework in Frameworks */,
+				4E598BEA1CEC5C9200EA984B /* AirshipKit.framework in Frameworks */,
 				EF26991F1B69BBE2005CE18D /* libPods-LegalTap.a in Frameworks */,
 				428883691B53AA6900B3DEF3 /* Crashlytics.framework in Frameworks */,
 				4288836A1B53AA6900B3DEF3 /* Fabric.framework in Frameworks */,
-				4288836B1B53AA6900B3DEF3 /* Quickblox.framework in Frameworks */,
-				4288836C1B53AA6900B3DEF3 /* QuickbloxWebRTC.framework in Frameworks */,
-				428883561B53A89600B3DEF3 /* libxml2.dylib in Frameworks */,
 				4288835E1B53A8B100B3DEF3 /* libresolv.dylib in Frameworks */,
 				428883551B53A89600B3DEF3 /* libsqlite3.dylib in Frameworks */,
 				428883601B53A8C500B3DEF3 /* libc++.dylib in Frameworks */,
 				428883621B53A8D600B3DEF3 /* libicucore.dylib in Frameworks */,
-				428883641B53A8EB00B3DEF3 /* libz.dylib in Frameworks */,
-				EFD32C0B1B81388C00F62FCC /* AirshipKit.framework in Frameworks */,
-				4288834C1B53A89600B3DEF3 /* Accelerate.framework in Frameworks */,
-				4288834D1B53A89600B3DEF3 /* AudioToolbox.framework in Frameworks */,
 				4288834E1B53A89600B3DEF3 /* AVFoundation.framework in Frameworks */,
 				4288834F1B53A89600B3DEF3 /* CFNetwork.framework in Frameworks */,
 				428883501B53A89600B3DEF3 /* CoreData.framework in Frameworks */,
 				428883511B53A89600B3DEF3 /* CoreLocation.framework in Frameworks */,
 				428883521B53A89600B3DEF3 /* CoreMedia.framework in Frameworks */,
+				B5AA77711C96FD0E00FE7CF1 /* Quickblox.framework in Frameworks */,
+				B5AA77721C96FD0E00FE7CF1 /* QuickbloxWebRTC.framework in Frameworks */,
 				428883531B53A89600B3DEF3 /* CoreVideo.framework in Frameworks */,
-				428883541B53A89600B3DEF3 /* GLKit.framework in Frameworks */,
 				428883571B53A89600B3DEF3 /* MediaPlayer.framework in Frameworks */,
 				428883581B53A89600B3DEF3 /* MessageUI.framework in Frameworks */,
 				428883591B53A89600B3DEF3 /* MobileCoreServices.framework in Frameworks */,
-				4288835A1B53A89600B3DEF3 /* QuartzCore.framework in Frameworks */,
 				4288835B1B53A89600B3DEF3 /* Security.framework in Frameworks */,
 				4288835C1B53A89600B3DEF3 /* SystemConfiguration.framework in Frameworks */,
 			);
@@ -434,14 +447,13 @@
 		428881F21B53991000B3DEF3 = {
 			isa = PBXGroup;
 			children = (
+				4E598BE41CEC5C7D00EA984B /* AirshipKit.xcodeproj */,
 				AC429FA01BC3937700A9B3B5 /* bundle_dark.png */,
 				AC86E66B1BC2598000FB79CF /* white_bundle_Image.png */,
 				ACAAFA7C1BB00D4E002767CF /* BundelImage.png */,
-				EFD32C051B81386700F62FCC /* AirshipKit.xcodeproj */,
 				428881FD1B53991000B3DEF3 /* LegalTap */,
 				4288821A1B53991000B3DEF3 /* LegalTapTests */,
 				428881FC1B53991000B3DEF3 /* Products */,
-				6AC50514F14B866C22C784A6 /* Pods */,
 				80AC096785594EB50BDA39A8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -457,6 +469,9 @@
 		428881FD1B53991000B3DEF3 /* LegalTap */ = {
 			isa = PBXGroup;
 			children = (
+				7116DFBA1C86CFE900F78051 /* Types.h */,
+				7116DFB71C86CF4400F78051 /* Settings.h */,
+				7116DFB81C86CF4400F78051 /* Settings.m */,
 				428882021B53991000B3DEF3 /* AppDelegate.h */,
 				428882031B53991000B3DEF3 /* AppDelegate.m */,
 				428882321B539E6300B3DEF3 /* ViewController.h */,
@@ -475,6 +490,11 @@
 		428881FE1B53991000B3DEF3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				6AC50514F14B866C22C784A6 /* Pods */,
+				B5033C1B1C98339700351CDC /* busy.wav */,
+				B5033C1C1C98339700351CDC /* calling.wav */,
+				B5033C1D1C98339700351CDC /* end_of_call.wav */,
+				B5033C1E1C98339700351CDC /* ringtone.wav */,
 				ACCEA26B1BB1400800BA7DD7 /* Main.storyboard */,
 				4288822E1B539D9900B3DEF3 /* Images.xcassets */,
 				428882101B53991000B3DEF3 /* LaunchScreen.xib */,
@@ -513,6 +533,10 @@
 		428882351B539E6D00B3DEF3 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B558D4931C92FB91002DD157 /* QBRTCScreenCapture.h */,
+				B558D4941C92FB91002DD157 /* QBRTCScreenCapture.m */,
+				7116DFB41C86C25900F78051 /* QMSoundManager.h */,
+				7116DFB51C86C25900F78051 /* QMSoundManager.m */,
 				428882AF1B53A17800B3DEF3 /* Payment Classes */,
 				428882B31B53A1A200B3DEF3 /* Lets Started */,
 				428882FD1B53A50000B3DEF3 /* Tutorials */,
@@ -668,13 +692,11 @@
 			children = (
 				425352A71B53B85D00927568 /* AQRecorder.h */,
 				425352A81B53B85D00927568 /* AQRecorder.mm */,
-				425352A51B53B85D00927568 /* CaptureSessionManager.mm */,
 				425352A91B53B85D00927568 /* CADebugMacros.cpp */,
 				425352AA1B53B85D00927568 /* CADebugMacros.h */,
 				425352AB1B53B85D00927568 /* CADebugPrintf.cpp */,
 				425352AC1B53B85D00927568 /* CADebugPrintf.h */,
 				425352AD1B53B85D00927568 /* CAMath.h */,
-				425352AE1B53B85D00927568 /* CaptureSessionManager.h */,
 				425352AF1B53B85D00927568 /* CAStreamBasicDescription.cpp */,
 				425352B01B53B85D00927568 /* CAStreamBasicDescription.h */,
 				425352B11B53B85D00927568 /* CAXException.cpp */,
@@ -979,6 +1001,14 @@
 			name = "Custom Cell";
 			sourceTree = "<group>";
 		};
+		4E598BE51CEC5C7D00EA984B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4E598BE91CEC5C7D00EA984B /* AirshipKit.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		6AC50514F14B866C22C784A6 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -986,21 +1016,26 @@
 				7F1706FBCE1C29DB432DAC50 /* Pods-LegalTap.release.xcconfig */,
 			);
 			name = Pods;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		80AC096785594EB50BDA39A8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B5AA776F1C96FD0E00FE7CF1 /* Quickblox.framework */,
+				B5AA77701C96FD0E00FE7CF1 /* QuickbloxWebRTC.framework */,
+				71D1376D1C8FE66A00265FFB /* GLKit.framework */,
+				713181C11C88140C0016841D /* Foundation.framework */,
+				713181BB1C880B8E0016841D /* libMBProgressHUD.a */,
+				713181B91C880AAE0016841D /* lazydylib1.o */,
+				71F4E6861C85B69500BD3D0C /* VideoToolbox.framework */,
 				EF26991E1B69BBE2005CE18D /* libPods-LegalTap.a */,
 				428883651B53AA6800B3DEF3 /* Crashlytics.framework */,
 				428883661B53AA6800B3DEF3 /* Fabric.framework */,
-				428883671B53AA6800B3DEF3 /* Quickblox.framework */,
-				428883681B53AA6800B3DEF3 /* QuickbloxWebRTC.framework */,
 				428883631B53A8EB00B3DEF3 /* libz.dylib */,
 				428883611B53A8D600B3DEF3 /* libicucore.dylib */,
 				4288835F1B53A8C400B3DEF3 /* libc++.dylib */,
 				4288835D1B53A8B100B3DEF3 /* libresolv.dylib */,
-				4288833B1B53A89600B3DEF3 /* Accelerate.framework */,
 				4288833C1B53A89600B3DEF3 /* AudioToolbox.framework */,
 				4288833D1B53A89600B3DEF3 /* AVFoundation.framework */,
 				4288833E1B53A89600B3DEF3 /* CFNetwork.framework */,
@@ -1008,13 +1043,11 @@
 				428883401B53A89600B3DEF3 /* CoreLocation.framework */,
 				428883411B53A89600B3DEF3 /* CoreMedia.framework */,
 				428883421B53A89600B3DEF3 /* CoreVideo.framework */,
-				428883431B53A89600B3DEF3 /* GLKit.framework */,
 				428883441B53A89600B3DEF3 /* libsqlite3.dylib */,
 				428883451B53A89600B3DEF3 /* libxml2.dylib */,
 				428883461B53A89600B3DEF3 /* MediaPlayer.framework */,
 				428883471B53A89600B3DEF3 /* MessageUI.framework */,
 				428883481B53A89600B3DEF3 /* MobileCoreServices.framework */,
-				428883491B53A89600B3DEF3 /* QuartzCore.framework */,
 				4288834A1B53A89600B3DEF3 /* Security.framework */,
 				4288834B1B53A89600B3DEF3 /* SystemConfiguration.framework */,
 				9256C0024BA2AAC76B0577FA /* libPods-LegalTap.a */,
@@ -1071,14 +1104,6 @@
 			name = FormShopListCell;
 			sourceTree = "<group>";
 		};
-		EFD32C061B81386700F62FCC /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				EFD32C0A1B81386700F62FCC /* AirshipKit.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1092,12 +1117,13 @@
 				428881F91B53991000B3DEF3 /* Resources */,
 				5E575BFE1E12EA5DF3F29787 /* Copy Pods Resources */,
 				421A3B401B6734A300B65401 /* Run Script */,
-				EFD32C0F1B81388C00F62FCC /* Embed Frameworks */,
+				9CE541BC9CBC309D61DDEE51 /* Embed Pods Frameworks */,
+				4EE432DA1CAE3F70007177F9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				EFD32C0E1B81388C00F62FCC /* PBXTargetDependency */,
+				4E598BED1CEC5C9200EA984B /* PBXTargetDependency */,
 			);
 			name = LegalTap;
 			productName = LegalTap;
@@ -1115,10 +1141,13 @@
 				TargetAttributes = {
 					428881FA1B53991000B3DEF3 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = BG3Z86X8J3;
+						DevelopmentTeam = R4B2PKDR5Z;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 0;
+							};
+							com.apple.Push = {
+								enabled = 1;
 							};
 						};
 					};
@@ -1137,8 +1166,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = EFD32C061B81386700F62FCC /* Products */;
-					ProjectRef = EFD32C051B81386700F62FCC /* AirshipKit.xcodeproj */;
+					ProductGroup = 4E598BE51CEC5C7D00EA984B /* Products */;
+					ProjectRef = 4E598BE41CEC5C7D00EA984B /* AirshipKit.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1149,11 +1178,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		EFD32C0A1B81386700F62FCC /* AirshipKit.framework */ = {
+		4E598BE91CEC5C7D00EA984B /* AirshipKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AirshipKit.framework;
-			remoteRef = EFD32C091B81386700F62FCC /* PBXContainerItemProxy */;
+			remoteRef = 4E598BE81CEC5C7D00EA984B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1164,6 +1193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC429FAB1BC3D31A00A9B3B5 /* OpenSans-Bold.ttf in Resources */,
+				B5033C201C98339700351CDC /* calling.wav in Resources */,
 				AC429FA91BC3CD1C00A9B3B5 /* OpenSans-Regular.ttf in Resources */,
 				AC429FA21BC3A0D500A9B3B5 /* OpenSans-Semibold.ttf in Resources */,
 				ACCEA26C1BB1400800BA7DD7 /* Main.storyboard in Resources */,
@@ -1183,11 +1213,14 @@
 				428883161B53A5D600B3DEF3 /* MyAppointmentCollectionViewCell.xib in Resources */,
 				425352A41B53B19E00927568 /* LegalPractice.plist in Resources */,
 				ACCDEF9D1BB1105100B4E974 /* FormShopListTableViewCell.xib in Resources */,
+				B5033C211C98339700351CDC /* end_of_call.wav in Resources */,
 				4288822C1B539A5300B3DEF3 /* ringing.wav in Resources */,
+				B5033C1F1C98339700351CDC /* busy.wav in Resources */,
 				ACAAFA831BB0194A002767CF /* FormShopTableViewCell.xib in Resources */,
 				428882741B53A05400B3DEF3 /* CalenderView.xib in Resources */,
 				AC86E66C1BC2598000FB79CF /* white_bundle_Image.png in Resources */,
 				4288822B1B539A5300B3DEF3 /* OpenSans-CondLight.ttf in Resources */,
+				B5033C221C98339700351CDC /* ringtone.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1196,7 +1229,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		421A3B401B6734A300B65401 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -1204,9 +1237,10 @@
 			name = "Run Script";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "";
+			shellScript = "./Fabric.framework/run 4a419d3ac58821a7bb3c6b0d27ac288a1a7c82ba 9f9e2974b51a8e60d29fc5f40567abbb7059a1427a73952305a09249966dc461";
+			showEnvVarsInLog = 0;
 		};
 		5E575BFE1E12EA5DF3F29787 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1238,6 +1272,21 @@
 			shellScript = "\ndiff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\ncat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\nexit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		9CE541BC9CBC309D61DDEE51 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LegalTap/Pods-LegalTap-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1267,8 +1316,10 @@
 				4288832E1B53A65900B3DEF3 /* SignUpViewController.m in Sources */,
 				425352D61B53B94F00927568 /* FeedbackHelper.m in Sources */,
 				425352C11B53B85D00927568 /* CAStreamBasicDescription.cpp in Sources */,
+				7116DFB91C86CF4400F78051 /* Settings.m in Sources */,
 				428882531B539F8200B3DEF3 /* Appointment.m in Sources */,
 				4288831C1B53A5F400B3DEF3 /* AppointmentWindowViewController.m in Sources */,
+				7116DFB61C86C25900F78051 /* QMSoundManager.m in Sources */,
 				428882041B53991000B3DEF3 /* AppDelegate.m in Sources */,
 				425352C31B53B85D00927568 /* MediaFileMerger.m in Sources */,
 				428882C21B53A29800B3DEF3 /* LetsStartedViewController.m in Sources */,
@@ -1320,20 +1371,20 @@
 				425352D51B53B94F00927568 /* ErrorHelper.m in Sources */,
 				428883091B53A54900B3DEF3 /* FormPortalViewController.m in Sources */,
 				428883151B53A5D600B3DEF3 /* MyAppointmentCollectionViewCell.m in Sources */,
+				B558D4951C92FB91002DD157 /* QBRTCScreenCapture.m in Sources */,
 				4288826E1B53A01200B3DEF3 /* LTPageControl.m in Sources */,
 				428882F01B53A41B00B3DEF3 /* AccountBalanceViewController.m in Sources */,
 				428882401B539F5C00B3DEF3 /* LTAPIClientManager.m in Sources */,
-				425352BC1B53B85D00927568 /* CaptureSessionManager.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		EFD32C0E1B81388C00F62FCC /* PBXTargetDependency */ = {
+		4E598BED1CEC5C9200EA984B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AirshipKit;
-			targetProxy = EFD32C0D1B81388C00F62FCC /* PBXContainerItemProxy */;
+			targetProxy = 4E598BEC1CEC5C9200EA984B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1366,8 +1417,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Matthew White (F8444TEFL5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Matthew White (F8444TEFL5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Brighthaus, llc (BG3Z86X8J3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brighthaus, llc (BG3Z86X8J3)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
@@ -1391,7 +1442,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "16b129e1-e644-4af1-ba1e-87a9101ecd85";
+				PROVISIONING_PROFILE = "5962466f-d9d1-4e6b-a002-d09bc662b8ec";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1413,8 +1464,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Matthew White (F8444TEFL5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Matthew White (F8444TEFL5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Brighthaus, llc (BG3Z86X8J3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brighthaus, llc (BG3Z86X8J3)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
@@ -1431,7 +1482,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "16b129e1-e644-4af1-ba1e-87a9101ecd85";
+				PROVISIONING_PROFILE = "5962466f-d9d1-4e6b-a002-d09bc662b8ec";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1442,23 +1493,25 @@
 			baseConfigurationReference = 8A7097190C11E60614ABB117 /* Pods-LegalTap.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Billy Canu (352SB5CW9Q)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Billy Canu (352SB5CW9Q)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Brighthaus, llc (BG3Z86X8J3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brighthaus, llc (BG3Z86X8J3)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				GCC_PREFIX_HEADER = LegalTap/PrefixHeader.pch;
 				INFOPLIST_FILE = LegalTap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(SDKROOT)/usr/lib/system",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.NewlegalTap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3162ed57-c886-447b-8269-36d21fa8f904";
+				PROVISIONING_PROFILE = "fd71ceac-7b5c-4b87-9eb0-637aaa8a6373";
 			};
 			name = Debug;
 		};
@@ -1467,23 +1520,25 @@
 			baseConfigurationReference = 7F1706FBCE1C29DB432DAC50 /* Pods-LegalTap.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Billy Canu (352SB5CW9Q)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Billy Canu (352SB5CW9Q)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Brighthaus, llc (BG3Z86X8J3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brighthaus, llc (BG3Z86X8J3)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				GCC_PREFIX_HEADER = LegalTap/PrefixHeader.pch;
 				INFOPLIST_FILE = LegalTap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(SDKROOT)/usr/lib/system",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.NewlegalTap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3162ed57-c886-447b-8269-36d21fa8f904";
+				PROVISIONING_PROFILE = "fd71ceac-7b5c-4b87-9eb0-637aaa8a6373";
 			};
 			name = Release;
 		};

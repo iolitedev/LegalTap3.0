@@ -12,6 +12,7 @@
 
 
 @property (strong, nonatomic) UserProfile *user_Profile;
+@property (strong, nonatomic) NSString *appID;
 
 //Methods
 + (instancetype)sharedClient;

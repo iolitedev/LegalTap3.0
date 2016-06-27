@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VideoCallingViewController : UIViewController<QBActionStatusDelegate, QBChatDelegate>
+@interface VideoCallingViewController : UIViewController<UIActionSheetDelegate, QBChatDelegate>
 {
     IBOutlet UIButton *loginAsUser1Button;
     IBOutlet UIButton *loginAsUser2Button;

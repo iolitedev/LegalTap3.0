@@ -1,16 +1,13 @@
 //
-//  Delegates.h
+//  ChatDelegates.h
 //  QBChat
 //
 //  Copyright 2012 QuickBlox team. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-
-#define kStopVideoChatCallStatus_OpponentDidNotAnswer @"kStopVideoChatCallStatus_OpponentDidNotAnswer"
-#define kStopVideoChatCallStatus_Manually @"kStopVideoChatCallStatus_Manually"
-#define kStopVideoChatCallStatus_Cancel @"kStopVideoChatCallStatus_Cancel"
-#define kStopVideoChatCallStatus_BadConnection @"kStopVideoChatCallStatus_BadConnection"
+#import <Quickblox/QBNullability.h>
+#import <Quickblox/QBGeneric.h>
 
 /**
  QBChatDelegate protocol definition
@@ -18,69 +15,79 @@
  add [QBChat instance].addDelegate to your implementation instance to receive callbacks from QBChat
  */
 
-@class QBContactList, QBChatRoom, QBChatMessage, QBPrivacyList;
+@class QBContactList, QBChatMessage, QBPrivacyList, QBContactListItem;
 
 @protocol QBChatDelegate <NSObject>
 @optional
-
 
 #pragma mark -
 #pragma mark Base IM
 
 /**
- didLogin fired by QBChat when connection to service established and login is successfull
+ *  didNotSendMessage fired when message cannot be send to user
+ *
+ *  @param message message passed to sendMessage method into QBChat
+ *  @param error Error
+ *
+ *  @warning *Deprecated in QB iOS SDK 2.5.0:* Use 'onBlockedMessage' or 'setOnBlockedMessage' of QBChatDialog class instead.
  */
-- (void)chatDidLogin;
+- (void)chatDidNotSendMessage:(QB_NONNULL QBChatMessage *)message error:(QB_NULLABLE NSError *)error DEPRECATED_MSG_ATTRIBUTE("Use 'onBlockedMessage' or 'setOnBlockedMessage' of QBChatDialog class instead.");
 
 /**
- didNotLogin fired when login process did not finished successfully
+ *  Fired when message cannot be send to the group chat.
+ *
+ *  @param message  QBChatMessage message.
+ *  @param dialogID QBChatDialog identifier.
+ *  @param error    Error.
+ *
+ *  @warning *Deprecated in QB iOS SDK 2.5.0:* Use 'onBlockedMessage' or 'setOnBlockedMessage' of QBChatDialog class instead.
  */
-- (void)chatDidNotLogin;
+- (void)chatDidNotSendMessage:(QB_NONNULL QBChatMessage *)message toDialogID:(QB_NONNULL NSString *)dialogID error:(QB_NULLABLE NSError *)error DEPRECATED_MSG_ATTRIBUTE("Use 'onBlockedMessage' or 'setOnBlockedMessage' of QBChatDialog class instead.");
 
 /**
- didNotSendMessage fired when message cannot be send to user
+ didReceiveMessage fired when new 1-1 message was received from QBChat
  
- @param message message passed to sendMessage method into QBChat
- @param error Error
- */
-- (void)chatDidNotSendMessage:(QBChatMessage *)message error:(NSError *)error;
-
-/**
- didReceiveMessage fired when new message was received from QBChat
- 
+ @note Will fire only on recipient device
  @param message Message received from Chat
  */
-- (void)chatDidReceiveMessage:(QBChatMessage *)message;
+- (void)chatDidReceiveMessage:(QB_NONNULL QBChatMessage *)message;
 
 /**
- didFailWithError fired when connection error occurs
+ didReceiveSystemMessage fired when new system message was received from QBChat
  
- @param error Error code from QBChatServiceError enum
+ @note Will fire only on recipient device
+ @param message Message received from Chat
  */
-- (void)chatDidFailWithError:(NSInteger)code __attribute__((deprecated("Use chatDidFailWithStreamError:")));
+- (void)chatDidReceiveSystemMessage:(QB_NONNULL QBChatMessage *)message;
 
 /**
  chatDidFailWithStreamError fired when connection error
  
  @param error XMPPStream Error
  */
-- (void)chatDidFailWithStreamError:(NSError *)error;
+- (void)chatDidFailWithStreamError:(QB_NULLABLE NSError *)error;
 
 /**
- Called in case receiving presence
- 
- @param userID User ID from which received presence
- @param type Presence type
+ *  Fired when XMPP stream established connection
  */
-- (void)chatDidReceivePresenceOfUser:(NSUInteger)userID type:(NSString *)type;
-
+- (void)chatDidConnect;
 
 /**
- Fired when received service discovery information
+ chatDidNotConnectWithError fired when connect process did not finished successfully
  
- @param features Array of server features
+ @param error Error
  */
-- (void)chatDidReceiveServiceDiscoveryInformation:(NSArray *)features;
+- (void)chatDidNotConnectWithError:(QB_NULLABLE NSError *)error;
+
+/**
+ *  Fired when XMPP stream is accidentaly disconnected
+ */
+- (void)chatDidAccidentallyDisconnect;
+
+/**
+ *  Fired after successful connection to stream after disconnect.
+ */
+- (void)chatDidReconnect;
 
 
 #pragma mark -
@@ -96,7 +103,7 @@
 /**
  Called in case of changing contact list
  */
-- (void)chatContactListDidChange:(QBContactList *)contactList;
+- (void)chatContactListDidChange:(QB_NONNULL QBContactList *)contactList;
 
 /**
  Called in case changing contact's online status
@@ -105,223 +112,34 @@
  @param isOnline New user status (online or offline)
  @param status Custom user status
  */
-- (void)chatDidReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status;
+- (void)chatDidReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(QB_NULLABLE NSString *)status;
+
+/**
+ * Called when user has accepted your contact request
+ *
+ * @param userID User ID from which accepted your request
+ * */
+- (void)chatDidReceiveAcceptContactRequestFromUser:(NSUInteger)userID;
+
+/**
+ * Called when user has rejected your contact request
+ *
+ * @param userID User ID from which rejected your request
+ */
+- (void)chatDidReceiveRejectContactRequestFromUser:(NSUInteger)userID;
 
 
 #pragma mark -
 #pragma mark Rooms
 
 /**
- Called in case received list of available to join rooms.
- 
- @rooms Array of rooms
+ *  Called when group chat dialog receives message.
+ *
+ *  @note Will fire both on recepient and sender device (with corrected time from server)
+ *  @param message  Received message.
+ *  @param dialogID QBChatDialog identifier.
  */
-- (void)chatDidReceiveListOfRooms:(NSArray *)rooms;
-
-/**
- Called when room received message. It will be fired each time when room received message from any user
- 
- @param message Received message
- @param roomName Name of room which reeived message
- */
-- (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoom:(NSString *)roomName;
-
-/**
- Called when room receives a message.
- 
- @param message Received message
- @param roomJID Room JID
- */
-- (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoomJID:(NSString *)roomJID;
-
-/**
- Called when received room information.
- 
- @param information Room information
- @param roomName Name of room
- */
-- (void)chatRoomDidReceiveInformation:(NSDictionary *)information room:(NSString *)roomName;
-
-/**
- Fired when room was successfully created
- */
-- (void)chatRoomDidCreate:(NSString *)roomName;
-
-/**
- Fired when you did enter to room
- 
- @param room which you have joined
- */
-- (void)chatRoomDidEnter:(QBChatRoom *)room;
-
-/**
- Called when you didn't enter to room
- 
- @param room Name of room which you haven't joined
- @param error Error
- */
-- (void)chatRoomDidNotEnter:(NSString *)roomName error:(NSError *)error;
-
-/**
- Called when you didn't enter to room
- 
- @param roomJID  JID of room which you haven't joined
- @param error Error
- */
-- (void)chatRoomDidNotEnterRoomWithJID:(NSString *)roomJID error:(NSError *)error;
-
-/**
- Fired when you did leave room
- 
- @param roomName Name of room which you have leaved
- */
-- (void)chatRoomDidLeave:(NSString *)roomName;
-
-/**
- Fired when you did leave room
- 
- @param roomJID JID of room which you have leaved
- */
-- (void)chatRoomDidLeaveRoomWithJID:(NSString *)roomJID;
-
-/**
- Fired when you did destroy room
- 
- @param roomName of room which you have destroyed
- */
-- (void)chatRoomDidDestroy:(NSString *)roomName;
-
-/**
- Called in case changing online users
- 
- @param onlineUsers Array of online users
- @param roomName Name of room in which have changed online users
- */
-- (void)chatRoomDidChangeOnlineUsers:(NSArray *)onlineUsers room:(NSString *)roomName;
-
-/**
- Called in case changing online users
- 
- @param onlineUsers Array of online users
- @param roomJID JID of room in which has changed online users list
- */
-- (void)chatRoomDidChangeOnlineUsers:(NSArray *)onlineUsers roomJID:(NSString *)roomJID;
-
-/**
- Called in case receiving list of users who can join room
- 
- @param users Array of users which are able to join room
- @param roomName Name of room which provides access to join
- */
-- (void)chatRoomDidReceiveListOfUsers:(NSArray *)users room:(NSString *)roomName;
-
-/**
- Called in case receiving list of online users
- 
- @param users Array of joined users
- @param roomName Name of room
- */
-- (void)chatRoomDidReceiveListOfOnlineUsers:(NSArray *)users room:(NSString *)roomName;
-
-/**
- Called in case receiving list of online users
- 
- @param users Array of joined users
- @param roomJID JID of room
- */
-- (void)chatRoomDidReceiveListOfOnlineUsers:(NSArray *)users roomJID:(NSString *)roomJID;
-
-
-#pragma mark -
-#pragma mark Video Chat
-
-/**
- Called in case when opponent is calling to you
- 
- @param userID ID of uopponent
- @param conferenceType Type of conference. 'QBVideoChatConferenceTypeAudioAndVideo' and 'QBVideoChatConferenceTypeAudio' values are available
- */
--(void) chatDidReceiveCallRequestFromUser:(NSUInteger)userID withSessionID:(NSString*)sessionID conferenceType:(enum QBVideoChatConferenceType)conferenceType;
-
-/**
- Called in case when opponent is calling to you
- 
- @param userID ID of uopponent
- @param conferenceType Type of conference. 'QBVideoChatConferenceTypeAudioAndVideo' and 'QBVideoChatConferenceTypeAudio' values are available
- @param customParameters Custom caller parameters
- */
--(void) chatDidReceiveCallRequestFromUser:(NSUInteger)userID withSessionID:(NSString*)sessionID conferenceType:(enum QBVideoChatConferenceType)conferenceType customParameters:(NSDictionary *)customParameters;
-
-/**
- Called in case when you are calling to user, but hi hasn't answered
- 
- @param userID ID of opponent
- */
--(void) chatCallUserDidNotAnswer:(NSUInteger)userID;
-
-/**
- Called in case when opponent has accepted you call
- 
- @param userID ID of opponent
- */
--(void) chatCallDidAcceptByUser:(NSUInteger)userID;
-
-/**
- Called in case when opponent has accepted you call
- 
- @param userID ID of opponent
- @param customParameters Custom caller parameters
- */
--(void) chatCallDidAcceptByUser:(NSUInteger)userID customParameters:(NSDictionary *)customParameters;
-
-/**
- Called in case when opponent has rejected you call
- 
- @param userID ID of opponent
- */
--(void) chatCallDidRejectByUser:(NSUInteger)userID;
-
-/**
- Called in case when opponent has finished call
- 
- @param userID ID of opponent
- @param status Reason of finish call. There are 2 reasons: 1) Opponent did not answer - 'kStopVideoChatCallStatus_OpponentDidNotAnswer'. 2) Opponent finish call with method 'finishCall' - 'kStopVideoChatCallStatus_Manually'
- */
--(void) chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status;
-
-/**
- Called in case when opponent has finished call
- 
- @param userID ID of opponent
- @param status Reason of finish call. There are 2 reasons: 1) Opponent did not answer - 'kStopVideoChatCallStatus_OpponentDidNotAnswer'. 2) Opponent finish call with method 'finishCall' - 'kStopVideoChatCallStatus_Manually'
- @param customParameters Custom caller parameters
- */
--(void) chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status customParameters:(NSDictionary *)customParameters;
-
-/**
- Called in case when call has started
- 
- @param userID ID of opponent
- @param sessionID ID of session
- */
--(void) chatCallDidStartWithUser:(NSUInteger)userID sessionID:(NSString *)sessionID;
-
-/**
- Called in case when start using TURN relay for video chat (not p2p).
- */
-- (void)didStartUseTURNForVideoChat;
-
-
-#pragma mark -
-#pragma mark Custom audio session
-
-/**
- Called in case when user uses custom audio session for video chat
- 
- @param buffer Audio buffer
- */
-- (void)didReceiveAudioBuffer:(AudioBuffer)buffer;
-
+- (void)chatRoomDidReceiveMessage:(QB_NONNULL QBChatMessage *)message fromDialogID:(QB_NONNULL NSString *)dialogID;
 
 #pragma mark -
 #pragma mark Privacy
@@ -331,130 +149,97 @@
  
  @param listNames array with privacy list names
  */
-- (void)chatDidReceivePrivacyListNames:(NSArray *)listNames;
+- (void)chatDidReceivePrivacyListNames:(QB_NONNULL NSArray QB_GENERIC(NSString *) *)listNames;
 
 /**
  Called in case receiving privacy list
  
  @param privacyList list with privacy items
  */
-- (void)chatDidReceivePrivacyList:(QBPrivacyList *)privacyList;
+- (void)chatDidReceivePrivacyList:(QB_NONNULL QBPrivacyList *)privacyList;
 
 /**
  Called when you failed to receive privacy list names
  
  @param error Error
  */
-- (void)chatDidNotReceivePrivacyListNamesDueToError:(id)error;
+- (void)chatDidNotReceivePrivacyListNamesDueToError:(QB_NULLABLE id)error;
 
 /**
  Called when you failed to receive a list of privacy items
  @param name privacy list name
  @param error Error
  */
-- (void)chatDidNotReceivePrivacyListWithName:(NSString *)name error:(id)error;
+- (void)chatDidNotReceivePrivacyListWithName:(QB_NONNULL NSString *)name error:(QB_NULLABLE id)error;
 
 /**
  Called when you successfully created/edited a list
  @param name privacy list name
  */
-- (void)chatDidSetPrivacyListWithName:(NSString *)name;
+- (void)chatDidSetPrivacyListWithName:(QB_NONNULL NSString *)name;
 
 /**
  Called when you successfully set an active privacy list
  @param name active privacy list name
  */
-- (void)chatDidSetActivePrivacyListWithName:(NSString *)name;
+- (void)chatDidSetActivePrivacyListWithName:(QB_NONNULL NSString *)name;
 
 /**
  Called when you successfully set a default privacy list
  @param name default privacy list name
  */
-- (void)chatDidSetDefaultPrivacyListWithName:(NSString *)name;
+- (void)chatDidSetDefaultPrivacyListWithName:(QB_NONNULL NSString *)name;
 
 /**
  Called when you failed to create/edit a privacy list
  @param name privacy list name
  @param error Error
  */
-- (void)chatDidNotSetPrivacyListWithName:(NSString *)name error:(id)error;
+- (void)chatDidNotSetPrivacyListWithName:(QB_NONNULL NSString *)name error:(QB_NULLABLE id)error;
 
 /**
  Called when you failed to create/edit an active privacy list
  @param name privacy list name
  @param error Error
  */
-- (void)chatDidNotSetActivePrivacyListWithName:(NSString *)name error:(id)error;
+- (void)chatDidNotSetActivePrivacyListWithName:(QB_NONNULL NSString *)name error:(QB_NULLABLE id)error;
 
 /**
  Called when you failed to set a default privacy list
  @param name privacy list name
  @param error Error
  */
-- (void)chatDidNotSetDefaultPrivacyListWithName:(NSString *)name error:(id)error;
+- (void)chatDidNotSetDefaultPrivacyListWithName:(QB_NONNULL NSString *)name error:(QB_NULLABLE id)error;
 
 /**
  Called when you removed a privacy list
  @param name privacy list name
- @param error Error
  */
-- (void)chatDidRemovedPrivacyListWithName:(NSString *)name;
-
-
-#pragma mark -
-#pragma mark Typing Status
-
-/**
- Called when you received a chat status "user is typing"
- @param userID privacy list name
- */
-- (void)chatDidReceiveUserIsTypingFromUserWithID:(NSUInteger)userID;
-
-/**
- Called when you received a chat status "user stop typing"
- @param userID privacy list name
- */
-- (void)chatDidReceiveUserStopTypingFromUserWithID:(NSUInteger)userID;
-
+- (void)chatDidRemovedPrivacyListWithName:(QB_NONNULL NSString *)name;
 
 #pragma mark -
 #pragma mark Delivered status
 
 /**
- Called when you received a confirmation about message delivery
- 
- @warning *Deprecated in QB iOS SDK 2.0.7:* Use chatDidDeliverMessageWithID: instead
- 
- @param packetID ID of an original message
+ *  Called when message is delivered to user.
+ *
+ *  @param messageID Message identifier.
+ *  @param dialogID  Dialog identifier.
+ *  @param userID  User identifier.
  */
-- (void)chatDidDeliverMessageWithPacketID:(NSString *)packetID __attribute__((deprecated("use 'chatDidDeliverMessageWithID:' instead.")));
-
-/**
- Called when you received a confirmation about message delivery
- @param messageID ID of an original message
- */
-- (void)chatDidDeliverMessageWithID:(NSString *)messageID;
-
+- (void)chatDidDeliverMessageWithID:(QB_NONNULL NSString *)messageID dialogID:(QB_NONNULL NSString *)dialogID toUserID:(NSUInteger)userID;
 
 #pragma mark -
 #pragma mark Read status
 
 /**
- Called when you received a confirmation about message read
- @param messageID ID of an original message
+ *  Called when message is read by opponent.
+ *
+ *  @param messageID Message identifier.
+ *  @param dialogID  Dialog identifier.
+ *  @param readerID  Reader identifier.
  */
-- (void)chatDidReadMessageWithID:(NSString *)messageID;
-
-
-#pragma mark -
-#pragma mark Draft
-
-- (void)chatTURNServerDidDisconnect;
-- (void)chatTURNServerdidFailWithError:(NSError *)error;
-- (void)chatDidPassConnectionStep:(NSUInteger)step totalSteps:(NSUInteger)totalSteps;
-
-- (void)chatDidExceedWriteVideoQueueMaxOperationsThresholdWithCount:(NSUInteger)operationsInQueue;
-- (void)chatDidExceedWriteAudioQueueMaxOperationsThresholdWithCount:(NSUInteger)operationsInQueue;
+- (void)chatDidReadMessageWithID:(QB_NONNULL NSString *)messageID dialogID:(QB_NONNULL NSString *)dialogID readerID:(NSUInteger)readerID;
 
 @end
 

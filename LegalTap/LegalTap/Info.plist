@@ -15,15 +15,15 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>4.96</string>
+	<string>5.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>9.7</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
-		<string>2756f39298c80650d130cc4ccfe4676caecb826a</string>
+		<string>4a419d3ac58821a7bb3c6b0d27ac288a1a7c82ba</string>
 		<key>Kits</key>
 		<array>
 			<dict>
@@ -36,6 +36,11 @@
 	</dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UIAppFonts</key>
 	<array>
 		<string>OpenSans-CondLight.ttf</string>

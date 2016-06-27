@@ -24,8 +24,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationApplication_StateChange:) name:defApplicationDidBecomeActive object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationApplication_StateChange:) name:defApplicationDidEnterBackground object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationApplication_StateChange:) name:defApplicationWillEnterForeground object:nil];
-
-    
     [self formateViews];
     
     self.navigationController.navigationBarHidden = YES;
@@ -77,31 +75,10 @@
                 
                 formPortalNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"FORM SHOP" image:imageUnSell selectedImage:imageSell];
             }
-//            UINavigationController *settingsNavigationController = [arr objectAtIndex:3];
-//            {
-//                UIImage *imageUnSell = [UIImage imageNamed:@"New_settings_icon"];
-//                UIImage *imageSell = [UIImage imageNamed:@"New_settings_icon"];
-//                
-//                imageUnSell = [imageUnSell imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-//                imageSell = [imageSell imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-//                
-//                settingsNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"SETTINGS" image:imageUnSell selectedImage:imageSell];
-//            }
             myHomeNavigationController.navigationBar.tintColor = defColor_TOPBAR;
             myAppointmentNavigationController.navigationBar.tintColor = defColor_TOPBAR;
             formPortalNavigationController.navigationBar.tintColor = defColor_TOPBAR;
-//            settingsNavigationController.navigationBar.tintColor = defColor_TOPBAR;
-            
             {
-//                @"ritesharora", @"ritesharora", @2569186
-//                NSString *qUserName = @"ritesharora";//user_Profile.quickBlox_UserName;
-//                NSString *qPassword = @"ritesharora";//user_Profile.quickBlox_UserName;
-//                if (qUserName.length && qPassword.length)
-//                {
-//                    [self createSeesionForClientwithUserName:qUserName withUserPassword:qPassword];
-//
-//                }
-//                else
                 {
                     [self.navigationController pushViewController:tabBarController animated:NO];
                 }
@@ -110,12 +87,6 @@
         else
         {
             UINavigationController *myAppointmentNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"MyAppointmentNavigationController"];
-            
-            
-//            UINavigationController *formPortalNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"FormPortalNavigationController"];
-//            
-//            UIViewController *viewc = [self.storyboard instantiateViewControllerWithIdentifier:@"FormPortal"];//FormShopViewC
-//            formPortalNavigationController = [[UINavigationController alloc]initWithRootViewController:viewc];
             
             UINavigationController *settingsNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsNavigationController"];
             
@@ -133,16 +104,6 @@
                     
                     myAppointmentNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"APPOINTMENTS" image:imageUnSell selectedImage:imageSell];
                 }
-//                {
-//                    UIImage *imageUnSell = [UIImage imageNamed:@"New_formportal_icon"];
-//                    UIImage *imageSell = [UIImage imageNamed:@"New_formportal_icon"];
-//                    
-//                    imageUnSell = [imageUnSell imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-//                    imageSell = [imageSell imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-//                    
-//                    formPortalNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"FORM SHOP" image:imageUnSell selectedImage:imageSell];
-//                }
-//                UINavigationController *settingsNavigationController = [arr objectAtIndex:2];
                 {
                     UIImage *imageUnSell = [UIImage imageNamed:@"New_settings_icon"];
                     UIImage *imageSell = [UIImage imageNamed:@"New_settings_icon"];
@@ -154,16 +115,12 @@
                 }
                 
                 myAppointmentNavigationController.navigationBar.tintColor = defColor_TOPBAR;
-//                formPortalNavigationController.navigationBar.tintColor = defColor_TOPBAR;
                 settingsNavigationController.navigationBar.tintColor = defColor_TOPBAR;
             }
-//            UIImage *BlueBackground = [UIImage imageNamed:@"blueImage3"];
-//            [[UITabBar appearance] setSelectionIndicatorImage:BlueBackground];
             NSLog(@"aar appearance] setSelectionIndicator");
 
             [self.navigationController pushViewController:tabBarController animated:NO];
         }
-
     }
     else
     {
@@ -185,16 +142,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 #pragma mark - scrollView Delegates
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -213,7 +160,7 @@
 }
 
 #pragma mark - Methods
--(void)formateViews                     //Called in ViewDidController
+-(void)formateViews
 {
     scrollView_Main.contentSize = CGSizeMake(def_DeviceWidth*3, CGRectGetHeight(scrollView_Main.frame)-20);
     NSInteger page = (NSInteger)(scrollView_Main.contentOffset.x/def_DeviceWidth);
@@ -250,7 +197,6 @@
                                       CGRectGetWidth(btn_GetStarted.frame),
                                       CGRectGetHeight(btn_GetStarted.frame));
     
-    
     btn_GetStarted.layer.cornerRadius = 4;
     btn_GetStarted.clipsToBounds = YES;
 
@@ -282,7 +228,6 @@
                                           def_DeviceHeight - 30 - CGRectGetHeight(btn_GetStarted.frame) - Y,
                                           CGRectGetWidth(btn_GetStarted.frame),
                                           CGRectGetHeight(btn_GetStarted.frame));
-
     }
 }
 
@@ -299,8 +244,6 @@
     {
         X = -(X);
     }
-    
-    
     imageView_BackGround.frame = CGRectMake(X,
                                             CGRectGetMinY(imageView_BackGround.frame),
                                             CGRectGetWidth(imageView_BackGround.frame),
@@ -310,12 +253,10 @@
 //Change Current Page Number
 -(void)setCurrentPageWithPageNumber:(NSInteger)page
 {
-    
     NSArray *array = @[@"Video Chat with a local licensed attorney now about your legal matter or schedule an appointment for the future",
                        @"Request a form from the form shop!",
                        @"Connect with a local licensed attorney if you need further legal guidance using our lawyer connect service!",
                        @"Retain a Lawyer from our\nServices"];
-    
     pageControl.currentPage = page;
     [UIView animateWithDuration:0.5 animations:^{
         lbl_Title.alpha = 1.0;

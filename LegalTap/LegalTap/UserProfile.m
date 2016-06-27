@@ -20,7 +20,7 @@
         self.email = [dict valueForKey:@"emailId"];
         self.imageURL = [dict valueForKey:@"userImage"];
         self.userType = [dict valueForKey:@"userType"];
-        
+        self.appointmentId = [dict valueForKey:@"appointmentId"];
         self.address = [dict valueForKey:@"address"];
         self.city = [dict valueForKey:@"city"];
         self.mobileNumber = [dict valueForKey:@"contactNumber"];

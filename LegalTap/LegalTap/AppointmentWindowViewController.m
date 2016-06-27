@@ -19,8 +19,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self loadNavigationHeader];
+    [QBRTCClient.instance addDelegate:self];
+
     lblTimeOfAppointment.text = [self getAppointmentDateTextWithDate:_appointmentDate];
-    
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"New_BackButton_blue"] style:UIBarButtonItemStylePlain target:self action:@selector(backBarButton)];
+    [backButton setTintColor:[UIColor colorWithRed:0/255.0f green:133/255.0f blue:198/255.0f alpha:1.0f]];
+    [self.navigationItem setLeftBarButtonItem:backButton];
     if (_isOnlyOpen)
     
     {
@@ -42,7 +46,12 @@
             lblHoldAlertForUser.hidden=YES;
             QueAnsView.hidden=NO;
             UIView*questionAnsView=[CommonHelper loadAnswersOnViewWithWindowArray:_appointmentData.questionare withWidth:self.view.frame.size.width];
-            [QueAnsView addSubview:questionAnsView];
+            [scrollViewQandA addSubview:questionAnsView];
+            scrollViewQandA.contentSize = CGSizeMake(CGRectGetWidth(questionAnsView.frame), CGRectGetHeight(questionAnsView.frame));
+            if (IS_IPHONE_4_OR_LESS)
+            {
+                scrollViewQandA.frame = CGRectMake(0, 55, 300, 130);
+            }
         }
     }
     else
@@ -54,6 +63,10 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+- (void)backBarButton
+{
+    [self.navigationController popViewControllerAnimated:TRUE];
 }
 
 #pragma mark - Navigation
@@ -179,4 +192,6 @@
 
 //    [self.navigationController.tabBarController.navigationController popToRootViewControllerAnimated:YES];
 }
+
+
 @end

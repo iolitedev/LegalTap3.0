@@ -26,6 +26,7 @@ typedef void (^RecordVideoResultBlock)(NSString *URL);
 -(void) setupAudioCapture;
 
 - (void)processAudioBuffer:(AudioBuffer)buffer;
+
 - (void)changeVideoOutput:(BOOL)useBackCamera;
 
 - (void)finishWritingVideoAndAudio;

@@ -33,9 +33,18 @@
 }
 - (IBAction)DoneButtonAction:(id)sender
 {
+    NSString *emailRegEx = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,10}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
+    
+    
     if ([EmailTextField.text isEqualToString:@""])
     {
         UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Error!" message:@"Please Enter Your Email Id" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    else if ([emailTest evaluateWithObject:EmailTextField.text] == NO) {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Test!" message:@"Please Enter Valid Email Address." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }
     else if ([PsswordTextField.text isEqualToString:@""])
@@ -51,6 +60,13 @@
         [self GetForgotPassword];
     }
 }
+
+//- (BOOL)validateEmailWithString:(NSString*)email
+//{
+//    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+//    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+//    return [emailTest evaluateWithObject:email];
+//}
 
 -(void)GetForgotPassword
 {
@@ -68,7 +84,7 @@
                  if ([[responseObject valueForKey:@"success"] integerValue]==1)
                  {
                      
-                     UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"" message:@"Please Check Your Email. Verification Code has been Sent On Your Email Address" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                     UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"" message:@"Please check your email. A verification code has been sent to your email address" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                      [alert show];
                      
                  }
